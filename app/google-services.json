@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "65738750490",
+    "project_id": "numadsp22-quester",
+    "storage_bucket": "numadsp22-quester.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:65738750490:android:e630046ea9084c896cefa3",
+        "android_client_info": {
+          "package_name": "com.benockert.numadsp22_quester_final_project"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "65738750490-2t93rkbsvfv1fsbq1vrmd0frredh1nh7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnVlqV47L2m_2XGUb4rW-Hjb_jmX4fA0E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "65738750490-2t93rkbsvfv1fsbq1vrmd0frredh1nh7.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
