@@ -7,7 +7,7 @@ Ben, Jada, Julia, Nate
 ### Rough Schema:
 ```
 users:
-  first_name: string
+  username: string
   quests:
       quest_id: 
          images: 
