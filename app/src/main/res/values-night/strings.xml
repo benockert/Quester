@@ -9,7 +9,7 @@
     <string name="reg_btn">Register</string>
     <string name="prompt_password">Enter Password Here</string>
     <string name="prompt_conf_password">Confirm Password</string>
-    <string name="prompt_email">Enter Email Here</string>
+    <string name="prompt_email">Enter Email/Username Here</string>
     <string name="forgot_password">Forgot Password?</string>
     <string name="reset_Pass">Reset Password</string>
     <string name="back">Back</string>
