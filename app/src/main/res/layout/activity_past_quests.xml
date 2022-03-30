@@ -27,15 +27,15 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:textSize="34sp"
+        android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Quest:" />
+        tools:text="Quest Name:" />
 
     <TextView
-        android:id="@+id/questName"
-        android:layout_width="281dp"
-        android:layout_height="70dp"
+        android:id="@+id/pastQuest_questName"
+        android:layout_width="239dp"
+        android:layout_height="65dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         app:layout_constraintStart_toEndOf="@+id/questNameLabel"
@@ -48,7 +48,7 @@
         android:layout_marginTop="28dp"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/questNameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/questName"
+        app:layout_constraintTop_toBottomOf="@+id/pastQuest_questName"
         tools:text="Participant(s):" />
 
     <TextView

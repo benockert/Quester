@@ -14,4 +14,5 @@
     <string name="reset_Pass">Reset Password</string>
     <string name="back">Back</string>
     <string name="log_out">Log Out</string>
+    <string name="activity_location_image">Activity Location Image</string>
 </resources>
