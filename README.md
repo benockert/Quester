@@ -36,13 +36,19 @@ activities:
     user_price_range: int
     user_popularity: float
     user_xxx: ...
-    g_place_id: string
+    place_id: string
+
+places:
+  id: //from google
     g_place_name: string
     g_place_formatted_address: string
     g_place_coord_lat: string
     g_place_coord:lng: string
     g_image_url: string
-    g_price_level: int 
+    g_price_level: int
+    g_num_ratings: int
+    g_avg_rating: int
+    g_main_type: string // first element in type array is main category
 ```
 
 For each user inputted activity:
