@@ -11,7 +11,7 @@
         android:id="@+id/reg_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:autofillHints="@string/prompt_username"
+        android:autofillHints="@string/prompt_email"
         android:hint="@string/prompt_email"
         android:inputType="textEmailAddress"
         android:minHeight="48dp"

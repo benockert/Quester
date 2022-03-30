@@ -47,11 +47,13 @@ public class Register extends AppCompatActivity {
         finish();
     }
 
-    public void forgot_password(View v){
+    public void forgot_password(View v) {
         EditText getEmail = findViewById(R.id.log_email);
-        String currentEmail = getEmail.getText().toString();
         Intent i = new Intent(this, ForgotPassword.class);
-        i.putExtra("currentEmail", currentEmail);
+        if (getEmail != null) {
+            String currentEmail = getEmail.getText().toString();
+            i.putExtra("currentEmail", currentEmail);
+        }
         startActivity(i);
     }
 
@@ -99,15 +101,15 @@ public class Register extends AppCompatActivity {
                             } else if (errorCode.equals("ERROR_WEAK_PASSWORD")) {
                                 notifyUser("Invalid Password. Password Must Be At Least 6 Characters");
                             } else {
-                                Log.d(TAG,errorCode);
+                                Log.d(TAG, errorCode);
                             }
                         } else if (e instanceof FirebaseAuthUserCollisionException) {
                             String errorCode =
                                     ((FirebaseAuthUserCollisionException) e).getErrorCode();
                             if (errorCode.equals("ERROR_EMAIL_ALREADY_IN_USE")) {
                                 notifyUser("Email Already In Use. Login or Try Again");
-                            } else{
-                                Log.d(TAG,errorCode);
+                            } else {
+                                Log.d(TAG, errorCode);
                             }
                         } else {
                             notifyUser(e.getMessage());
