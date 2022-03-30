@@ -1,39 +1,54 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
-import java.util.ArrayList;
+import android.graphics.drawable.Drawable;
 
 public class pastQuestActivityCard {
-    String questName;
-    ArrayList<String> participants;
-    ArrayList<String> locationsVisited;
+    private final String questName;
+    private final String participants;
+    private final Drawable locationPhoto;
+    final String locationPhotoName;
 
-    pastQuestActivityCard(String questName, ArrayList<String> participants, ArrayList<String> locationsVisited){
+    pastQuestActivityCard(String questName, String participants,
+                          Drawable locationPhoto, String locationPhotoName) {
         this.questName = questName;
         this.participants = participants;
-        this.locationsVisited = locationsVisited;
+        this.locationPhoto = locationPhoto;
+        this.locationPhotoName = locationPhotoName;
+    }
+
+    /**
+     * getter for questLocation photo name
+     *
+     * @return String representing the photo name
+     */
+    public String getLocationPhotoName() {
+        return this.locationPhotoName;
     }
 
     /**
      * Getter for quest name
+     *
      * @return String QuestName
      */
-    public String getQuestName(){
+    public String getQuestName() {
         return this.questName;
     }
 
     /**
      * gets the list of participants from a quest
-     * @return ArrayList of Strings
+     *
+     * @return String holding the name of all participants
      */
-    public ArrayList<String> getParticipants(){
+    public String getParticipants() {
         return this.participants;
     }
 
     /**
      * gets a list of the locations visited during the quest
+     *
      * @return ArrayList of Locations represented by Strings
      */
-    public ArrayList<String> getLocationsVisited(){
-        return this.locationsVisited;
+    public Drawable getLocationPhoto() {
+        return this.locationPhoto;
     }
 }
