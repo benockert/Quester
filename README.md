@@ -23,26 +23,26 @@ quests:
     end_time: string
     location: string
     proximity: float
-    icon_url: string
-    activities: 
-      activity_id
+    location_image_url: string // generated image based on user's specified quest location
+    users:
+      user_id
       ...
-  
-  
-activities:
-  id: int
-    order_in_quest: int
-    user_query: string
-    user_price_range: int
-    user_popularity: float
-    user_xxx: ...
-    g_place_id: string
-    g_place_name: string
-    g_place_formatted_address: string
-    g_place_coord_lat: string
-    g_place_coord:lng: string
-    g_image_url: string
-    g_price_level: int 
+    activities: 
+      id: int // potential sort key
+        sort_key??
+        next_activity_id: activity_id
+        user_query: string
+        user_price_range: int
+        user_popularity: float
+        user_xxx: ...
+        g_place_name: string
+        g_place_formatted_address: string
+        g_place_coord_lat: string
+        g_place_coord:lng: string
+        g_image_url: string
+        g_price_level: int 
+      ...         
+
 ```
 
 For each user inputted activity:
@@ -72,3 +72,36 @@ My Quests screen:
 - pulls quest ids from Firebase with logged in username/email/id
 - Active quests section based on active? of each quest
 - 'Past Quests' section for inactive quests
+
+---
+Hit List:
+- User Login
+- Pages
+  - Login
+  - Forgot Password
+  - My Quests (homepage with active and previous)
+  - Create A Quest
+  - Confirm/Edit Quest
+  - Selected Quest (when clicking on past quest from homepage; might be similar to Confirm quest page as in displaying all activities in recycler view)
+  - Active Quest
+  - Recap
+
+My Quests Page:
+- Active quest(s) at top
+- Previous quests underneath sorted in descending date order
+- Each quest card shows:
+  - Users typed in location
+  - Cover image based on that location
+  - Number of participants
+  - Date of quest
+  - Number of stops
+
+Active Quest:
+- current 
+- next
+
+View Selected Quest:
+- Show all activities
+- Show participant names
+- If has a recap:
+  - button at top to 'View recap'
