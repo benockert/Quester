@@ -9,14 +9,13 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastQuestsRecylerView"
-        android:layout_width="0dp"
-        android:layout_height="517dp"
-        android:layout_marginStart="1dp"
-        android:layout_marginEnd="1dp"
-        android:layout_marginBottom="1dp"
+        android:layout_width="416dp"
+        android:layout_height="523dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="4dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.625"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activitiesLabel"
         app:layout_constraintVertical_bias="1.0" />
@@ -30,7 +29,7 @@
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Quest Name:" />
+        android:text="@string/quest_name" />
 
     <TextView
         android:id="@+id/pastQuest_questName"
@@ -38,6 +37,7 @@
         android:layout_height="65dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:textSize="20sp"
         app:layout_constraintStart_toEndOf="@+id/questNameLabel"
         app:layout_constraintTop_toTopOf="@+id/questNameLabel" />
 
@@ -45,11 +45,11 @@
         android:id="@+id/participantsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="12dp"
+        android:text="@string/participant_s"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/questNameLabel"
-        app:layout_constraintTop_toBottomOf="@+id/pastQuest_questName"
-        tools:text="Participant(s):" />
+        app:layout_constraintTop_toBottomOf="@+id/pastQuest_questName" />
 
     <TextView
         android:id="@+id/participants"
@@ -57,6 +57,7 @@
         android:layout_height="51dp"
         android:layout_marginStart="4dp"
         android:text=""
+        android:textSize="16sp"
         app:layout_constraintStart_toEndOf="@+id/participantsLabel"
         app:layout_constraintTop_toTopOf="@+id/participantsLabel" />
 
@@ -68,5 +69,5 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/participantsLabel"
         app:layout_constraintTop_toBottomOf="@+id/participants"
-        tools:text="Activities:" />
+        android:text="@string/activities" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,54 +1,41 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
-import android.graphics.drawable.Drawable;
-
 public class pastQuestActivityCard {
-    private final String questName;
-    private final String participants;
-    private final Drawable locationPhoto;
-    final String locationPhotoName;
+    private final String locationName;
+    private final int price_range;
+    private final String locationPhotoRef;
 
-    pastQuestActivityCard(String questName, String participants,
-                          Drawable locationPhoto, String locationPhotoName) {
-        this.questName = questName;
-        this.participants = participants;
-        this.locationPhoto = locationPhoto;
-        this.locationPhotoName = locationPhotoName;
+    pastQuestActivityCard(String locationName, int price_range, String locationPhotoRef) {
+        this.locationName = locationName;
+        this.price_range = price_range;
+        this.locationPhotoRef = locationPhotoRef;
     }
 
     /**
-     * getter for questLocation photo name
+     * getter for the price range of the activity
      *
-     * @return String representing the photo name
+     * @return String representing the number of $signs the price range is
      */
-    public String getLocationPhotoName() {
-        return this.locationPhotoName;
+    public int getPrice_range() {
+        return this.price_range;
     }
 
     /**
-     * Getter for quest name
+     * getter for the name of the activity location
      *
-     * @return String QuestName
+     * @return String representing the name of the location
      */
-    public String getQuestName() {
-        return this.questName;
+    public String getLocationName() {
+        return this.locationName;
     }
 
-    /**
-     * gets the list of participants from a quest
-     *
-     * @return String holding the name of all participants
-     */
-    public String getParticipants() {
-        return this.participants;
-    }
 
     /**
-     * gets a list of the locations visited during the quest
+     * getter for the String referencing the photo of the activity location
      *
-     * @return ArrayList of Locations represented by Strings
+     * @return String representing a reference to a photo of the activity location
      */
-    public Drawable getLocationPhoto() {
-        return this.locationPhoto;
+    public String getLocationPhotoRef() {
+        return this.locationPhotoRef;
     }
 }

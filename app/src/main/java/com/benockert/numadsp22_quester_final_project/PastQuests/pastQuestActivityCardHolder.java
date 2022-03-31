@@ -11,13 +11,14 @@ import com.benockert.numadsp22_quester_final_project.R;
 
 public class pastQuestActivityCardHolder extends RecyclerView.ViewHolder {
     public ImageView locationImage;
-    public TextView participants;
-    public TextView questName;
+    public TextView price;
+    public TextView locationName;
+
 
     public pastQuestActivityCardHolder(@NonNull View itemView) {
         super(itemView);
         locationImage = itemView.findViewById(R.id.locationImage);
-        participants = itemView.findViewById(R.id.participants);
-        questName = itemView.findViewById(R.id.pastQuest_questName);
+        price = itemView.findViewById(R.id.activityPrice);
+        locationName = itemView.findViewById(R.id.activityName);
     }
 }

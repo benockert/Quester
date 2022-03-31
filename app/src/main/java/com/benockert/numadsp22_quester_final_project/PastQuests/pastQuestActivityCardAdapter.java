@@ -42,10 +42,19 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
     @Override
     public void onBindViewHolder(@NonNull pastQuestActivityCardHolder holder, int position) {
         pastQuestActivityCard currentCard = qCardList.get(position);
-        holder.questName.setText(currentCard.getQuestName());
-        holder.participants.setText(currentCard.getParticipants());
-        Drawable locationPhoto = currentCard.getLocationPhoto();
-        locationPhoto.setBounds(0, 0, 100, 100);
+        holder.locationName.setText(currentCard.getLocationName());
+
+        StringBuilder temp = new StringBuilder();
+        temp.append("Price Range: ");
+        for(int x = 0; x < currentCard.getPrice_range(); x++){
+            temp.append("$");
+        }
+        holder.price.setText(temp);
+       String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+       url += currentCard.getLocationPhotoRef();
+//       url+= apk key
+        Drawable locationPhoto = Drawable.createFromPath("https://ibb.co/8X7GY9z");
+//        locationPhoto.setBounds(0, 0, 100, 100);
         holder.locationImage.setImageDrawable(locationPhoto);
     }
 

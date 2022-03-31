@@ -15,4 +15,7 @@
     <string name="back">Back</string>
     <string name="log_out">Log Out</string>
     <string name="activity_location_image">Activity Location Image</string>
+    <string name="quest_name">Quest Name:</string>
+    <string name="participant_s">Participant(s):</string>
+    <string name="activities">Activities:</string>
 </resources>
