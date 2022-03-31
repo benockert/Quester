@@ -47,7 +47,8 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
     @Override
     public void onBindViewHolder(@NonNull pastQuestActivityCardHolder holder, int position) {
         pastQuestActivityCard currentCard = qCardList.get(position);
-        holder.locationName.setText(currentCard.getLocationName());
+        String tempName = "Location Name: " + currentCard.getLocationName();
+        holder.locationName.setText(tempName);
 
         StringBuilder temp = new StringBuilder();
         temp.append("Price Range: ");
