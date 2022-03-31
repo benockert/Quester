@@ -1,8 +1,11 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,7 +50,7 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
     @Override
     public void onBindViewHolder(@NonNull pastQuestActivityCardHolder holder, int position) {
         pastQuestActivityCard currentCard = qCardList.get(position);
-        String tempName = "Location Name: " + currentCard.getLocationName();
+        String tempName = "Location: " + currentCard.getLocationName();
         holder.locationName.setText(tempName);
 
         StringBuilder temp = new StringBuilder();
@@ -56,10 +59,12 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
             temp.append("$");
         }
         holder.price.setText(temp);
+
         String url = "";
 //        = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
 //        url += currentCard.getLocationPhotoRef();
-//       url+= apk key
+//       url+= "&key=currentCard.getImageAPIKey();
+
         Drawable locationPhoto = Drawable.createFromPath(url);
 
         if (locationPhoto == null) {

@@ -4,11 +4,23 @@ public class pastQuestActivityCard {
     private final String locationName;
     private final int price_range;
     private final String locationPhotoRef;
+    private final String imageAPIKey;
 
-    pastQuestActivityCard(String locationName, int price_range, String locationPhotoRef) {
+    pastQuestActivityCard(String locationName, int price_range,
+                          String locationPhotoRef, String imageAPIKey) {
         this.locationName = locationName;
         this.price_range = price_range;
         this.locationPhotoRef = locationPhotoRef;
+        this.imageAPIKey = imageAPIKey;
+    }
+
+    /**
+     * getter for google API key
+     *
+     * @return String representing the Google API key
+     */
+    public String getImageAPIKey() {
+        return this.imageAPIKey;
     }
 
     /**

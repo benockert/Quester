@@ -1,5 +1,7 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
@@ -48,7 +50,7 @@ public class PastQuests extends AppCompatActivity {
         dr.child("quests").child(questName).child("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
-                    String results =String.valueOf(task.getResult().getValue());
+                    String results = String.valueOf(task.getResult().getValue());
                     JSONObject jsonResults = new JSONObject(results);
 
                     Iterator<String> objs = jsonResults.keys();
@@ -82,19 +84,35 @@ public class PastQuests extends AppCompatActivity {
     }
 
     private void getAllActivities() {
+        String apiKey = "";
+        try {
+            ActivityInfo ai = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_META_DATA);
+            Bundle metaData = ai.metaData;
+            apiKey = metaData.get("com.google.android.geo.API_KEY").toString();
+        } catch (PackageManager.NameNotFoundException | RuntimeException e) {
+            e.printStackTrace();
+            Log.e("TAG", "API_KEY not found in metadata");
+        }
+
+        String finalApiKey = apiKey;
+        
         dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Map<String, Object> map = (Map<String, Object>) task.getResult().getValue();
                 try {
                     for (Map.Entry<String, Object> result : map.entrySet()) {
-                        JSONObject currActivity = new JSONObject(result.getValue().toString().replaceAll(" ", "_"));
+                        JSONObject currActivity = new JSONObject(result.getValue().toString()
+                                .replaceAll(" u", "u")
+                                .replaceAll(" g", "g")
+                                .replaceAll(" ", "_"));
                         Log.i("json", currActivity.toString());
 
-                        int prange = currActivity.getInt("_gPriceLevel");
-                        String actName = currActivity.getString("_gName").replaceAll("_", " ");
-                        String photoRef = currActivity.getString("_gPhotoReference");
+                        int prange = currActivity.getInt("gPriceLevel");
+                        String actName = currActivity.getString("gName")
+                                .replaceAll("_", " ");
+                        String photoRef = currActivity.getString("gPhotoReference");
                         pastQuestActivityCard temp = new pastQuestActivityCard(actName, prange,
-                                photoRef);
+                                photoRef, finalApiKey);
                         pastQuestActivities.add(temp);
                         rviewAdapter.notifyItemInserted(0);
                     }

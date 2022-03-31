@@ -22,10 +22,10 @@
 
         <TextView
             android:id="@+id/activityName"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="60dp"
-            android:layout_marginBottom="108dp"
+            android:layout_width="151dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="40dp"
+            android:layout_marginBottom="116dp"
             android:textColor="#616161"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@+id/locationImage"
@@ -44,13 +44,12 @@
 
         <TextView
             android:id="@+id/activityPrice"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="115dp"
+            android:layout_height="20dp"
             android:layout_marginTop="8dp"
-            android:layout_marginEnd="1dp"
             android:textColor="#616161"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="@+id/activityName"
+            app:layout_constraintStart_toStartOf="@+id/activityName"
             app:layout_constraintTop_toBottomOf="@+id/activityName"
             app:layout_constraintVertical_bias="0.0"
             tools:text="Activity Price" />
