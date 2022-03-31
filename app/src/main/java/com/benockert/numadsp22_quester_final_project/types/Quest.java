@@ -5,21 +5,20 @@ import java.util.List;
 public class Quest {
     public int joinCode;
     public boolean active;
-    public String dateTimeGenerated;
-    public String location; // need to figure out string vs coordinates
+    public String location;
     public float proximity;
-    public List<String> activities;
+    public String photoReference;
+    public List<Activity> activities;
 
     public Quest() {
-
     }
 
-    public Quest(int joinCode, boolean active, String dateTimeGenerated, String location, float proximity, List<String> activities) {
+    public Quest(int joinCode, boolean active, String location, float proximity, String photoReference, List<Activity> activities) {
         this.joinCode = joinCode;
         this.active = active;
-        this.dateTimeGenerated = dateTimeGenerated;
         this.location = location;
         this.proximity = proximity;
+        this.photoReference = photoReference;
         this.activities = activities;
     }
 
@@ -31,10 +30,6 @@ public class Quest {
         return active;
     }
 
-    public String getDateTimeGenerated() {
-        return dateTimeGenerated;
-    }
-
     public String getLocation() {
         return location;
     }
@@ -43,7 +38,11 @@ public class Quest {
         return proximity;
     }
 
-    public List<String> getActivities() {
+    public String getPhotoReference() {
+        return photoReference;
+    }
+
+    public List<Activity> getActivities() {
         return activities;
     }
 }
