@@ -1,15 +1,20 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
+import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuestActivityCardHolder> {
@@ -46,15 +51,23 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
 
         StringBuilder temp = new StringBuilder();
         temp.append("Price Range: ");
-        for(int x = 0; x < currentCard.getPrice_range(); x++){
+        for (int x = 0; x < currentCard.getPrice_range(); x++) {
             temp.append("$");
         }
         holder.price.setText(temp);
-       String url = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
-       url += currentCard.getLocationPhotoRef();
+        String url = "";
+//        = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
+//        url += currentCard.getLocationPhotoRef();
 //       url+= apk key
-        Drawable locationPhoto = Drawable.createFromPath("https://ibb.co/8X7GY9z");
-//        locationPhoto.setBounds(0, 0, 100, 100);
+        Drawable locationPhoto = Drawable.createFromPath(url);
+
+        if (locationPhoto == null) {
+            Context appContext = holder.locationImage.getContext();
+            Resources r = appContext.getResources();
+            int drawableId = r.getIdentifier("no_image_found_foreground",
+                    "drawable", appContext.getPackageName());
+            locationPhoto = AppCompatResources.getDrawable(appContext, drawableId);
+        }
         holder.locationImage.setImageDrawable(locationPhoto);
     }
 

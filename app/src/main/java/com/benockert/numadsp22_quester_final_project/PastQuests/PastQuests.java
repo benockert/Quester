@@ -9,8 +9,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -22,26 +20,17 @@ import java.util.Map;
 
 public class PastQuests extends AppCompatActivity {
     private DatabaseReference dr;
-    private String username;
     private String questName;
     private final ArrayList<pastQuestActivityCard> pastQuestActivities = new ArrayList<>();
 
 
-    private RecyclerView rView;
     private pastQuestActivityCardAdapter rviewAdapter;
-    private RecyclerView.LayoutManager rLayoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_quests);
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
-
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            username = user.getDisplayName();
-        }
 
         TextView qName = findViewById(R.id.pastQuest_questName);
         qName.setText(this.getIntent().getExtras().get("questName").toString());
@@ -59,7 +48,7 @@ public class PastQuests extends AppCompatActivity {
         dr.child("quests").child(questName).child("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
-                    String results = task.getResult().getValue().toString();
+                    String results =String.valueOf(task.getResult().getValue());
                     JSONObject jsonResults = new JSONObject(results);
 
                     Iterator<String> objs = jsonResults.keys();
@@ -81,9 +70,9 @@ public class PastQuests extends AppCompatActivity {
      */
     private void createRecyclerView() {
         pastQuestActivities.clear();
-        rLayoutManager = new LinearLayoutManager(this);
+        RecyclerView.LayoutManager rLayoutManager = new LinearLayoutManager(this);
 
-        rView = findViewById(R.id.pastQuestsRecylerView);
+        RecyclerView rView = findViewById(R.id.pastQuestsRecylerView);
         rView.setHasFixedSize(true);
 
         rviewAdapter = new pastQuestActivityCardAdapter(pastQuestActivities);
@@ -104,14 +93,11 @@ public class PastQuests extends AppCompatActivity {
                         int prange = currActivity.getInt("_gPriceLevel");
                         String actName = currActivity.getString("_gName").replaceAll("_", " ");
                         String photoRef = currActivity.getString("_gPhotoReference");
-                        //  Log.i("TAG", String.valueOf(prange));
                         pastQuestActivityCard temp = new pastQuestActivityCard(actName, prange,
                                 photoRef);
                         pastQuestActivities.add(temp);
+                        rviewAdapter.notifyItemInserted(0);
                     }
-
-                    rviewAdapter.notifyDataSetChanged();
-
                 } catch (Exception e) {
                     Log.e("ERROR1", e.toString());
                     e.printStackTrace();
