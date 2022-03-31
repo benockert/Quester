@@ -95,7 +95,7 @@ public class PastQuests extends AppCompatActivity {
         }
 
         String finalApiKey = apiKey;
-        
+
         dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 Map<String, Object> map = (Map<String, Object>) task.getResult().getValue();
