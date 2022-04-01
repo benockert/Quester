@@ -12,6 +12,10 @@ import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
+import com.google.maps.GeoApiContext;
+import com.google.maps.model.LatLng;
+import com.google.maps.model.PlacesSearchResult;
+import com.google.maps.model.PriceLevel;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,11 +23,15 @@ import org.json.JSONObject;
 
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Map;
 
 public class CreateQuestActivity extends AppCompatActivity {
     private String TAG = "LOG_QUESTER_CREATE_QUEST_ACTIVITY";
 
-    private String apiKey = null;
+    final HashMap<String, PriceLevel> priceLevels = setPriceLevels();
+
+    private String apiKey;
+    private GeoApiContext apiContext;
 
     public TextView searchQueryInput;
     public Button submitSearchQueryButton;
@@ -47,24 +55,38 @@ public class CreateQuestActivity extends AppCompatActivity {
             e.printStackTrace();
             Log.e(TAG, "API_KEY not found in metadata");
         }
+
+        // create the Google Maps Geo API context
+        apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
     }
 
     public void sendSearch(View v) {
-        GooglePlacesClient client = new GooglePlacesClient(apiKey);
+        GooglePlacesClient client = new GooglePlacesClient(apiContext);
 
-        HashMap<String, String> params = new HashMap<>();
-        params.put("query", searchQueryInput.getText().toString());
-        params.put("location", "42.33564,71.08369");
-        params.put("radius", "2000");
+        String query = searchQueryInput.getText().toString();
+        LatLng location = new LatLng(42.33564, 71.08369); // todo user location
+        int radius = 2000;
+        PriceLevel priceLevel = priceLevels.get("$$");
 
-        try {
-            JSONArray response = client.textSearch(params);
-            JSONObject place = response.getJSONObject(0);
-            String placeName = place.get("name").toString();
-            responseTextView.setText(placeName);
-        } catch (IOException | JSONException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error sending text search request");
+        PlacesSearchResult[] places = client.textSearch(query, location, radius, priceLevel);
+        if (places != null) {
+            // TODO do shit here
+            responseTextView.setText(places[0].name);
         }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        apiContext.shutdown();
+    }
+
+    private HashMap<String, PriceLevel> setPriceLevels() {
+        HashMap<String, PriceLevel> priceLevels = new HashMap<>();
+        priceLevels.put("$", PriceLevel.INEXPENSIVE);
+        priceLevels.put("$$", PriceLevel.MODERATE);
+        priceLevels.put("$$$", PriceLevel.EXPENSIVE);
+        priceLevels.put("$$$$", PriceLevel.VERY_EXPENSIVE);
+        return priceLevels;
     }
 }
