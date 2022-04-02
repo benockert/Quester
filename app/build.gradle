@@ -45,9 +45,6 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 
     implementation 'com.google.android.libraries.places:places:2.5.0'
-
-    implementation 'com.squareup.okhttp3:okhttp:3.10.0'
-
     implementation 'com.google.maps:google-maps-services:2.0.0'
     implementation 'org.slf4j:slf4j-simple:1.7.25'
 
