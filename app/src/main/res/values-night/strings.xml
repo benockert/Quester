@@ -19,4 +19,6 @@
     <string name="participant_s">Participant(s):</string>
     <string name="activities">Activities:</string>
     <string name="google_maps_logo">google maps logo</string>
+    <string name="quest_recap">Quest Recap</string>
+    <string name="create_new_quest">Create New Quest</string>
 </resources>

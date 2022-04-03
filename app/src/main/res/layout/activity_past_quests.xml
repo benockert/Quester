@@ -10,27 +10,26 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastQuestsRecylerView"
         android:layout_width="408dp"
-        android:layout_height="505dp"
+        android:layout_height="463dp"
         android:layout_marginStart="7dp"
-        android:layout_marginTop="10dp"
         android:layout_marginEnd="7dp"
+        android:layout_marginTop="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel"
+        app:layout_constraintTop_toBottomOf="@+id/toQRecap"
         app:layout_constraintVertical_bias="0.891" />
 
     <TextView
         android:id="@+id/questNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="60dp"
+        android:text="@string/quest_name"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="@string/quest_name" />
+        app:layout_constraintStart_toStartOf="@+id/toCreateQuest"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/pastQuest_questName"
@@ -71,4 +70,26 @@
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/participantsLabel"
         app:layout_constraintTop_toBottomOf="@+id/participants" />
+
+    <Button
+        android:id="@+id/toQRecap"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="4dp"
+        android:onClick="toQuestRecap"
+        android:text="@string/quest_recap"
+         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/participants" />
+
+    <Button
+        android:id="@+id/toCreateQuest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="4dp"
+        android:onClick="toCreateQuest"
+        android:text="@string/create_new_quest"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

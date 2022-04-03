@@ -138,4 +138,15 @@ public class PastQuests extends AppCompatActivity {
         i.setPackage("com.google.android.apps.maps");
         context.startActivity(i);
     }
+
+    //TODO: ensure that there is a quest recap to go to (keep visibility as invisible if no recap)
+    public void toQuestRecap(View v){
+        Intent i = new Intent();
+        i.putExtra("questName", questName);
+        startActivity(i);
+    }
+    public void toCreateQuest(View v){
+        Intent i = new Intent();
+        startActivity(i);
+    }
 }
