@@ -1,10 +1,12 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,14 +18,15 @@ import androidx.appcompat.content.res.AppCompatResources;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.types.Activity;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuestActivityCardHolder> {
-    private final ArrayList<pastQuestActivityCard> qCardList;
+    private final ArrayList<Activity> qCardList;
 
-    public pastQuestActivityCardAdapter(ArrayList<pastQuestActivityCard> qCardList) {
+    public pastQuestActivityCardAdapter(ArrayList<Activity> qCardList) {
         this.qCardList = qCardList;
     }
 
@@ -49,22 +52,28 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
      */
     @Override
     public void onBindViewHolder(@NonNull pastQuestActivityCardHolder holder, int position) {
-        pastQuestActivityCard currentCard = qCardList.get(position);
-        String tempName = "Location: " + currentCard.getLocationName();
+        //getting the current card
+        Activity currentCard = qCardList.get(position);
+        //setting the name of the activity location
+        String tempName = "Name: " + currentCard.getgName();
         holder.locationName.setText(tempName);
-
+        //converting the integer price range to a series of dollar signs to display the price range
         StringBuilder temp = new StringBuilder();
         temp.append("Price Range: ");
-        for (int x = 0; x < currentCard.getPrice_range(); x++) {
+        for (int x = 0; x < currentCard.getgPriceLevel(); x++) {
             temp.append("$");
         }
         holder.price.setText(temp);
+        //setting the address of the activity location
+        holder.address.setText(currentCard.getgFormattedAddress());
 
+
+        //setting the image of the location
+        //if there is no photo available it displays no image found
         String url = "";
 //        = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=";
 //        url += currentCard.getLocationPhotoRef();
 //       url+= "&key=currentCard.getImageAPIKey();
-
         Drawable locationPhoto = Drawable.createFromPath(url);
 
         if (locationPhoto == null) {
@@ -75,6 +84,8 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
             locationPhoto = AppCompatResources.getDrawable(appContext, drawableId);
         }
         holder.locationImage.setImageDrawable(locationPhoto);
+
+        holder.maps.setOnClickListener(view -> PastQuests.openInMaps(currentCard.gFormattedAddress));
     }
 
     /**

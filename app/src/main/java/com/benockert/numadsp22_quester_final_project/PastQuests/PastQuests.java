@@ -1,9 +1,13 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
+import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -11,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -23,9 +28,8 @@ import java.util.Map;
 public class PastQuests extends AppCompatActivity {
     private DatabaseReference dr;
     private String questName;
-    private final ArrayList<pastQuestActivityCard> pastQuestActivities = new ArrayList<>();
-
-
+    private final ArrayList<Activity> pastQuestActivities = new ArrayList<>();
+    private static Context context;
     private pastQuestActivityCardAdapter rviewAdapter;
 
     @Override
@@ -33,7 +37,7 @@ public class PastQuests extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_quests);
         dr = FirebaseDatabase.getInstance().getReference();
-
+        context = this;
         TextView qName = findViewById(R.id.pastQuest_questName);
         qName.setText(this.getIntent().getExtras().get("questName").toString());
         questName = this.getIntent().getExtras().get("questName").toString();
@@ -111,8 +115,10 @@ public class PastQuests extends AppCompatActivity {
                         String actName = currActivity.getString("gName")
                                 .replaceAll("_", " ");
                         String photoRef = currActivity.getString("gPhotoReference");
-                        pastQuestActivityCard temp = new pastQuestActivityCard(actName, prange,
-                                photoRef, finalApiKey);
+                        String address = currActivity.getString("gFormattedAddress")
+                                .replaceAll("_", " ");
+                        Activity temp = new Activity(actName, prange,
+                                photoRef, address);
                         pastQuestActivities.add(temp);
                         rviewAdapter.notifyItemInserted(0);
                     }
@@ -124,5 +130,12 @@ public class PastQuests extends AppCompatActivity {
                 Log.e("ERROR2", task.getResult().toString());
             }
         });
+    }
+
+    public static void openInMaps(String address) {
+        Intent i = new Intent(Intent.ACTION_VIEW,
+                Uri.parse("geo:0,0?q=" + address));
+        i.setPackage("com.google.android.apps.maps");
+        context.startActivity(i);
     }
 }
