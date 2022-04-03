@@ -6,7 +6,7 @@ Ben, Jada, Julia, Nate
 
 ### ~~Rough Schema:~~
 ### Current Schema
-* may change as needed
+*may change as needed
 ```
 users:
   username: string
@@ -17,7 +17,7 @@ users:
           
 
 quests:
-  id: int
+  id: datetime_username
     join_code: int
     active: boolean
     location: string // might also be coordinates, depending on if user inputs location or uses current
@@ -27,8 +27,7 @@ quests:
       user_id
       ...
     activities: 
-      id: datetime_username
- 
+      id: a#
         user_query: string
         user_price_level: int
         user_popularity: int
