@@ -9,16 +9,17 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastQuestsRecylerView"
-        android:layout_width="416dp"
-        android:layout_height="523dp"
+        android:layout_width="408dp"
+        android:layout_height="505dp"
         android:layout_marginStart="7dp"
-        android:layout_marginEnd="4dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.625"
+        app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/activitiesLabel"
-        app:layout_constraintVertical_bias="1.0" />
+        app:layout_constraintVertical_bias="0.891" />
 
     <TextView
         android:id="@+id/questNameLabel"
@@ -65,9 +66,9 @@
         android:id="@+id/activitiesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/activities"
         android:textSize="16sp"
         app:layout_constraintStart_toStartOf="@+id/participantsLabel"
-        app:layout_constraintTop_toBottomOf="@+id/participants"
-        android:text="@string/activities" />
+        app:layout_constraintTop_toBottomOf="@+id/participants" />
 </androidx.constraintlayout.widget.ConstraintLayout>
