@@ -13,6 +13,7 @@ public class pastQuestActivityCardHolder extends RecyclerView.ViewHolder {
     public ImageView locationImage;
     public TextView price;
     public TextView locationName;
+    public TextView address;
 
 
     public pastQuestActivityCardHolder(@NonNull View itemView) {
@@ -20,5 +21,6 @@ public class pastQuestActivityCardHolder extends RecyclerView.ViewHolder {
         locationImage = itemView.findViewById(R.id.locationImage);
         price = itemView.findViewById(R.id.activityPrice);
         locationName = itemView.findViewById(R.id.activityName);
+        address = itemView.findViewById(R.id.locationAddress);
     }
 }
