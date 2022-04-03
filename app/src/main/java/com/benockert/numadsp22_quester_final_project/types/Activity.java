@@ -15,10 +15,11 @@ public class Activity {
     }
 
     public Activity(String gName, int gPriceLevel,
-                    String gPhotoReference) {
+                    String gPhotoReference, String gFormattedAddress) {
         this.gName = gName;
         this.gPriceLevel = gPriceLevel;
         this.gPhotoReference = gPhotoReference;
+        this.gFormattedAddress = gFormattedAddress;
     }
 
     public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, float gPlaceLat, float gPlaceLng, int gPriceLevel, String uQuery) {
