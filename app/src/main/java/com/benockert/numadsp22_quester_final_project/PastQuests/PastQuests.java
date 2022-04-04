@@ -1,9 +1,9 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,9 +16,12 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -36,11 +39,44 @@ public class PastQuests extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_past_quests);
+
+        findViewById(R.id.createQRecap).setVisibility(View.INVISIBLE);
+        findViewById(R.id.viewQRecap).setVisibility(View.INVISIBLE);
+
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        FirebaseUser currentUser = mAuth.getCurrentUser();
         dr = FirebaseDatabase.getInstance().getReference();
+
+        questName = this.getIntent().getExtras().get("questName").toString();
+
+        String qRecap = questName + "_recap";
+        Log.i("name", qRecap);
+        if(currentUser != null) {
+
+            String username = currentUser.getDisplayName();
+
+            if(username != null){
+                dr.child("users").child(username).child("recaps")
+                        .child(qRecap).child("generated").get().addOnCompleteListener(task -> {
+                            if (task.isSuccessful()) {
+                                Log.i(TAG, String.valueOf(task.getResult().getValue()));
+                                if(task.getResult().getValue()!=null){
+                                    if (task.getResult().getValue().toString().equals("true")) {
+                                        findViewById(R.id.viewQRecap).setVisibility(View.VISIBLE);
+                                    }
+                                    else{
+                                        findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
+                                    }
+                                }
+                            }
+                        });
+            }
+        }
+
         context = this;
         TextView qName = findViewById(R.id.pastQuest_questName);
         qName.setText(this.getIntent().getExtras().get("questName").toString());
-        questName = this.getIntent().getExtras().get("questName").toString();
+
         createRecyclerView();
         getAndPlaceAllParticipants();
         getAllActivities();
@@ -61,9 +97,10 @@ public class PastQuests extends AppCompatActivity {
                     StringBuilder participants = new StringBuilder();
                     while (objs.hasNext()) {
                         participants.append(objs.next());
-                        participants.append(" ");
+                        participants.append(",  ");
                     }
-                    particpantV.setText(participants.toString());
+                    String finalParticipants = participants.substring(0, participants.length() - 3);
+                    particpantV.setText(finalParticipants);
                 } catch (Exception e) {
                     Log.i("exception", e.toString());
                 }
@@ -88,17 +125,15 @@ public class PastQuests extends AppCompatActivity {
     }
 
     private void getAllActivities() {
-        String apiKey = "";
-        try {
-            ActivityInfo ai = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_META_DATA);
-            Bundle metaData = ai.metaData;
-            apiKey = metaData.get("com.google.android.geo.API_KEY").toString();
-        } catch (PackageManager.NameNotFoundException | RuntimeException e) {
-            e.printStackTrace();
-            Log.e("TAG", "API_KEY not found in metadata");
-        }
-
-        String finalApiKey = apiKey;
+//        String apiKey = "";
+//        try {
+//            ActivityInfo ai = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_META_DATA);
+//            Bundle metaData = ai.metaData;
+////            apiKey = metaData.get("com.google.android.geo.API_KEY").toString();
+//        } catch (PackageManager.NameNotFoundException | RuntimeException e) {
+//            e.printStackTrace();
+//            Log.e("TAG", "API_KEY not found in metadata");
+//        }
 
         dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
@@ -106,19 +141,17 @@ public class PastQuests extends AppCompatActivity {
                 try {
                     for (Map.Entry<String, Object> result : map.entrySet()) {
                         JSONObject currActivity = new JSONObject(result.getValue().toString()
-                                .replaceAll(" u", "u")
-                                .replaceAll(" g", "g")
-                                .replaceAll(" ", "_"));
-                        Log.i("json", currActivity.toString());
+                        .replaceAll(" g", "g")
+                        .replaceAll(" u", "u")
+                        .replaceAll(" ", "_"));
 
-                        int prange = currActivity.getInt("gPriceLevel");
                         String actName = currActivity.getString("gName")
                                 .replaceAll("_", " ");
-                        String photoRef = currActivity.getString("gPhotoReference");
                         String address = currActivity.getString("gFormattedAddress")
                                 .replaceAll("_", " ");
-                        Activity temp = new Activity(actName, prange,
-                                photoRef, address);
+                        Activity temp = new Activity(actName,
+                                currActivity.getInt("gPriceLevel"),
+                                currActivity.getString("gPhotoReference"), address);
                         pastQuestActivities.add(temp);
                         rviewAdapter.notifyItemInserted(0);
                     }
@@ -139,13 +172,19 @@ public class PastQuests extends AppCompatActivity {
         context.startActivity(i);
     }
 
-    //TODO: ensure that there is a quest recap to go to (keep visibility as invisible if no recap)
-    public void toQuestRecap(View v){
+    public void viewQuestRecap(View v) {
         Intent i = new Intent();
         i.putExtra("questName", questName);
         startActivity(i);
     }
-    public void toCreateQuest(View v){
+
+    public void createQuestRecap(View v){
+        Intent i = new Intent();
+        i.putExtra("questName", questName);
+        startActivity(i);
+    }
+
+    public void toCreateQuest(View v) {
         Intent i = new Intent();
         startActivity(i);
     }

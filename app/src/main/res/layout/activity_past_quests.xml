@@ -72,31 +72,32 @@
 
     <Button
         android:id="@+id/viewQRecap"
-        android:layout_width="wrap_content"
+        android:layout_width="137dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
         android:onClick="viewQuestRecap"
         android:text="@string/view_quest_recap"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/createQRecap"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/createQRecap"
-        android:layout_width="177dp"
-        android:layout_height="52dp"
-        android:layout_marginTop="4dp"
-        android:layout_marginEnd="16dp"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
         android:onClick="createQuestRecap"
         android:text="@string/create_quest_recap"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/toCreateQuest" />
 
     <Button
         android:id="@+id/toCreateQuest"
-        android:layout_width="wrap_content"
+        android:layout_width="137dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:onClick="toCreateQuest"
         android:text="@string/create_new_quest"
