@@ -9,16 +9,15 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastQuestsRecylerView"
-        android:layout_width="408dp"
-        android:layout_height="463dp"
+        android:layout_width="409dp"
+        android:layout_height="470dp"
         android:layout_marginStart="7dp"
         android:layout_marginEnd="7dp"
-        android:layout_marginTop="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.545"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toQRecap"
+        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel"
         app:layout_constraintVertical_bias="0.891" />
 
     <TextView
@@ -72,15 +71,26 @@
         app:layout_constraintTop_toBottomOf="@+id/participants" />
 
     <Button
-        android:id="@+id/toQRecap"
+        android:id="@+id/viewQRecap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="4dp"
-        android:onClick="toQuestRecap"
-        android:text="@string/quest_recap"
-         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/participants" />
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="viewQuestRecap"
+        android:text="@string/view_quest_recap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/createQRecap"
+        android:layout_width="177dp"
+        android:layout_height="52dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginEnd="16dp"
+        android:onClick="createQuestRecap"
+        android:text="@string/create_quest_recap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/toCreateQuest"
