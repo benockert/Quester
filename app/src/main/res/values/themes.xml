@@ -3,7 +3,7 @@
     <style name="Theme.NUMADSp22_Quester_Final_Project" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/green_700</item>
-        <item name="colorPrimaryVariant">@color/green_900</item>
+        <item name="colorPrimaryVariant">@color/green_800</item>
         <item name="colorOnPrimary">@color/white</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/orange_500</item>
