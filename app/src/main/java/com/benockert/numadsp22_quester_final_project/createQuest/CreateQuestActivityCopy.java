@@ -1,11 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.createQuest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -21,9 +15,11 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+
 import com.benockert.numadsp22_quester_final_project.R;
-import com.benockert.numadsp22_quester_final_project.createQuest.recycler.AddActivityCard;
-import com.benockert.numadsp22_quester_final_project.createQuest.recycler.AddActivityCardAdapter;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
@@ -32,13 +28,12 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.PlacesSearchResult;
 import com.google.maps.model.PriceLevel;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Locale;
 
-public class CreateQuestActivity extends AppCompatActivity {
+public class CreateQuestActivityCopy extends AppCompatActivity {
     private String TAG = "LOG_QUESTER_CREATE_QUEST_ACTIVITY";
     private int LOCATION_PERMISSION_ID = 1;
+
     private int METERS_IN_ONE_MILE = 1609;
 
     final PriceLevel[] priceLevels = {PriceLevel.FREE, PriceLevel.INEXPENSIVE, PriceLevel.MODERATE, PriceLevel.EXPENSIVE, PriceLevel.VERY_EXPENSIVE};
@@ -51,36 +46,44 @@ public class CreateQuestActivity extends AppCompatActivity {
     private Context context;
     private Location mLocation;
 
+    public TextView searchQueryInput;
+    public Button submitSearchQueryButton;
+    public TextView responseTextView;
+
     public TextView startLocationTextView;
     public Button useCurrentLocationButton;
     public Slider proximitySlider;
-    public Button addActivityButton;
-    public Button generateQuestButton;
-
-    public ArrayList<AddActivityCard> activityCards;
-    private RecyclerView recyclerView;
-    private AddActivityCardAdapter linkCardAdapter;
-    private RecyclerView.LayoutManager recyclerLayoutManager;
+    public Slider priceLevelSlider;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_quest);
+
         context = getApplicationContext();
 
+        searchQueryInput = findViewById(R.id.placeSearchQuery);
+        submitSearchQueryButton = findViewById(R.id.submitSearchButton);
+        responseTextView = findViewById(R.id.searchResponseView);
         startLocationTextView = findViewById(R.id.questLocationTextView);
         useCurrentLocationButton = findViewById(R.id.useCurrentLocationButton);
         proximitySlider = findViewById(R.id.proximitySlider);
-
-        activityCards = new ArrayList<>();
-        createRecyclerView();
-
+        priceLevelSlider = findViewById(R.id.priceLevelSlider);
 
         proximitySlider.setLabelFormatter(new LabelFormatter() {
             @NonNull
             @Override
             public String getFormattedValue(float value) {
                 return String.format(Locale.US, "%.2f", value) + " mi";
+            }
+        });
+
+        priceLevelSlider.setLabelFormatter(new LabelFormatter() {
+            @NonNull
+            @Override
+            public String getFormattedValue(float value) {
+                int priceLevelValue = Math.round(value);
+                return priceLevelStrings[priceLevelValue];
             }
         });
 
@@ -98,21 +101,23 @@ public class CreateQuestActivity extends AppCompatActivity {
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
     }
 
-    private void createRecyclerView() {
-        recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+    public void sendSearch(View v) {
+        GooglePlacesClient client = new GooglePlacesClient(apiContext);
 
-//        recyclerView = findViewById(R.id.receivedStickerRecyclerView);
-//        recyclerView.setHasFixedSize(true);
-//
-//        Collections.sort(cardList, new ReceivedStickerComparator());
-//
-//        receivedStickerCardAdapter = new ReceivedStickerCardAdapter(cardList);
-//
-//        recyclerView.setAdapter(receivedStickerCardAdapter);
-//        recyclerView.setLayoutManager(recyclerLayoutManager);
+        String query = searchQueryInput.getText().toString();
+        LatLng location = new LatLng(mLocation.getLatitude(), mLocation.getLongitude()); // todo user location
+        int radius = Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE); //
+        // todo check if this is working
+        PriceLevel priceLevel = priceLevels[Math.round(priceLevelSlider.getValue())]; //todo add onChangeListener to sliders
+
+        PlacesSearchResult[] places = client.textSearch(query, location, radius, priceLevel);
+        if (places != null) {
+            // TODO do shit here
+            responseTextView.setText(places[0].name);
+        }
     }
 
-    private void useCurrentLocation(View v) {
+    public void useCurrentLocation(View v) {
         boolean locationPermission = checkLocationPermissions();
         if (locationPermission) {
             Log.v(TAG, "Permission already granted!");

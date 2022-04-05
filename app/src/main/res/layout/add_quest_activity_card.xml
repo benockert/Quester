@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".createQuest.CreateQuestActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/base_cardview"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="@color/blue"
+        app:strokeWidth="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp">
+
+            <TextView
+                android:id="@+id/activityQueryText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="Enter anything you want to do..."
+                android:textColorHint="@color/blue_25"
+                android:textColor="@color/blue"
+                android:textSize="16sp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/activityPriceLevelCollapsedView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$$"
+                android:textStyle="italic"
+                android:textColor="@color/blue_50"
+                android:textSize="14sp"
+                android:visibility="invisible"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintStart_toEndOf="@id/activityQueryText"
+                app:layout_constraintTop_toTopOf="@id/activityQueryText"
+                app:layout_constraintBottom_toBottomOf="@id/activityQueryText"/>
+
+            <ImageView
+                android:id="@+id/show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toTopOf="@+id/activityQueryText"
+                app:layout_constraintBottom_toBottomOf="@+id/activityQueryText"
+                app:srcCompat="@android:drawable/arrow_down_float"
+                app:tint="@color/blue" />
+
+            <View
+                android:id="@+id/searchQueryBaseline"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:background="@color/blue_75"
+                android:layout_marginTop="2dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/activityQueryText" />
+
+            <TextView
+                android:id="@+id/priceLevelPromptText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="Price level:"
+                android:textColor="@color/blue"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/activityQueryText"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <com.google.android.material.button.MaterialButtonToggleGroup
+                android:id="@+id/priceLevelButtonToggleGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="45dp"
+                app:singleSelection="true"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelPromptText">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/priceLevelOneButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                app:strokeColor="@color/blue"
+                app:strokeWidth="2dp"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/white"
+                android:backgroundTintMode="add"
+                android:text="$" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/priceLevelTwoButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                android:backgroundTint="@color/blue"
+                android:backgroundTintMode="add"
+                android:text="$$" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/priceLevelThreeButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                app:strokeColor="@color/blue"
+                app:strokeWidth="2dp"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/white"
+                android:backgroundTintMode="add"
+                android:text="$$$" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/priceLevelFourButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12dp"
+                app:strokeColor="@color/blue"
+                app:strokeWidth="2dp"
+                android:textColor="@color/blue"
+                android:backgroundTint="@color/white"
+                android:backgroundTintMode="add"
+                android:text="$$$$" />
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+            <TextView
+                android:id="@+id/popularityLevelPromptText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Popularity:"
+                android:textColor="@color/blue"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelButtonToggleGroup" />
+
+            <TextView
+                android:id="@+id/popularityLevelTextRepresentation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Everyday Spot"
+                android:textColor="@color/blue_50"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelButtonToggleGroup"
+                app:layout_constraintBaseline_toBaselineOf="@id/popularityLevelPromptText"
+                app:layout_constraintLeft_toRightOf="@id/popularityLevelPromptText"/>
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/popularitySlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:valueFrom="0.0"
+                android:valueTo="10.0"
+                android:value="5"
+                app:thumbColor="@color/blue"
+                app:trackColorActive="@color/blue_75"
+                app:trackColorInactive="@color/blue_25"
+                app:labelBehavior="floating"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/popularityLevelPromptText"/>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/activityPreferencesGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="priceLevelPromptText,priceLevelButtonToggleGroup,popularityLevelPromptText,popularityLevelTextRepresentation,popularitySlider" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>
