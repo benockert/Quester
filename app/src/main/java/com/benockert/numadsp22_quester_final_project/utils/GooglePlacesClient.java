@@ -1,7 +1,9 @@
 package com.benockert.numadsp22_quester_final_project.utils;
 
+import android.location.Location;
 import android.util.Log;
 
+import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.maps.GeoApiContext;
 import com.google.maps.ImageResult;
 import com.google.maps.PlacesApi;
@@ -14,24 +16,40 @@ import com.google.maps.model.PlacesSearchResult;
 import com.google.maps.model.PriceLevel;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class GooglePlacesClient {
     private final String TAG = "LOG_QUESTER_GOOGLE_API_CLIENT";
     private final GeoApiContext context;
+    private LatLng locationLatLng;
+    private String locationString;
+    private final int radius;
 
-    public GooglePlacesClient(GeoApiContext context) {
+    public GooglePlacesClient(GeoApiContext context, int radius, String location) {
         this.context = context;
+        this.radius = radius;
+        this.locationString = location;
     }
 
-    public PlacesSearchResult[] textSearch(String query,
-                                           LatLng location,
-                                           int radius,
-                                           PriceLevel priceLevel) {
+    public GooglePlacesClient(GeoApiContext context, int radius, LatLng location) {
+        this.context = context;
+        this.radius = radius;
+        this.locationLatLng = location;
+    }
+
+    public PlacesSearchResult[] textSearch(String query, PriceLevel priceLevel) {
         TextSearchRequest request = new TextSearchRequest(context);
-        request.query(query);
-        request.location(location);
+
+        // if location was provided manually by user, add location to query parameter
+        if (locationString != null) {
+            request.query(query + " in " + locationString);
+        }
+        // if user's current location is provided, set it as a parameter
+        if (locationLatLng != null) {
+            request.location(locationLatLng);
+        }
         request.radius(radius);
         request.minPrice(priceLevel);
         request.maxPrice(priceLevel);
@@ -40,11 +58,20 @@ public class GooglePlacesClient {
             PlacesSearchResponse response  = request.await();
             PlacesSearchResult[] results = response.results;
             Log.d(TAG, "Number of Place results returned: " + results.length);
+
+            //Arrays.stream(results).filter()
+
+            PlacesSearchResult r = results[0];
+            Activity a = new Activity(r.formattedAddress, r.name, null, r.placeId, r.geometry.location.lat, r.geometry.location.lng, priceLevel.ordinal(), query);
+
             return results;
         } catch (ApiException | IOException | InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in text search request");
         }
+
+        // parse response
+        // 3.8 rating and above, random selection
         return null;
     }
 

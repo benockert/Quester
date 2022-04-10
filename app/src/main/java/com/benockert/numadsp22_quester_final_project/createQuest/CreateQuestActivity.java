@@ -11,6 +11,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
@@ -22,18 +23,18 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.R;
-import com.benockert.numadsp22_quester_final_project.createQuest.recycler.AddActivityCard;
-import com.benockert.numadsp22_quester_final_project.createQuest.recycler.AddActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCard;
+import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.LatLng;
-import com.google.maps.model.PlacesSearchResult;
 import com.google.maps.model.PriceLevel;
 
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.List;
 import java.util.Locale;
 
 public class CreateQuestActivity extends AppCompatActivity {
@@ -41,25 +42,24 @@ public class CreateQuestActivity extends AppCompatActivity {
     private int LOCATION_PERMISSION_ID = 1;
     private int METERS_IN_ONE_MILE = 1609;
 
-    final PriceLevel[] priceLevels = {PriceLevel.FREE, PriceLevel.INEXPENSIVE, PriceLevel.MODERATE, PriceLevel.EXPENSIVE, PriceLevel.VERY_EXPENSIVE};
-    final String[] priceLevelStrings = {"", "$", "$$", "$$$", "$$$"};
-
     private LocationManager locationManager;
     private String apiKey;
     private GeoApiContext apiContext;
+    private GooglePlacesClient placesClient;
 
     private Context context;
-    private Location mLocation;
+    private LatLng mLocation;
 
     public TextView startLocationTextView;
     public Button useCurrentLocationButton;
     public Slider proximitySlider;
     public Button addActivityButton;
     public Button generateQuestButton;
+    public TextView addFirstActivityTextView;
 
     public ArrayList<AddActivityCard> activityCards;
     private RecyclerView recyclerView;
-    private AddActivityCardAdapter linkCardAdapter;
+    private AddActivityCardAdapter activityCardAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
 
     @Override
@@ -68,13 +68,15 @@ public class CreateQuestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_quest);
         context = getApplicationContext();
 
-        startLocationTextView = findViewById(R.id.questLocationTextView);
-        useCurrentLocationButton = findViewById(R.id.useCurrentLocationButton);
-        proximitySlider = findViewById(R.id.proximitySlider);
-
         activityCards = new ArrayList<>();
         createRecyclerView();
 
+        startLocationTextView = findViewById(R.id.questLocationTextInput);
+        useCurrentLocationButton = findViewById(R.id.useCurrentLocationButton);
+        proximitySlider = findViewById(R.id.proximitySlider);
+        addActivityButton = findViewById(R.id.addActivityButton);
+        generateQuestButton = findViewById(R.id.generateQuestButton);
+        addFirstActivityTextView = findViewById(R.id.noActivityMessageText);
 
         proximitySlider.setLabelFormatter(new LabelFormatter() {
             @NonNull
@@ -100,19 +102,64 @@ public class CreateQuestActivity extends AppCompatActivity {
 
     private void createRecyclerView() {
         recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
-
-//        recyclerView = findViewById(R.id.receivedStickerRecyclerView);
-//        recyclerView.setHasFixedSize(true);
-//
-//        Collections.sort(cardList, new ReceivedStickerComparator());
-//
-//        receivedStickerCardAdapter = new ReceivedStickerCardAdapter(cardList);
-//
-//        recyclerView.setAdapter(receivedStickerCardAdapter);
-//        recyclerView.setLayoutManager(recyclerLayoutManager);
+        recyclerView = findViewById(R.id.activityCardRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        //Collections.sort(cardList, new ReceivedStickerComparator());
+        activityCardAdapter = new AddActivityCardAdapter(activityCards);
+        recyclerView.setAdapter(activityCardAdapter);
+        recyclerView.setLayoutManager(recyclerLayoutManager);
     }
 
-    private void useCurrentLocation(View v) {
+    public void addNewActivity(View v) {
+        AddActivityCard newCard = new AddActivityCard();
+        activityCards.add(newCard);
+
+        if (activityCards.size() > 0) {
+            addFirstActivityTextView.setVisibility(View.GONE);
+        }
+        activityCardAdapter.notifyItemInserted(activityCards.indexOf(newCard));
+
+        // collapse all other cards except last
+        for (int i=0; i < activityCards.size() - 1; i++) {
+            activityCards.get(i).setIsCollapsed(true);
+            activityCardAdapter.notifyItemChanged(i);
+        }
+    }
+
+    public void onGenerateQuestButtonClick(View v) {
+        CharSequence locationString = startLocationTextView.getText();
+        int radiusInMeters = Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE);
+        if (locationString != "") {
+            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, locationString.toString());
+        } else if (mLocation != null) {
+            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, mLocation);
+        }
+
+        // start loading icon
+
+
+        List<Activity> questActivities = new ArrayList<>();
+        for (AddActivityCard activity : activityCards) {
+            Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.priceLevel]);
+            if (currentActivity != null) {
+                questActivities.add(currentActivity);
+            }
+        }
+
+        // stop loading and open new intent with the list of activities
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        apiContext.shutdown(); // todo NetworkOnMainThreadException
+    }
+
+    // LOCATION method
+
+    public void useCurrentLocation(View v) {
+        startLocationTextView.setTypeface(startLocationTextView.getTypeface(), Typeface.ITALIC);
         boolean locationPermission = checkLocationPermissions();
         if (locationPermission) {
             Log.v(TAG, "Permission already granted!");
@@ -123,21 +170,19 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        apiContext.shutdown(); // todo NetworkOnMainThreadException
-    }
-
     @SuppressLint("MissingPermission")
     private void getLocation() {
-        locationManager = (LocationManager)getSystemService(context.LOCATION_SERVICE);
+        startLocationTextView.setHint("Getting current location...");
+        locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         Criteria criteria = setLocationCriteria();
         locationManager.requestSingleUpdate(criteria, locationListener, null);
     }
 
     private boolean checkLocationPermissions() {
-        return ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        return ActivityCompat.checkSelfPermission(this,
+                Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this,
+                        Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestLocationPermissions() {
@@ -177,10 +222,9 @@ public class CreateQuestActivity extends AppCompatActivity {
     final LocationListener locationListener = new LocationListener() {
         @Override
         public void onLocationChanged(Location location) {
-            mLocation = location;
+            mLocation = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, "Location Changed to: " + location.toString());
-            String coordString = location.getLatitude() + ", " + location.getLongitude();
-            startLocationTextView.setHint(coordString);
+            startLocationTextView.setHint(location.getLongitude() + ", " + location.getLatitude());
         }
 
         @Override

@@ -5,12 +5,12 @@ public class Activity {
     public String gName;
     public String gPhotoReference;
     public String gPlaceId;
-    public float gPlaceLat;
-    public float gPlaceLng;
+    public double gPlaceLat;
+    public double gPlaceLng;
     public int gPriceLevel;
     public String uQuery;
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, float gPlaceLat, float gPlaceLng, int gPriceLevel, String uQuery) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int gPriceLevel, String uQuery) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -37,11 +37,11 @@ public class Activity {
         return gPlaceId;
     }
 
-    public float getgPlaceLat() {
+    public double getgPlaceLat() {
         return gPlaceLat;
     }
 
-    public float getgPlaceLng() {
+    public double getgPlaceLng() {
         return gPlaceLng;
     }
 

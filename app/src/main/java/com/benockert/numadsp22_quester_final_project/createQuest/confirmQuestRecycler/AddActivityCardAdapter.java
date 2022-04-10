@@ -1,4 +1,4 @@
-package com.benockert.numadsp22_quester_final_project.createQuest.recycler;
+package com.benockert.numadsp22_quester_final_project.createQuest.confirmQuestRecycler;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,15 +8,16 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.types.Activity;
 
 import java.util.ArrayList;
 
 public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCardHolder> {
     private static final String TAG = "CREATE_QUEST_ACTIVITY_CARD";
-    private ArrayList<AddActivityCard> activityCardList;
+    private ArrayList<Activity> confirmActivityList;
 
-    public AddActivityCardAdapter(ArrayList<AddActivityCard> activityCardList) {
-        this.activityCardList = activityCardList;
+    public AddActivityCardAdapter(ArrayList<Activity> confirmActivityList) {
+        this.confirmActivityList = confirmActivityList;
     }
 
     @NonNull
@@ -28,12 +29,13 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
 
     @Override
     public void onBindViewHolder(@NonNull AddActivityCardHolder holder, int position) {
-        AddActivityCard currentCard = activityCardList.get(position);
+        Activity currentCard = confirmActivityList.get(position);
 
     }
 
     @Override
     public int getItemCount() {
-        return activityCardList.size();
+        return confirmActivityList.size();
     }
+
 }
