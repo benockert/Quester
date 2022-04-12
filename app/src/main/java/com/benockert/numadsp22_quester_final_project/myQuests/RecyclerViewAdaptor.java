@@ -45,8 +45,9 @@ public class RecyclerViewAdaptor extends RecyclerView.Adapter<RecyclerViewHolder
     @Override
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         QuestCard currentQuest = this.linkList.get(position);
+
 //        GooglePlacesClient client = new GooglePlacesClient(apiContext);
-//        byte[] placePhotoBytes = client.getPlacePhoto(currentQuest.getPhotoReference());
+//        byte[] placePhotoBytes = client.getPlacePhoto("CnRvAAAAwMpdHeWlXl-lH0vp7lez4znKPIWSWvgvZFISdKx45AwJVP1Qp37YOrH7sqHMJ8C-vBDC546decipPHchJhHZL94RcTUfPa1jWzo-rSHaTlbNtjh-N68RkcToUCuY9v2HNpo5mziqkir37WU8FJEqVBIQ4k938TI3e7bf8xq-uwDZcxoUbO_ZJzPxremiQurAYzCTwRhE_V0");
 //
 //        Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
 //        ImageView image = holder.coverPhoto;

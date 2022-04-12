@@ -1,7 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.myQuests;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,9 +14,6 @@ import android.view.View;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.ChildEventListener;
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
@@ -71,36 +67,7 @@ public class MyQuestsActivity extends AppCompatActivity {
 
         initLinkData(savedInstanceState);
 
-        dr.child("quests").addChildEventListener(
-                new ChildEventListener() {
-                    @Override
-                    public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Log.v("MY_QUESTS_ACTIVITY", "child added");
-                        addQuest(snapshot);
-                    }
 
-                    @Override
-                    public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Log.v("MY_QUESTS_ACTIVITY", "child changed");
-                    }
-
-                    @Override
-                    public void onChildRemoved(@NonNull DataSnapshot snapshot) {
-                        Log.v("MY_QUESTS_ACTIVITY", "child removed");
-
-                    }
-
-                    @Override
-                    public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
-                        Log.v("MY_QUESTS_ACTIVITY", "child moved");
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError error) {
-                        Log.v("RECEIVED_STICKERS_ACTIVITY", "ERROR");
-                    }
-                }
-        );
     }
 
     private void initLinkData(Bundle savedInstanceState) {
@@ -143,16 +110,21 @@ public class MyQuestsActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(recyclerLayoutManger);
     }
 
-    private void addQuest(DataSnapshot dataSnapshot) {
-        QuestCard questCard = dataSnapshot.getValue(QuestCard.class);
-        Log.v("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
+    //todo only find quests this user is a part of and add those to list
+    private void getAllQuests() {
+        dr.child("quests").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                String result = String.valueOf(task.getResult().getValue());
+                Quest quest = Quest.getQuestFromJSON(result);
+                QuestCard questCard = new QuestCard(quest);
+                Log.d("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
 
-        if (dataSnapshot.getKey() != null) {
-            questList.add(questCard);
-            findViewById(R.id.no_quests_text).setVisibility(View.GONE);
-            Collections.sort(questList, new QuestComparator());
-            recyclerViewAdapter.notifyDataSetChanged();
-        }
+                questList.add(questCard);
+                findViewById(R.id.no_quests_text).setVisibility(View.GONE);
+                Collections.sort(questList, new QuestComparator());
+                recyclerViewAdapter.notifyDataSetChanged();
+            }
+        });
     }
 
     // Handling Orientation Changes
