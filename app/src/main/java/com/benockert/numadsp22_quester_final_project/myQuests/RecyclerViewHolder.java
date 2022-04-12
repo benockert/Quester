@@ -13,7 +13,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder{
     public ImageView coverPhoto;
     public TextView numParticipants;
     public TextView numActivities;
-    public TextView startTime;
+    public TextView date;
 
     public RecyclerViewHolder(View itemView, final LinkClickListener listener) {
         super(itemView);
@@ -22,7 +22,7 @@ public class RecyclerViewHolder extends RecyclerView.ViewHolder{
         this.coverPhoto = itemView.findViewById(R.id.location_image);
         this.numParticipants = itemView.findViewById(R.id.num_participants);
         this.numActivities = itemView.findViewById(R.id.num_activities);
-        this.startTime = itemView.findViewById(R.id.start_time);
+        this.date = itemView.findViewById(R.id.date);
 
         itemView.setOnClickListener(new View.OnClickListener() {
             @Override

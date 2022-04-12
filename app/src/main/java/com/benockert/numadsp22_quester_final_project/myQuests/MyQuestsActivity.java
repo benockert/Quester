@@ -67,7 +67,7 @@ public class MyQuestsActivity extends AppCompatActivity {
 
         initLinkData(savedInstanceState);
 
-
+        getAllQuests();
     }
 
     private void initLinkData(Bundle savedInstanceState) {

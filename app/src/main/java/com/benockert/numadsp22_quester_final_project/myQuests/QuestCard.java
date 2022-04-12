@@ -13,7 +13,7 @@ public class QuestCard implements LinkClickListener{
     private String location;
     private int numUsers;
     private int numActivities;
-    //private final int date;
+    private String date;
 
     public QuestCard() {
 
@@ -25,7 +25,7 @@ public class QuestCard implements LinkClickListener{
         this.photoReference = quest.getPhotoReference();
         this.numUsers = quest.getUsers().size();
         this.numActivities = quest.getActivities().size();
-        //this.date = quest.getDate();
+        this.date = quest.getDate();
     }
 
     public Quest getQuest() {
@@ -34,6 +34,10 @@ public class QuestCard implements LinkClickListener{
 
     public String getLocation() {
         return this.location;
+    }
+
+    public String getDate() {
+        return this.date;
     }
 
     public String getPhotoReference() {

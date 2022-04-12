@@ -8,6 +8,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -18,7 +20,7 @@ public class Quest implements Serializable {
     public boolean completed;
     public int joinCode;
     public String location;
-    public String date;
+    public LocalDateTime datetime;
     public String photoReference;
     public float proximity;
     public List<String> users;
@@ -26,11 +28,11 @@ public class Quest implements Serializable {
     public Quest() {
     }
 
-    public Quest(int joinCode, boolean active, String location, String date, float proximity, String photoReference, List<Activity> activities, List<String> users) {
+    public Quest(int joinCode, boolean active, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
         this.joinCode = joinCode;
         this.active = active;
         this.location = location;
-        this.date = date;
+        this.datetime = datetime;
         this.proximity = proximity;
         this.photoReference = photoReference;
         this.activities = activities;
@@ -49,8 +51,18 @@ public class Quest implements Serializable {
         return this.location;
     }
 
+    public LocalDateTime getDateTime() {
+        return this.datetime;
+    }
+
     public String getDate() {
-        return this.date;
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        return this.datetime.format(formatter);
+    }
+
+    public String getTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
+        return this.datetime.format(formatter);
     }
 
     public float getProximity() {
@@ -84,7 +96,7 @@ public class Quest implements Serializable {
             boolean completed = jsonResults.getBoolean("completed");
             int joinCode = jsonResults.getInt("joinCode");
             String location = jsonResults.getString("location");
-            String date = jsonResults.getString("date");
+            LocalDateTime date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", "."));
             String photoReference = jsonResults.getString("photoReference");
             float proximity = Float.parseFloat(jsonResults.getString("proximity"));
             List<String> users = new ArrayList<>();

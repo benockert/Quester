@@ -54,6 +54,7 @@ public class RecyclerViewAdaptor extends RecyclerView.Adapter<RecyclerViewHolder
 //        image.setImageBitmap(Bitmap.createScaledBitmap(bmp, image.getWidth(), image.getHeight(), false));
 
         holder.location.setText(currentQuest.getLocation());
+        holder.date.setText(currentQuest.getDate());
         holder.numParticipants.setText(String.format(this.context.getString(R.string.num_participants), currentQuest.getNumUsers()));
         holder.numActivities.setText(String.format(this.context.getString(R.string.num_activities), currentQuest.getNumActivities()));
     }
