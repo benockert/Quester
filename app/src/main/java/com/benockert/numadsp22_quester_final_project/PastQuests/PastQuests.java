@@ -1,7 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
-import static android.content.ContentValues.TAG;
-
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,12 +25,12 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Map;
 
 public class PastQuests extends AppCompatActivity {
     private DatabaseReference dr;
     private String questName;
     private final ArrayList<Activity> pastQuestActivities = new ArrayList<>();
+    @SuppressLint("StaticFieldLeak")
     private static Context context;
     private pastQuestActivityCardAdapter rviewAdapter;
 
@@ -51,25 +50,25 @@ public class PastQuests extends AppCompatActivity {
 
         String qRecap = questName + "_recap";
         Log.i("name", qRecap);
-        if(currentUser != null) {
+        if (currentUser != null) {
 
             String username = currentUser.getDisplayName();
 
-            if(username != null){
+            //determining whether create quest recap or view quest recap is displayed
+            if (username != null) {
                 dr.child("users").child(username).child("recaps")
                         .child(qRecap).child("generated").get().addOnCompleteListener(task -> {
-                            if (task.isSuccessful()) {
-                                Log.i(TAG, String.valueOf(task.getResult().getValue()));
-                                if(task.getResult().getValue()!=null){
-                                    if (task.getResult().getValue().toString().equals("true")) {
-                                        findViewById(R.id.viewQRecap).setVisibility(View.VISIBLE);
-                                    }
-                                    else{
-                                        findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
-                                    }
-                                }
+                    if (task.isSuccessful()) {
+                        Log.i("here", String.valueOf(task.getResult().getValue()));
+                        if (task.getResult().getValue() != null) {
+                            if (task.getResult().getValue().toString().equals("true")) {
+                                findViewById(R.id.viewQRecap).setVisibility(View.VISIBLE);
+                            } else {
+                                findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
                             }
-                        });
+                        }
+                    }
+                });
             }
         }
 
@@ -87,6 +86,7 @@ public class PastQuests extends AppCompatActivity {
      */
     private void getAndPlaceAllParticipants() {
         TextView particpantV = findViewById(R.id.participants);
+        //query to retrieve quest participants
         dr.child("quests").child(questName).child("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
@@ -102,6 +102,7 @@ public class PastQuests extends AppCompatActivity {
                     String finalParticipants = participants.substring(0, participants.length() - 3);
                     particpantV.setText(finalParticipants);
                 } catch (Exception e) {
+                    //if the query fails for some reason, log the exception
                     Log.i("exception", e.toString());
                 }
             }
@@ -124,6 +125,9 @@ public class PastQuests extends AppCompatActivity {
         rView.setLayoutManager(rLayoutManager);
     }
 
+    /**
+     * gets all the activities for the current quest and adds them to a list of activities
+     */
     private void getAllActivities() {
 //        String apiKey = "";
 //        try {
@@ -137,27 +141,54 @@ public class PastQuests extends AppCompatActivity {
 
         dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Map<String, Object> map = (Map<String, Object>) task.getResult().getValue();
                 try {
-                    for (Map.Entry<String, Object> result : map.entrySet()) {
-                        JSONObject currActivity = new JSONObject(result.getValue().toString()
-                        .replaceAll(" g", "g")
-                        .replaceAll(" u", "u")
-                        .replaceAll(" ", "_"));
+                    JSONObject objs = new JSONObject(String.valueOf(task.getResult().getValue())
+                            .replaceAll(" g", "g")
+                            .replaceAll(" u", "u")
+                            .replaceAll(" ", "_"));
 
-                        String actName = currActivity.getString("gName")
-                                .replaceAll("_", " ");
-                        String address = currActivity.getString("gFormattedAddress")
-                                .replaceAll("_", " ");
-                        Activity temp = new Activity(actName,
-                                currActivity.getInt("gPriceLevel"),
-                                currActivity.getString("gPhotoReference"), address);
-                        pastQuestActivities.add(temp);
-                        rviewAdapter.notifyItemInserted(0);
+                    Iterator<String> objsIt = objs.keys();
+
+                    while (objsIt.hasNext()) {
+                        String activityName;
+                        String address;
+                        int price;
+                        String photoRef;
+
+                        String key = objsIt.next();
+
+                        if (objs.get(key) instanceof JSONObject) {
+                            JSONObject currActivity = (JSONObject) objs.get(key);
+                            try {
+                                activityName = currActivity.getString("gName")
+                                        .replaceAll("_", " ");
+                            } catch (JSONException e) {
+                                activityName = "N/A";
+                            }
+                            try {
+                                address = currActivity.getString("gFormattedAddress")
+                                        .replaceAll("_", " ");
+                            } catch (JSONException e) {
+                                address = "N/A";
+                            }
+                            try {
+                                price = currActivity.getInt("gPriceLevel");
+                            } catch (JSONException e) {
+                                price = 0;
+                            }
+                            try {
+                                photoRef = currActivity.getString("gPhotoReference");
+                            } catch (JSONException e) {
+                                photoRef = "N/A";
+                            }
+
+                            Activity temp = new Activity(activityName, price, photoRef, address);
+                            pastQuestActivities.add(temp);
+                            rviewAdapter.notifyItemInserted(0);
+                        }
                     }
-                } catch (Exception e) {
+                } catch (JSONException e) {
                     Log.e("ERROR1", e.toString());
-                    e.printStackTrace();
                 }
             } else {
                 Log.e("ERROR2", task.getResult().toString());
@@ -165,25 +196,47 @@ public class PastQuests extends AppCompatActivity {
         });
     }
 
+    /**
+     * when the maps image on an activity card is pressed, maps will open
+     *
+     * @param address String representing the address associated with the activity card
+     */
     public static void openInMaps(String address) {
-        Intent i = new Intent(Intent.ACTION_VIEW,
-                Uri.parse("geo:0,0?q=" + address));
+        Uri uri = Uri.parse("geo:0,0?q=" + Uri.encode(address));
+        Intent i = new Intent(Intent.ACTION_VIEW, uri);
         i.setPackage("com.google.android.apps.maps");
         context.startActivity(i);
     }
 
+    /**
+     * if a quest recap is generated, when clicked this method will allow users to view all of their
+     * quest recaps
+     *
+     * @param v represents the current view the user sees
+     */
     public void viewQuestRecap(View v) {
         Intent i = new Intent();
         i.putExtra("questName", questName);
         startActivity(i);
     }
 
-    public void createQuestRecap(View v){
+    /**
+     * if a quest recap was not generated, when clicked this method will bring the user to a page
+     * to generate a recap
+     *
+     * @param v represents the current view the user sees
+     */
+    public void createQuestRecap(View v) {
         Intent i = new Intent();
         i.putExtra("questName", questName);
         startActivity(i);
     }
 
+    /**
+     * shortcut that allows user to create a new quest while viewing a past quest
+     *
+     * @param v represents the current view the user sees
+     */
     public void toCreateQuest(View v) {
         Intent i = new Intent();
         startActivity(i);
