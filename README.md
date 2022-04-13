@@ -4,7 +4,9 @@ Ben, Jada, Julia, Nate
 
 ---
 
-### Rough Schema:
+### ~~Rough Schema:~~
+### Current Schema
+*may change as needed
 ```
 users:
   username: string
@@ -15,33 +17,28 @@ users:
           
 
 quests:
-  id: int
+  id: datetime_username
     join_code: int
     active: boolean
-    date_generated: datetime
-    start_time: string
-    end_time: string
-    location: string
+    location: string // might also be coordinates, depending on if user inputs location or uses current
     proximity: float
-    location_image_url: string // generated image based on user's specified quest location
+    photoReference: string // comes from google places
     users:
       user_id
       ...
     activities: 
-      id: int // potential sort key
-        sort_key??
-        next_activity_id: activity_id
+      id: a#
         user_query: string
-        user_price_range: int
-        user_popularity: float
-        user_xxx: ...
+        user_price_level: int
+        user_popularity: int
         g_place_name: string
+        g_place_id: string
         g_place_formatted_address: string
         g_place_coord_lat: string
         g_place_coord:lng: string
-        g_image_url: string
+        g_photo_reference: string
         g_price_level: int 
-      ...         
+      ...        
 
 ```
 
