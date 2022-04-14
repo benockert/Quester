@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="templates_array">
+        <item>Select Template</item>
+        <item>Vertical</item>
+        <item>Horizontal</item>
+        <item>Triangle (3 photo limit)</item>
+        <item>Grid</item>
+        <item>Single</item>
+    </string-array>
+</resources>
