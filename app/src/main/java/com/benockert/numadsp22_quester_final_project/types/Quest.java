@@ -24,11 +24,12 @@ public class Quest implements Serializable {
     public String photoReference;
     public float proximity;
     public List<String> users;
+    public String name;
 
     public Quest() {
     }
 
-    public Quest(int joinCode, boolean active, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
+    public Quest(String name, int joinCode, boolean active, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
         this.joinCode = joinCode;
         this.active = active;
         this.location = location;
@@ -37,6 +38,7 @@ public class Quest implements Serializable {
         this.photoReference = photoReference;
         this.activities = activities;
         this.users = users;
+        this.name = name;
     }
 
     public int getJoinCode() {
@@ -60,6 +62,10 @@ public class Quest implements Serializable {
         return this.datetime.format(formatter);
     }
 
+    public String getName(){
+        return this.name;
+    }
+
     public String getTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
         return this.datetime.format(formatter);
@@ -81,7 +87,7 @@ public class Quest implements Serializable {
         return this.users;
     }
 
-    public static Quest getQuestFromJSON(String data) {
+    public static Quest getQuestFromJSON(String name, String data) {
         try {
             int joinCode = 0;
             boolean completed = false;
@@ -93,44 +99,34 @@ public class Quest implements Serializable {
             List<Activity> activities = new ArrayList<>();
             boolean active = false;
 
-            String s = data.replaceAll(" ", "_");
-            JSONObject jsonResults = new JSONObject(s);
-            //Log.i("json", s);
-            Iterator<String> questsIterator = jsonResults.keys();
+            JSONObject jsonResults = new JSONObject(data);
+            Log.i("json", data);
+            Iterator<String> activitiesIterator = jsonResults.getJSONObject("_activities").keys();
 
-            while(questsIterator.hasNext()){
-                JSONObject quest = jsonResults.getJSONObject(questsIterator.next());
-                Log.i("quest", quest.toString());
-                Iterator<String> activitiesIterator = quest.getJSONObject("_activities").keys();
+            Iterator<String> usersIterator = jsonResults.getJSONObject("_users").keys();
 
-                Iterator<String> usersIterator = quest.getJSONObject("_users").keys();
+            JSONObject activitiesObj = jsonResults.getJSONObject("_activities");
+            JSONObject usersObj = jsonResults.getJSONObject("_users");
 
-                JSONObject activitiesObj = quest.getJSONObject("_activities");
-                JSONObject usersObj = quest.getJSONObject("_users");
+            active = jsonResults.getBoolean("_active");
+            activities = new ArrayList<>();
+            completed = jsonResults.getBoolean("_completed");
+            joinCode = jsonResults.getInt("_joinCode");
+            location = jsonResults.getString("_location");
+            date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
+            photoReference = jsonResults.getString("_photoReference");
+            proximity = Float.parseFloat(jsonResults.getString("_proximity"));
+            users = new ArrayList<>();
 
-                active = quest.getBoolean("_active");
-                activities = new ArrayList<>();
-                completed = quest.getBoolean("_completed");
-                joinCode = quest.getInt("_joinCode");
-                location = quest.getString("_location");
-                date = LocalDateTime.parse(quest.getString("datetime").replace("|", ":"));
-                photoReference = quest.getString("_photoReference");
-                proximity = Float.parseFloat(quest.getString("_proximity"));
-                users = new ArrayList<>();
-
-                while (usersIterator.hasNext()) {
-                    users.add(usersIterator.next());
-                }
-
-                while (activitiesIterator.hasNext()) {
-                    String activity = activitiesIterator.next();
-                    activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
-                }
-                return new Quest(joinCode, active, location, date, proximity, photoReference, activities, users);
+            while (usersIterator.hasNext()) {
+                users.add(usersIterator.next());
             }
 
-            //better to return an array list of quests?
-            return new Quest(joinCode, false, location, null, proximity, photoReference, activities, users);
+            while (activitiesIterator.hasNext()) {
+                String activity = activitiesIterator.next();
+                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+            }
+            return new Quest(name, joinCode, active, location, date, proximity, photoReference, activities, users);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();

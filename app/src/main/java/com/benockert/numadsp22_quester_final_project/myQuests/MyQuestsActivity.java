@@ -18,8 +18,12 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.Objects;
 
 public class MyQuestsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -61,7 +65,8 @@ public class MyQuestsActivity extends AppCompatActivity {
         // create the Google Maps Geo API context
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
 
-        currentUser = this.getIntent().getExtras().get("currentUser").toString();
+        //changed how current username is gotten, was: this.getIntent().getExtras().get("currentUser").toString()
+        currentUser = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
 
         createRecyclerView();
 
@@ -114,14 +119,25 @@ public class MyQuestsActivity extends AppCompatActivity {
     private void getAllQuests() {
         dr.child("quests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                String result = String.valueOf(task.getResult().getValue());
+                String result = String.valueOf(task.getResult().getValue())
+                        .replaceAll(" ", "_");
                 Log.i("result", result);
                 //loop through quest here and accumulate list
-                Quest quest = Quest.getQuestFromJSON(result);
-                QuestCard questCard = new QuestCard(quest);
-                Log.d("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
 
-                questList.add(questCard);
+                try {
+                    JSONObject jsonResults = new JSONObject(result);
+                    Iterator<String> questsIterator = jsonResults.keys();
+                    while(questsIterator.hasNext()){
+                        String name = questsIterator.next();
+                        Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
+                        QuestCard questCard = new QuestCard(quest);
+                        Log.d("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
+                        questList.add(questCard);
+                    }
+                }
+                catch(Exception e){
+                    e.printStackTrace();
+                }
                 findViewById(R.id.no_quests_text).setVisibility(View.GONE);
                 Collections.sort(questList, new QuestComparator());
                 recyclerViewAdapter.notifyDataSetChanged();

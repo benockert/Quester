@@ -1,5 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.myQuests;
 
+import android.content.Intent;
 import android.view.View;
 
 import com.benockert.numadsp22_quester_final_project.types.Activity;
@@ -55,7 +56,8 @@ public class QuestCard implements LinkClickListener{
     //todo go to quest activity
     @Override
     public void onItemClick(int position, View view) {
-//        Intent intent = new Intent(...);
-//        view.getContext().startActivity(intent);
+       // Intent intent = new Intent(this, PastQuests.class);
+       // intent.putExtra("questName", this.quest.getName());
+       // view.getContext().startActivity(intent);
     }
 }
