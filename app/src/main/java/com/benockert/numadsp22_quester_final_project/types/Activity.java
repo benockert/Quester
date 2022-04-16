@@ -67,16 +67,16 @@ public class Activity {
     public static Activity getActivityFromJSON(String data) {
         try {
             JSONObject activityObj = new JSONObject(data);
-
+            Log.i("activities", activityObj.toString());
             String gFormattedAddress = activityObj.getString("gFormattedAddress");
-            String gName = activityObj.getString("gName");
-            String gPhotoReference = activityObj.getString("gPhotoReference");
-            String gPlaceId = activityObj.getString("gPlaceId");
+            String gName = activityObj.getString("_gName");
+            String gPhotoReference = activityObj.getString("_gPhotoReference");
+            String gPlaceId = activityObj.getString("_gPlaceId");
             float gPlaceLat = Float.parseFloat(activityObj.getString("gPlaceLat"));
-            float gPlaceLng = Float.parseFloat(activityObj.getString("gPlaceLng"));
-            int gPriceLevel = activityObj.getInt("gPriceLevel");
-            float gPopularity = Float.parseFloat(activityObj.getString("gPopularity"));
-            String uQuery = activityObj.getString("uQuery");
+            float gPlaceLng = Float.parseFloat(activityObj.getString("_gPlaceLng"));
+            int gPriceLevel = activityObj.getInt("_gPriceLevel");
+            float gPopularity = Float.parseFloat(activityObj.getString("_gPopularity"));
+            String uQuery = activityObj.getString("_uQuery");
 
             return new Activity(gFormattedAddress,
                     gName,

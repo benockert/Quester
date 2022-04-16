@@ -83,37 +83,56 @@ public class Quest implements Serializable {
 
     public static Quest getQuestFromJSON(String data) {
         try {
-            JSONObject jsonResults = new JSONObject(data);
-
-            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
-            Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
-
-            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
-            JSONObject usersObj = jsonResults.getJSONObject("users");
-
-            boolean active = jsonResults.getBoolean("active");
-            List<Activity> activities = new ArrayList<>();
-            boolean completed = jsonResults.getBoolean("completed");
-            int joinCode = jsonResults.getInt("joinCode");
-            String location = jsonResults.getString("location");
-            LocalDateTime date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", "."));
-            String photoReference = jsonResults.getString("photoReference");
-            float proximity = Float.parseFloat(jsonResults.getString("proximity"));
+            int joinCode = 0;
+            boolean completed = false;
+            String location = "N/A";
+            float proximity = 0;
+            LocalDateTime date = null;
+            String photoReference = "N/A";
             List<String> users = new ArrayList<>();
+            List<Activity> activities = new ArrayList<>();
+            boolean active = false;
 
-            while (usersIterator.hasNext()) {
-                users.add(usersIterator.next());
+            String s = data.replaceAll(" ", "_");
+            JSONObject jsonResults = new JSONObject(s);
+            //Log.i("json", s);
+            Iterator<String> questsIterator = jsonResults.keys();
+
+            while(questsIterator.hasNext()){
+                JSONObject quest = jsonResults.getJSONObject(questsIterator.next());
+                Log.i("quest", quest.toString());
+                Iterator<String> activitiesIterator = quest.getJSONObject("_activities").keys();
+
+                Iterator<String> usersIterator = quest.getJSONObject("_users").keys();
+
+                JSONObject activitiesObj = quest.getJSONObject("_activities");
+                JSONObject usersObj = quest.getJSONObject("_users");
+
+                active = quest.getBoolean("_active");
+                activities = new ArrayList<>();
+                completed = quest.getBoolean("_completed");
+                joinCode = quest.getInt("_joinCode");
+                location = quest.getString("_location");
+                date = LocalDateTime.parse(quest.getString("datetime").replace("|", ":"));
+                photoReference = quest.getString("_photoReference");
+                proximity = Float.parseFloat(quest.getString("_proximity"));
+                users = new ArrayList<>();
+
+                while (usersIterator.hasNext()) {
+                    users.add(usersIterator.next());
+                }
+
+                while (activitiesIterator.hasNext()) {
+                    String activity = activitiesIterator.next();
+                    activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+                }
+                return new Quest(joinCode, active, location, date, proximity, photoReference, activities, users);
             }
 
-            while (activitiesIterator.hasNext()) {
-                String activity = activitiesIterator.next();
-                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
-            }
-
-            return new Quest(joinCode, active, location, date, proximity, photoReference, activities, users);
-
+            //better to return an array list of quests?
+            return new Quest(joinCode, false, location, null, proximity, photoReference, activities, users);
         } catch (JSONException e) {
-            Log.e("QUEST_PARSER", "JSONException");
+            Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();
             return null;
         }

@@ -115,6 +115,8 @@ public class MyQuestsActivity extends AppCompatActivity {
         dr.child("quests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue());
+                Log.i("result", result);
+                //loop through quest here and accumulate list
                 Quest quest = Quest.getQuestFromJSON(result);
                 QuestCard questCard = new QuestCard(quest);
                 Log.d("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
