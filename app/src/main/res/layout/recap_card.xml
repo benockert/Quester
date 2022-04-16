@@ -1,6 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pQuestsCardView"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="#E8E8E8"
+    app:cardCornerRadius="15dp"
+    app:cardElevation="5dp"
+    app:cardPreventCornerOverlap="true"
+    app:cardUseCompatPadding="true"
+    app:contentPadding="8dp">
 
-</LinearLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/recapLayout"
+        android:layout_width="380dp"
+        android:layout_height="71dp"
+        app:layout_constraintEnd_toStartOf="@+id/activityQuery"
+        app:layout_constraintStart_toStartOf="@+id/activityQuery">
+
+        <TextView
+            android:id="@+id/recapName"
+            android:layout_width="151dp"
+            android:layout_height="21dp"
+            android:layout_marginStart="140dp"
+            android:layout_marginBottom="44dp"
+            android:textColor="#616161"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="Recap Name" />
+
+        <TextView
+            android:id="@+id/recapDate"
+            android:layout_width="115dp"
+            android:layout_height="20dp"
+            android:layout_marginTop="8dp"
+            android:textColor="#616161"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/recapName"
+            app:layout_constraintTop_toBottomOf="@+id/recapName"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Recap Date" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
