@@ -12,6 +12,18 @@
         <activity
             android:name=".PastQuests.PastQuests"
             android:exported="false" />
+       <activity
+            android:name=".PhotoRecap.ViewAllRecaps"
+            android:exported="false" />
+        <activity
+            android:name=".PhotoRecap.ViewRecap"
+            android:exported="false" />
+        <activity
+            android:name=".PhotoRecap.ChoosePhotos"
+            android:exported="false" />
+        <activity
+            android:name=".PhotoRecap.ChooseTemplate"
+            android:exported="false" />
         <activity
             android:name=".ForgotPassword"
             android:exported="false" />

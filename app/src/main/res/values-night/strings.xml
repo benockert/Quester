@@ -22,4 +22,6 @@
     <string name="view_quest_recap">View Quest Recap</string>
     <string name="create_quest_recap">Create Quest Recap</string>
     <string name="create_new_quest">Create New Quest</string>
+    <string name="templates">Templates:</string>
+    <string name="choose_a_template">Choose A Template</string>
 </resources>
