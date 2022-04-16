@@ -12,7 +12,11 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ViewAllRecaps extends AppCompatActivity {
     DatabaseReference dr;
@@ -41,12 +45,32 @@ public class ViewAllRecaps extends AppCompatActivity {
         recapCardList.clear();
         RecyclerView.LayoutManager rLayoutManager = new LinearLayoutManager(this);
 
-        RecyclerView rView = findViewById(R.id.pastQuestsRecylerView);
+        RecyclerView rView = findViewById(R.id.allRecapsRView);
         rView.setHasFixedSize(true);
 
         rviewAdapter = new ViewAllRecapsAdapter(recapCardList);
 
         rView.setAdapter(rviewAdapter);
         rView.setLayoutManager(rLayoutManager);
+    }
+
+    private void getAllRecaps(){
+        dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                try {
+                    JSONObject recaps = new JSONObject(String.valueOf(task.getResult().getValue()));
+                    Iterator<String> recapIterator = recaps.keys();
+
+                    while(recapIterator.hasNext()){
+                        String recapName = recapIterator.next();
+                        JSONObject recap = new JSONObject(recapName);
+
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
+            }
+        });
     }
 }

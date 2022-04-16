@@ -42,8 +42,11 @@ public class ViewAllRecapsAdapter extends RecyclerView.Adapter<ViewAllRecapsHold
     public void onBindViewHolder(@NonNull ViewAllRecapsHolder holder, int position) {
         //getting the current card
         RecapCard currentCard = rCardList.get(position);
-        String tempName = "Reap Name: " + currentCard.getRecapName();
+        String tempName = "Recap Name: " + currentCard.getRecapName();
         String tempDate ="Date Generated: " + currentCard.getRecapDate();
+
+        holder.recapName.setText(tempName);
+        holder.recapDate.setText(tempDate);
     }
 
     /**
