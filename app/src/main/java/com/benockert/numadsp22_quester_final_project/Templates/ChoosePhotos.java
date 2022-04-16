@@ -1,4 +1,4 @@
-package com.benockert.numadsp22_quester_final_project.PhotoRecap;
+package com.benockert.numadsp22_quester_final_project.Templates;
 
 import androidx.appcompat.app.AppCompatActivity;
 
