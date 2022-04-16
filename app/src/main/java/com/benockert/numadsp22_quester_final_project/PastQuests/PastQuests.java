@@ -57,15 +57,12 @@ public class PastQuests extends AppCompatActivity {
             //determining whether create quest recap or view quest recap is displayed
             if (username != null) {
                 dr.child("users").child(username).child("recaps")
-                        .child(qRecap).child("generated").get().addOnCompleteListener(task -> {
+                        .child(qRecap).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
-                        Log.i("here", String.valueOf(task.getResult().getValue()));
-                        if (task.getResult().getValue() != null) {
-                            if (task.getResult().getValue().toString().equals("true")) {
-                                findViewById(R.id.viewQRecap).setVisibility(View.VISIBLE);
-                            } else {
-                                findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
-                            }
+                        if (task.getResult().getValue() == null) {
+                            findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
+                        } else {
+                            findViewById(R.id.viewQRecap).setVisibility(View.VISIBLE);
                         }
                     }
                 });
