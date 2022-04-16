@@ -14,6 +14,14 @@
     <string name="reset_Pass">Reset Password</string>
     <string name="back">Back</string>
     <string name="log_out">Log Out</string>
+    <string name="activity_location_image">Activity Location Image</string>
+    <string name="quest_name">Quest Name:</string>
+    <string name="participant_s">Participant(s):</string>
+    <string name="activities">Activities:</string>
+    <string name="google_maps_logo">google maps logo</string>
+    <string name="view_quest_recap">View Quest Recap</string>
+    <string name="create_quest_recap">Create Quest Recap</string>
+    <string name="create_new_quest">Create New Quest</string>
     <string name="templates">Templates:</string>
     <string name="choose_a_template">Choose A Template</string>
 </resources>

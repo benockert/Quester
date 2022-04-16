@@ -10,6 +10,18 @@ public class Activity {
     public int gPriceLevel;
     public String uQuery;
 
+    public Activity() {
+
+    }
+
+    public Activity(String gName, int gPriceLevel,
+                    String gPhotoReference, String gFormattedAddress) {
+        this.gName = gName;
+        this.gPriceLevel = gPriceLevel;
+        this.gPhotoReference = gPhotoReference;
+        this.gFormattedAddress = gFormattedAddress;
+    }
+
     public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, float gPlaceLat, float gPlaceLng, int gPriceLevel, String uQuery) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
@@ -21,14 +33,29 @@ public class Activity {
         this.uQuery = uQuery;
     }
 
+    /**
+     * getter for the address of the location
+     *
+     * @return String representing the address of the location
+     */
     public String getgFormattedAddress() {
         return gFormattedAddress;
     }
 
+    /**
+     * getter for the name of the activity location
+     *
+     * @return String representing the name of the activities location
+     */
     public String getgName() {
         return gName;
     }
 
+    /**
+     * getter for the String referencing the photo of the activity location
+     *
+     * @return String representing a reference to a photo of the activity location
+     */
     public String getgPhotoReference() {
         return gPhotoReference;
     }
@@ -45,6 +72,11 @@ public class Activity {
         return gPlaceLng;
     }
 
+    /**
+     * getter for the price range of the activity
+     *
+     * @return String representing the number of $signs the price range is
+     */
     public int getgPriceLevel() {
         return gPriceLevel;
     }

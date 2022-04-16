@@ -10,6 +10,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMADSp22_Quester_Final_Project">
         <activity
+            android:name=".PastQuests.PastQuests"
+            android:exported="false" />
+       <activity
             android:name=".PhotoRecap.ViewAllRecaps"
             android:exported="false" />
         <activity
