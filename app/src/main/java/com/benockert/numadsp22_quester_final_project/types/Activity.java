@@ -68,15 +68,15 @@ public class Activity {
         try {
             JSONObject activityObj = new JSONObject(data);
             Log.i("activities", activityObj.toString());
-            String gFormattedAddress = activityObj.getString("_gFormattedAddress");
-            String gName = activityObj.getString("_gName");
+            String gFormattedAddress = activityObj.getString("_gFormattedAddress").replaceAll("_", " ");;
+            String gName = activityObj.getString("_gName").replaceAll("_", " ");
             String gPhotoReference = activityObj.getString("_gPhotoReference");
             String gPlaceId = activityObj.getString("_gPlaceId");
             float gPlaceLat = Float.parseFloat(activityObj.getString("gPlaceLat"));
             float gPlaceLng = Float.parseFloat(activityObj.getString("_gPlaceLng"));
             int gPriceLevel = activityObj.getInt("_gPriceLevel");
             float gPopularity = Float.parseFloat(activityObj.getString("_uPopularity"));
-            String uQuery = activityObj.getString("_uQuery");
+            String uQuery = activityObj.getString("_uQuery").replaceAll("_", " ");
 
             return new Activity(gFormattedAddress,
                     gName,

@@ -26,12 +26,10 @@ public class Quest implements Serializable {
     public List<String> users;
     public String name;
 
-    public Quest() {
-    }
-
-    public Quest(String name, int joinCode, boolean active, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
+    public Quest(String name, int joinCode, boolean active, boolean completed, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
         this.joinCode = joinCode;
         this.active = active;
+        this.completed = completed;
         this.location = location;
         this.datetime = datetime;
         this.proximity = proximity;
@@ -112,7 +110,7 @@ public class Quest implements Serializable {
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("_completed");
             joinCode = jsonResults.getInt("_joinCode");
-            location = jsonResults.getString("_location");
+            location = jsonResults.getString("_location").replaceAll("_", " ");;
             date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
             photoReference = jsonResults.getString("_photoReference");
             proximity = Float.parseFloat(jsonResults.getString("_proximity"));
@@ -126,7 +124,7 @@ public class Quest implements Serializable {
                 String activity = activitiesIterator.next();
                 activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
             }
-            return new Quest(name, joinCode, active, location, date, proximity, photoReference, activities, users);
+            return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();

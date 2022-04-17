@@ -42,7 +42,7 @@ public class QuestCard implements LinkClickListener{
     }
 
     public String getPhotoReference() {
-        return this.getPhotoReference();
+        return this.photoReference;
     }
 
     public int getNumUsers() {

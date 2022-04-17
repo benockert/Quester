@@ -46,12 +46,15 @@ public class RecyclerViewAdaptor extends RecyclerView.Adapter<RecyclerViewHolder
     public void onBindViewHolder(RecyclerViewHolder holder, int position) {
         QuestCard currentQuest = this.linkList.get(position);
 
-//        GooglePlacesClient client = new GooglePlacesClient(apiContext);
-//        byte[] placePhotoBytes = client.getPlacePhoto("CnRvAAAAwMpdHeWlXl-lH0vp7lez4znKPIWSWvgvZFISdKx45AwJVP1Qp37YOrH7sqHMJ8C-vBDC546decipPHchJhHZL94RcTUfPa1jWzo-rSHaTlbNtjh-N68RkcToUCuY9v2HNpo5mziqkir37WU8FJEqVBIQ4k938TI3e7bf8xq-uwDZcxoUbO_ZJzPxremiQurAYzCTwRhE_V0");
-//
-//        Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
-//        ImageView image = holder.coverPhoto;
-//        image.setImageBitmap(Bitmap.createScaledBitmap(bmp, 20, 20, false));
+        ImageView image = holder.coverPhoto;
+        int imgWidth = 20;//image.getDrawable().getIntrinsicWidth();
+        int imgHeight = 20;//image.getDrawable().getIntrinsicHeight();
+
+        GooglePlacesClient client = new GooglePlacesClient(apiContext);
+        byte[] placePhotoBytes = client.getPlacePhoto(currentQuest.getPhotoReference(), imgWidth, imgHeight);
+
+        Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
+        image.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
 
         holder.location.setText(currentQuest.getLocation());
         holder.date.setText(currentQuest.getDate());

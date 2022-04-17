@@ -58,16 +58,16 @@ public class GooglePlacesClient {
         return null;
     }
 
-//    public byte[] getPlacePhoto(String photoReference) {
-//        try {
-//            ImageResult response = PlacesApi.photo(this.context, photoReference).maxHeight(20).maxWidth(20).await();
-//            byte[] photoData = response.imageData;
-//            Log.d(TAG, "Place photo content type " + response.contentType);
-//            return photoData;
-//        } catch (ApiException | IOException | InterruptedException |IllegalArgumentException e) {
-//            e.printStackTrace();
-//            Log.e(TAG, "Error in place photo request");
-//        }
-//        return null;
-//    }
+    public byte[] getPlacePhoto(String photoReference, int maxWidth, int maxHeight) {
+        try {
+            ImageResult response = PlacesApi.photo(this.context, photoReference).maxWidth(maxWidth).maxHeight(maxHeight).await();
+            byte[] photoData = response.imageData;
+            Log.d(TAG, "Place photo content type " + response.contentType);
+            return photoData;
+        } catch (ApiException | IOException | InterruptedException |IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error in place photo request");
+        }
+        return null;
+    }
 }
