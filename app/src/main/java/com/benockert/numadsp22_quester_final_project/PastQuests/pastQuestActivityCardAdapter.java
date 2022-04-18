@@ -1,14 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
 
 import android.content.Context;
-import android.content.Intent;
-import android.content.pm.ActivityInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import android.net.Uri;
-import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,7 +14,6 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
 
 public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuestActivityCardHolder> {
