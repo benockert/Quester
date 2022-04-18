@@ -2,7 +2,7 @@
 <androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/pQuestsCardView"
+    android:id="@+id/recapCardView"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     app:cardBackgroundColor="#E8E8E8"
@@ -15,33 +15,55 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recapLayout"
-        android:layout_width="380dp"
-        android:layout_height="71dp"
+        android:layout_width="382dp"
+        android:layout_height="84dp"
         app:layout_constraintEnd_toStartOf="@+id/activityQuery"
         app:layout_constraintStart_toStartOf="@+id/activityQuery">
 
         <TextView
             android:id="@+id/recapName"
-            android:layout_width="151dp"
-            android:layout_height="21dp"
-            android:layout_marginStart="140dp"
-            android:layout_marginBottom="44dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
             android:textColor="#616161"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.325"
+            app:layout_constraintStart_toEndOf="@+id/rNameLabel"
             tools:text="Recap Name" />
 
         <TextView
             android:id="@+id/recapDate"
-            android:layout_width="115dp"
-            android:layout_height="20dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:textColor="#616161"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/recapName"
             app:layout_constraintTop_toBottomOf="@+id/recapName"
-            app:layout_constraintVertical_bias="0.0"
+            app:layout_constraintVertical_bias="0.428"
             tools:text="Recap Date" />
+
+        <TextView
+            android:id="@+id/rNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="4dp"
+            android:text="Recap Name:"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/rDateGenLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:text="Date Generated:"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/rNameLabel"
+            app:layout_constraintTop_toBottomOf="@+id/rNameLabel"
+            app:layout_constraintVertical_bias="0.884" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
