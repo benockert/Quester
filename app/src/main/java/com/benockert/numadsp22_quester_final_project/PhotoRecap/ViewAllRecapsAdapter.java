@@ -21,32 +21,30 @@ public class ViewAllRecapsAdapter extends RecyclerView.Adapter<ViewAllRecapsHold
     /**
      * creates a new recycler view holder initializing private fields to be used by RecyclerView
      *
-     * @param parent   ViewGroup
-     * @param viewType Integer
-     * @return pastQuestHolder
+     * @param parent   ViewGroup a special view that can contain other views
+     * @param viewType Integer representing the type of view
+     * @return ViewAllRecapsHolder 	A new ViewHolder that holds a View of the given view type.
      */
     @NonNull
     @Override
     public ViewAllRecapsHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_view_all_recaps, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.recap_card, parent, false);
         return new ViewAllRecapsHolder(view);
     }
 
     /**
      * Called by RecyclerView to display data at a specified position
      *
-     * @param holder   pastQuestHolder
+     * @param holder   ViewAllRecapsHolder
      * @param position Integer
      */
     @Override
     public void onBindViewHolder(@NonNull ViewAllRecapsHolder holder, int position) {
         //getting the current card
         RecapCard currentCard = rCardList.get(position);
-        String tempName = "Recap Name: " + currentCard.getRecapName();
-        String tempDate ="Date Generated: " + currentCard.getRecapDate();
-
-        holder.recapName.setText(tempName);
-        holder.recapDate.setText(tempDate);
+        //setting the values of the current card
+        holder.recapName.setText(currentCard.getRecapName());
+        holder.recapDate.setText(currentCard.getRecapDate());
     }
 
     /**
