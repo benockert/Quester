@@ -25,8 +25,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class PastQuests extends AppCompatActivity {
     private DatabaseReference dr;
@@ -141,10 +143,11 @@ public class PastQuests extends AppCompatActivity {
         dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
-                    JSONObject objs = new JSONObject(String.valueOf(task.getResult().getValue())
-                            .replaceAll(" g", "g")
-                            .replaceAll(" u", "u")
-                            .replaceAll(" ", "_"));
+                    Log.i("json string", String.valueOf(task.getResult().getValue()));
+                    String json = convertStingToJson(String.valueOf(task.getResult().getValue())).replaceAll(" ", "_");
+                    Log.i("json string", json);
+
+                    JSONObject objs = new JSONObject(json);
 
                     Iterator<String> objsIt = objs.keys();
 
@@ -229,6 +232,16 @@ public class PastQuests extends AppCompatActivity {
         Intent i = new Intent(this, ChooseTemplate.class);
         i.putExtra("recapName", questName + "_recap");
         startActivity(i);
+    }
+    /**
+     * converts the String to a parsable json string
+     *
+     * @param s String of information gotten from the get request
+     * @return String of json info to parse through
+     */
+    private String convertStingToJson(String s) {
+        Scanner sc = new Scanner(s).useDelimiter("\\A");
+        return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
     }
 
     /**
