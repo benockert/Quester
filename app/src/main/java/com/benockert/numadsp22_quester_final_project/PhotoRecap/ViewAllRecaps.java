@@ -4,7 +4,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.View;
+import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -16,13 +21,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 public class ViewAllRecaps extends AppCompatActivity {
     DatabaseReference dr;
     String username;
-    private final ArrayList<RecapCard> recapCardList = new ArrayList<>();
+    private ArrayList<RecapCard> recapCardList = new ArrayList<>();
     private ViewAllRecapsAdapter rviewAdapter;
+    TextView noRecaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,7 +41,17 @@ public class ViewAllRecaps extends AppCompatActivity {
         username = currentUser.getDisplayName();
         dr = FirebaseDatabase.getInstance().getReference();
 
+        noRecaps = findViewById(R.id.noRecapsLabel);
+        noRecaps.setVisibility(View.INVISIBLE);
         createRecyclerView();
+
+        dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
+                getAllRecaps();
+            } else {
+                noRecaps.setVisibility(View.VISIBLE);
+            }
+        });
     }
 
 
@@ -50,23 +67,53 @@ public class ViewAllRecaps extends AppCompatActivity {
 
         rviewAdapter = new ViewAllRecapsAdapter(recapCardList);
 
+        RecapCardListener tempListener = new RecapCardListener() {
+            private final Context contxt = getBaseContext();
+            RecapCard temp;
+
+            @Override
+            public void onCardClick(int pos) {
+                temp = recapCardList.get(pos);
+                Intent i = new Intent(this.contxt, ViewRecap.class);
+                i.putExtra("recapName", temp.getRecapName(pos));
+                startActivity(i);
+            }
+
+            @Override
+            public String getRecapName(int pos) {
+                temp = recapCardList.get(pos);
+                return temp.getRecapName(pos);
+            }
+
+            @Override
+            public String getRecapDate(int pos) {
+                temp = recapCardList.get(pos);
+                return temp.getRecapDate(pos);
+            }
+        };
+
+        rviewAdapter.setRc_listener(tempListener);
         rView.setAdapter(rviewAdapter);
         rView.setLayoutManager(rLayoutManager);
     }
 
-    private void getAllRecaps(){
+    private void getAllRecaps() {
         dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
                     JSONObject recaps = new JSONObject(String.valueOf(task.getResult().getValue()));
+                    Log.i("recaps", recaps.toString());
+
                     Iterator<String> recapIterator = recaps.keys();
 
-                    while(recapIterator.hasNext()){
+                    while (recapIterator.hasNext()) {
                         String recapName = recapIterator.next();
-                        JSONObject recap = new JSONObject(recapName);
-
+                        //JSONObject recap = new JSONObject(recapName);
+                        RecapCard rc = new RecapCard(recapName, recaps.getJSONObject(recapName).getString("dateGenerated"));
+                        recapCardList.add(rc);
+                        rviewAdapter.notifyDataSetChanged();
                     }
-                } catch (JSONException e) {
+                } catch (JSONException | NullPointerException e) {
                     e.printStackTrace();
                 }
 
