@@ -13,7 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.Templates.ChooseTemplate;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -212,8 +214,8 @@ public class PastQuests extends AppCompatActivity {
      * @param v represents the current view the user sees
      */
     public void viewQuestRecap(View v) {
-        Intent i = new Intent();
-        i.putExtra("questName", questName);
+        Intent i = new Intent(this, ViewRecap.class);
+        i.putExtra("recapName", questName + "_recap");
         startActivity(i);
     }
 
@@ -224,8 +226,8 @@ public class PastQuests extends AppCompatActivity {
      * @param v represents the current view the user sees
      */
     public void createQuestRecap(View v) {
-        Intent i = new Intent();
-        i.putExtra("questName", questName);
+        Intent i = new Intent(this, ChooseTemplate.class);
+        i.putExtra("recapName", questName + "_recap");
         startActivity(i);
     }
 
