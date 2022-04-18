@@ -22,7 +22,9 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 
 public class MyQuestsActivity extends AppCompatActivity {
@@ -109,20 +111,22 @@ public class MyQuestsActivity extends AppCompatActivity {
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 
-        Collections.sort(questList, new QuestComparator());
+        //questList.sort(Comparator.comparing(QuestCard::getDate));
 
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManger);
     }
 
-    //todo only find quests this user is a part of and add those to list
     private void getAllQuests() {
         dr.child("quests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue())
                         .replaceAll(" ", "_");
                 Log.i("result", result);
+
                 //loop through quest here and accumulate list
+                List<Quest> usersActiveQuests = new ArrayList<>();
+                List<Quest> usersInactiveQuests = new ArrayList<>();
 
                 try {
                     JSONObject jsonResults = new JSONObject(result);
@@ -130,17 +134,36 @@ public class MyQuestsActivity extends AppCompatActivity {
                     while(questsIterator.hasNext()){
                         String name = questsIterator.next();
                         Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
+                        if (quest.isUserInQuest(currentUser)) {
+                            if (quest.isActive()) {
+                                usersActiveQuests.add(quest);
+                            } else {
+                                usersInactiveQuests.add(quest);
+                            }
+                        }
+                    }
+
+                    usersActiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
+                    usersInactiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
+
+                    for (Quest quest : usersActiveQuests) {
                         QuestCard questCard = new QuestCard(quest);
-                        Log.d("MY_QUESTS_ACTIVITY", "Quest added at location: " + questCard.getLocation());
+                        Log.d("MY_QUESTS_ACTIVITY", "Active Quest added at location: " + questCard.getLocation());
                         questList.add(questCard);
                     }
+
+                    for (Quest quest : usersInactiveQuests) {
+                        QuestCard questCard = new QuestCard(quest);
+                        Log.d("MY_QUESTS_ACTIVITY", "Inactive Quest added at location: " + questCard.getLocation());
+                        questList.add(questCard);
+                    }
+
+                    findViewById(R.id.no_quests_text).setVisibility(View.GONE);
+                    recyclerViewAdapter.notifyDataSetChanged();
                 }
                 catch(Exception e){
                     e.printStackTrace();
                 }
-                findViewById(R.id.no_quests_text).setVisibility(View.GONE);
-                Collections.sort(questList, new QuestComparator());
-                recyclerViewAdapter.notifyDataSetChanged();
             }
         });
     }

@@ -85,6 +85,10 @@ public class Quest implements Serializable {
         return this.users;
     }
 
+    public boolean isUserInQuest(String username) {
+        return this.users.contains(username) || this.users.contains("_" + username);
+    }
+
     public static Quest getQuestFromJSON(String name, String data) {
         try {
             int joinCode = 0;

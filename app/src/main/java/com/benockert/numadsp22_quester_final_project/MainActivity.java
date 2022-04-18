@@ -9,24 +9,21 @@ import android.view.View;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
+import java.util.Objects;
+
 public class MainActivity extends AppCompatActivity {
-    String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        //this.currentUser = this.getIntent().getExtras().get("currentUser").toString();
-        this.currentUser = "jada";
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
             case R.id.my_quests:
                 System.out.println("in onclick");
-                Intent intent = new Intent(this, MyQuestsActivity.class)
-                        .putExtra("currentUser", currentUser);
+                Intent intent = new Intent(this, MyQuestsActivity.class);
                 startActivity(intent);
                 break;
         }
