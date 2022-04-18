@@ -26,4 +26,6 @@
     <string name="choose_a_template">Choose A Template</string>
     <string name="next">Next</string>
     <string name="your_recaps">Your Recaps</string>
+    <string name="recap_name">Recap Name:</string>
+    <string name="view_all_recaps">View All Recaps</string>
 </resources>

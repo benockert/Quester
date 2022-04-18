@@ -6,4 +6,50 @@
     android:layout_height="match_parent"
     tools:context=".PhotoRecap.ViewRecap">
 
+    <RelativeLayout
+        android:id="@+id/L1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginEnd="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/recapNameLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/recap_name"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/viewRecapRName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/recapNameLabel"
+            android:layout_marginStart="14dp"
+            android:layout_marginTop="0dp"
+            android:layout_toEndOf="@+id/recapNameLabel"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="@+id/recapNameLabel"
+            app:layout_constraintTop_toTopOf="@+id/recapNameLabel"
+            tools:text="Recap Name" />
+
+        <Button
+            android:id="@+id/viewRecapAllRecapsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentBottom="true"
+            android:layout_marginEnd="25dp"
+            android:layout_marginBottom="22dp"
+            android:onClick="backToViewAll"
+            android:text="@string/view_all_recaps"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+    </RelativeLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>
