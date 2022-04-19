@@ -1,7 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
-import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 import android.util.Log;
 
 import org.json.JSONException;
@@ -86,7 +84,7 @@ public class Quest implements Serializable {
     }
 
     public boolean isUserInQuest(String username) {
-        return this.users.contains(username) || this.users.contains("_" + username);
+        return this.users.contains(username);
     }
 
     public static Quest getQuestFromJSON(String name, String data) {
@@ -103,21 +101,21 @@ public class Quest implements Serializable {
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
-            Iterator<String> activitiesIterator = jsonResults.getJSONObject("_activities").keys();
+            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
 
-            Iterator<String> usersIterator = jsonResults.getJSONObject("_users").keys();
+            Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
 
-            JSONObject activitiesObj = jsonResults.getJSONObject("_activities");
-            JSONObject usersObj = jsonResults.getJSONObject("_users");
+            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
+            JSONObject usersObj = jsonResults.getJSONObject("users");
 
-            active = jsonResults.getBoolean("_active");
+            active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
-            completed = jsonResults.getBoolean("_completed");
-            joinCode = jsonResults.getInt("_joinCode");
-            location = jsonResults.getString("_location").replaceAll("_", " ");;
+            completed = jsonResults.getBoolean("completed");
+            joinCode = jsonResults.getInt("joinCode");
+            location = jsonResults.getString("location").replaceAll("_", " ");;
             date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
-            photoReference = jsonResults.getString("_photoReference");
-            proximity = Float.parseFloat(jsonResults.getString("_proximity"));
+            photoReference = jsonResults.getString("photoReference");
+            proximity = Float.parseFloat(jsonResults.getString("proximity"));
             users = new ArrayList<>();
 
             while (usersIterator.hasNext()) {

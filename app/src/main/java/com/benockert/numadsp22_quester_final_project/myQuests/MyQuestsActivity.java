@@ -22,11 +22,11 @@ import com.google.maps.GeoApiContext;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
+import java.util.Scanner;
 
 public class MyQuestsActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -121,17 +121,25 @@ public class MyQuestsActivity extends AppCompatActivity {
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 
-        //questList.sort(Comparator.comparing(QuestCard::getDate));
-
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManger);
+    }
+
+    /**
+     * converts the String to a parsable json string
+     *
+     * @param s String of information gotten from the get request
+     * @return String of json info to parse through
+     */
+    private String convertStingToJson(String s) {
+        Scanner sc = new Scanner(s).useDelimiter("\\A");
+        return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
     }
 
     private void getAllQuests() {
         dr.child("quests").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                String result = String.valueOf(task.getResult().getValue())
-                        .replaceAll(" ", "_");
+                String result = convertStingToJson(String.valueOf(task.getResult().getValue())).replaceAll(" ", "_");
                 Log.i("result", result);
 
                 //loop through quest here and accumulate list
