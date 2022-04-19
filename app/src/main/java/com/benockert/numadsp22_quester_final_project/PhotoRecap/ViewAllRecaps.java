@@ -1,15 +1,15 @@
 package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -21,7 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Iterator;
 
 public class ViewAllRecaps extends AppCompatActivity {
@@ -43,17 +42,16 @@ public class ViewAllRecaps extends AppCompatActivity {
 
         noRecaps = findViewById(R.id.noRecapsLabel);
         noRecaps.setVisibility(View.INVISIBLE);
-        createRecyclerView();
 
         dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
+                createRecyclerView();
                 getAllRecaps();
             } else {
                 noRecaps.setVisibility(View.VISIBLE);
             }
         });
     }
-
 
     /**
      * Instantiates the recycler view and adapter to display available stickers

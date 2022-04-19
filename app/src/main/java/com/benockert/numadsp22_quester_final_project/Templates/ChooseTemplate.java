@@ -16,11 +16,14 @@ import com.benockert.numadsp22_quester_final_project.R;
 
 public class ChooseTemplate extends AppCompatActivity {
     String chosenTemplate;
+    String recapName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_template);
+
+        recapName = this.getIntent().getStringExtra("recapName");
 
         ImageView templates = findViewById(R.id.templateImage);
 
@@ -95,6 +98,7 @@ public class ChooseTemplate extends AppCompatActivity {
     public void choosePhotos(View v) {
         Intent i = new Intent(this, ChoosePhotos.class);
         i.putExtra("chosenTemplateName", chosenTemplate);
+        i.putExtra("recapName", recapName);
         startActivity(i);
     }
 }
