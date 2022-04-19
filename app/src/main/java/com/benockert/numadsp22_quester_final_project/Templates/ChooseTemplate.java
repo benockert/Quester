@@ -15,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.benockert.numadsp22_quester_final_project.R;
 
 public class ChooseTemplate extends AppCompatActivity {
+    String chosenTemplate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +43,8 @@ public class ChooseTemplate extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> adapterView, View view, int pos, long l) {
                 //nothingSelected.setVisibility(View.INVISIBLE);
                 Object item = adapterView.getItemAtPosition(pos);
-
-                switch (item.toString()) {
+                chosenTemplate = item.toString();
+                switch (chosenTemplate) {
                     case "Select Template":
                         nothingSelected.setVisibility(View.VISIBLE);
                         break;
@@ -93,6 +94,7 @@ public class ChooseTemplate extends AppCompatActivity {
 
     public void choosePhotos(View v) {
         Intent i = new Intent(this, ChoosePhotos.class);
+        i.putExtra("chosenTemplateName", chosenTemplate);
         startActivity(i);
     }
 }
