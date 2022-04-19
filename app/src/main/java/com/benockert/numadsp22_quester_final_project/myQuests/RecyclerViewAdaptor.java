@@ -65,6 +65,8 @@ public class RecyclerViewAdaptor extends RecyclerView.Adapter<RecyclerViewHolder
 
         if (currentQuest.getQuest().isActive()) {
             holder.view.setCardBackgroundColor(context.getResources().getColor(R.color.green_200));
+        } else {
+            holder.view.setCardBackgroundColor(context.getResources().getColor(R.color.orange_200));
         }
     }
 

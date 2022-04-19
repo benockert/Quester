@@ -8,7 +8,7 @@ import com.benockert.numadsp22_quester_final_project.types.Quest;
 
 import java.util.List;
 
-public class QuestCard implements LinkClickListener{
+public class QuestCard {
     private Quest quest;
     private String photoReference;
     private String location;
@@ -51,13 +51,5 @@ public class QuestCard implements LinkClickListener{
 
     public int getNumActivities() {
         return this.numActivities;
-    }
-
-    //todo go to quest activity
-    @Override
-    public void onItemClick(int position, View view) {
-       // Intent intent = new Intent(this, PastQuests.class);
-       // intent.putExtra("questName", this.quest.getName());
-       // view.getContext().startActivity(intent);
     }
 }

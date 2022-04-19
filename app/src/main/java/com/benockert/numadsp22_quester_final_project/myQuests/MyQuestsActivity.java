@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -105,8 +106,17 @@ public class MyQuestsActivity extends AppCompatActivity {
         LinkClickListener itemClickListener = new LinkClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-                questList.get(position).onItemClick(position, view);
-                recyclerViewAdapter.notifyItemChanged(position);
+//                QuestCard questCard = questList.get(position);
+//                if (questCard.getQuest().isActive()) {
+//                     Intent intent = new Intent(this, ActiveQuests.class);
+//                     intent.putExtra("questName", questCard.getQuest().getName());
+//                     view.getContext().startActivity(intent);
+//                } else {
+//                     Intent intent = new Intent(this, PastQuests.class);
+//                     intent.putExtra("questName", questCard.getQuest().getName());
+//                     view.getContext().startActivity(intent);
+//                }
+//                recyclerViewAdapter.notifyItemChanged(position);
             }
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
