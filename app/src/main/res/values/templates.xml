@@ -4,8 +4,9 @@
         <item>Select Template</item>
         <item>Vertical</item>
         <item>Horizontal</item>
-        <item>Triangle (3 photo limit)</item>
-        <item>Grid</item>
+        <item>Triangle</item>
+        <item>Grid 1</item>
+        <item>Grid 2</item>
         <item>Single</item>
     </string-array>
 </resources>

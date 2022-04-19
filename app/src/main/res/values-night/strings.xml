@@ -28,4 +28,6 @@
     <string name="your_recaps">Your Recaps</string>
     <string name="recap_name">Recap Name:</string>
     <string name="view_all_recaps">View All Recaps</string>
+    <string name="no_template_selected">No Template Selected</string>
+    <string name="_3_photo_limit">3 Photo Limit</string>
 </resources>
