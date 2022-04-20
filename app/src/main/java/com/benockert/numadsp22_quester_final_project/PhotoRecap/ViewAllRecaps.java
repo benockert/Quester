@@ -3,6 +3,7 @@ package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -45,8 +46,12 @@ public class ViewAllRecaps extends AppCompatActivity {
 
         dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                createRecyclerView();
-                getAllRecaps();
+                if(task.getResult().getValue() != null) {
+                    createRecyclerView();
+                    getAllRecaps();
+                } else{
+                    noRecaps.setVisibility(View.VISIBLE);
+                }
             } else {
                 noRecaps.setVisibility(View.VISIBLE);
             }
@@ -101,12 +106,10 @@ public class ViewAllRecaps extends AppCompatActivity {
                 try {
                     JSONObject recaps = new JSONObject(String.valueOf(task.getResult().getValue()));
                     Log.i("recaps", recaps.toString());
-
                     Iterator<String> recapIterator = recaps.keys();
 
                     while (recapIterator.hasNext()) {
                         String recapName = recapIterator.next();
-                        //JSONObject recap = new JSONObject(recapName);
                         RecapCard rc = new RecapCard(recapName, recaps.getJSONObject(recapName).getString("dateGenerated"));
                         recapCardList.add(rc);
                         rviewAdapter.notifyDataSetChanged();
