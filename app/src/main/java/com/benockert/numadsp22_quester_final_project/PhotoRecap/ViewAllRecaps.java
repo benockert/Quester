@@ -46,10 +46,10 @@ public class ViewAllRecaps extends AppCompatActivity {
 
         dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                if(task.getResult().getValue() != null) {
+                if (task.getResult().getValue() != null) {
                     createRecyclerView();
                     getAllRecaps();
-                } else{
+                } else {
                     noRecaps.setVisibility(View.VISIBLE);
                 }
             } else {
