@@ -3,7 +3,6 @@ package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -27,7 +26,7 @@ import java.util.Iterator;
 public class ViewAllRecaps extends AppCompatActivity {
     DatabaseReference dr;
     String username;
-    private ArrayList<RecapCard> recapCardList = new ArrayList<>();
+    private final ArrayList<RecapCard> recapCardList = new ArrayList<>();
     private ViewAllRecapsAdapter rviewAdapter;
     TextView noRecaps;
 
