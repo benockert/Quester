@@ -34,4 +34,7 @@
     <string name="share">SHARE</string>
     <string name="toolbarTitle">toolbar title</string>
     <string name="del">del</string>
+    <string name="image1">image1</string>
+    <string name="image2">image2</string>
+    <string name="image3">image3</string>
 </resources>

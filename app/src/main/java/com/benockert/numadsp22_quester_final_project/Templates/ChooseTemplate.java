@@ -24,12 +24,14 @@ import java.util.Objects;
 public class ChooseTemplate extends AppCompatActivity {
     String chosenTemplate;
     String recapName;
+    DatabaseReference dr;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_template);
 
+        dr = FirebaseDatabase.getInstance().getReference();
         recapName = this.getIntent().getStringExtra("recapName");
 
         ImageView templates = findViewById(R.id.templateImage);
@@ -63,6 +65,21 @@ public class ChooseTemplate extends AppCompatActivity {
                         templates.setVisibility(View.VISIBLE);
                         nothingSelected.setVisibility(View.INVISIBLE);
                         break;
+                    case "Triangle 2":
+                        templates.setImageResource(R.drawable.triangle_template2);
+                        templates.setVisibility(View.VISIBLE);
+                        nothingSelected.setVisibility(View.INVISIBLE);
+                        break;
+                    case "Triangle 3":
+                        templates.setImageResource(R.drawable.triangle_template3);
+                        templates.setVisibility(View.VISIBLE);
+                        nothingSelected.setVisibility(View.INVISIBLE);
+                        break;
+                    case "Triangle 4":
+                        templates.setImageResource(R.drawable.triangle_template4);
+                        templates.setVisibility(View.VISIBLE);
+                        nothingSelected.setVisibility(View.INVISIBLE);
+                        break;
                     default:
                         templates.setVisibility(View.INVISIBLE);
                         nothingSelected.setVisibility(View.VISIBLE);
@@ -78,17 +95,16 @@ public class ChooseTemplate extends AppCompatActivity {
     }
 
     public void choosePhotos(View v) {
-        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         assert userName != null;
         String dateGenerated = String.valueOf(LocalDate.now());
 
         dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("template").setValue(chosenTemplate);
+                .child("recapName").child("template").setValue(chosenTemplate);
 
         dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("dateGenerated").setValue(dateGenerated);
+                .child("recapName").child("dateGenerated").setValue(dateGenerated);
 
         Intent i = new Intent(this, ChoosePhotos.class);
         i.putExtra("chosenTemplateName", chosenTemplate);
