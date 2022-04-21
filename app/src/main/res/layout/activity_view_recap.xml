@@ -66,6 +66,7 @@
             android:layout_marginEnd="117dp"
             android:layout_marginBottom="20dp"
             android:backgroundTint="@color/orange_500"
+            android:onClick="delete"
             android:text="@string/del"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent" />
