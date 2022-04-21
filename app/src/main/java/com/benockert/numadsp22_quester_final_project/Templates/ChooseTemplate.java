@@ -58,32 +58,7 @@ public class ChooseTemplate extends AppCompatActivity {
                     case "Select Template":
                         nothingSelected.setVisibility(View.VISIBLE);
                         break;
-                    case "Horizontal":
-                        templates.setImageResource(R.drawable.horizontal_template);
-                        templates.setVisibility(View.VISIBLE);
-                        nothingSelected.setVisibility(View.INVISIBLE);
-                        break;
-                    case "Single":
-                        templates.setImageResource(R.drawable.single_template);
-                        templates.setVisibility(View.VISIBLE);
-                        nothingSelected.setVisibility(View.INVISIBLE);
-                        break;
-                    case "Vertical":
-                        templates.setImageResource(R.drawable.vertical_template);
-                        templates.setVisibility(View.VISIBLE);
-                        nothingSelected.setVisibility(View.INVISIBLE);
-                        break;
-                    case "Grid 1":
-                        templates.setImageResource(R.drawable.grid1_template);
-                        templates.setVisibility(View.VISIBLE);
-                        nothingSelected.setVisibility(View.INVISIBLE);
-                        break;
-                    case "Grid 2":
-                        templates.setImageResource(R.drawable.grid2_template);
-                        templates.setVisibility(View.VISIBLE);
-                        nothingSelected.setVisibility(View.INVISIBLE);
-                        break;
-                    case "Triangle (3 photo limit)":
+                    case "Triangle 1":
                         templates.setImageResource(R.drawable.triangle_template);
                         templates.setVisibility(View.VISIBLE);
                         nothingSelected.setVisibility(View.INVISIBLE);

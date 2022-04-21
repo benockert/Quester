@@ -2,11 +2,9 @@
 <resources>
     <string-array name="templates_array">
         <item>Select Template</item>
-        <item>Vertical</item>
-        <item>Horizontal</item>
-        <item>Triangle</item>
-        <item>Grid 1</item>
-        <item>Grid 2</item>
-        <item>Single</item>
+        <item>Triangle 1</item>
+        <item>Triangle 2</item>
+        <item>Triangle 3</item>
+        <item>Triangle 4</item>
     </string-array>
 </resources>
