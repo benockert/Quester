@@ -50,7 +50,7 @@ public class ViewRecap extends AppCompatActivity {
             Intent shareIntent = new Intent();
             shareIntent.setAction(Intent.ACTION_SEND);
             // shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
-            shareIntent.setType("image/jpg");
+            shareIntent.setType("image/*");
             startActivity(Intent.createChooser(shareIntent, null));
         });
 
