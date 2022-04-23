@@ -97,23 +97,12 @@ public class ChooseTemplate extends AppCompatActivity {
 
     public void choosePhotos(View v) {
         if (!chosenTemplate.equals("Select Template")){
-            FirebaseAuth mAuth = FirebaseAuth.getInstance();
-            String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-            assert userName != null;
-            String dateGenerated = String.valueOf(LocalDate.now());
-
-            dr.child("users").child(userName).child("recaps")
-                    .child("recapName").child("template").setValue(chosenTemplate);
-
-            dr.child("users").child(userName).child("recaps")
-                    .child("recapName").child("dateGenerated").setValue(dateGenerated);
-
             Intent i = new Intent(this, ChoosePhotos.class);
-            i.putExtra("chosenTemplateName", chosenTemplate);
+            i.putExtra("chosenTemplateName", chosenTemplate.replaceAll(" ", ""));
             i.putExtra("recapName", recapName);
             startActivity(i);
         } else {
-            Snackbar.make(this.getCurrentFocus(), "Select A Template", BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(v, "Select A Template", BaseTransientBottomBar.LENGTH_LONG).show();
         }
     }
 }
