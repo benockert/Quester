@@ -37,4 +37,6 @@
     <string name="image1">image1</string>
     <string name="image2">image2</string>
     <string name="image3">image3</string>
+    <string name="finish">finish</string>
+    <string name="select">Select</string>
 </resources>
