@@ -6,8 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".Templates.ChoosePhotos">
 
-
-
     <TextView
         android:id="@+id/selPhotosLabel"
         android:layout_width="wrap_content"
@@ -122,6 +120,7 @@
             android:layout_alignBottom="@+id/imageView3"
             android:layout_marginEnd="22dp"
             android:contentDescription="@string/image2"
+            android:onClick="selectImg2"
             app:layout_constraintBottom_toBottomOf="@+id/finalImageView"
             app:layout_constraintEnd_toStartOf="@+id/imageView3"
             app:layout_constraintStart_toStartOf="parent"
@@ -139,12 +138,9 @@
             android:layout_marginTop="16dp"
             android:contentDescription="@string/image1"
             android:onClick="selectImg1"
-
             app:layout_constraintStart_toStartOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/finalImageView"
             app:srcCompat="@drawable/box" />
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <Button
@@ -154,8 +150,8 @@
         android:layout_marginEnd="28dp"
         android:layout_marginBottom="36dp"
         android:backgroundTint="@color/orange_500"
-        android:text="@string/finish"
         android:onClick="finish"
+        android:text="@string/finish"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -165,20 +161,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="28dp"
         android:layout_marginBottom="36dp"
-        android:text="@string/back"
         android:onClick="back"
+        android:text="@string/back"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
-
-    <yuku.ambilwarna.widget.AmbilWarnaPrefWidgetView
-        android:layout_width="146dp"
-        android:layout_height="98dp"
-        android:defaultValue="0xff6699cc"
-        android:key="your_preference_key"
-        android:title="Pick a color"
-        tools:ignore="MissingConstraints"
-        tools:layout_editor_absoluteX="73dp"
-        tools:layout_editor_absoluteY="109dp" />
 
     <Button
         android:id="@+id/button4"
@@ -187,7 +173,7 @@
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="8dp"
         android:onClick="changeBackgroundColor"
-        android:text="change Background color"
+        android:text="@string/change_background_color"
         app:layout_constraintBottom_toTopOf="@+id/L2"
         app:layout_constraintEnd_toEndOf="parent" />
 

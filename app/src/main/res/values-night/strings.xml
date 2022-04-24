@@ -39,4 +39,5 @@
     <string name="image3">image3</string>
     <string name="finish">finish</string>
     <string name="select">Select</string>
+    <string name="change_background_color">change Background color</string>
 </resources>
