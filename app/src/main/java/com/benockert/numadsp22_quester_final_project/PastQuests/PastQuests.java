@@ -144,7 +144,7 @@ public class PastQuests extends AppCompatActivity {
             if (task.isSuccessful()) {
                 try {
                     Log.i("json string", String.valueOf(task.getResult().getValue()));
-                    String json = convertStingToJson(String.valueOf(task.getResult().getValue())).replaceAll(" ", "_");
+                    String json = convertStringToJson(String.valueOf(task.getResult().getValue())).replaceAll(" ", "_");
                     Log.i("json string", json);
 
                     JSONObject objs = new JSONObject(json);
@@ -239,7 +239,7 @@ public class PastQuests extends AppCompatActivity {
      * @param s String of information gotten from the get request
      * @return String of json info to parse through
      */
-    private String convertStingToJson(String s) {
+    private String convertStringToJson(String s) {
         Scanner sc = new Scanner(s).useDelimiter("\\A");
         return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
     }

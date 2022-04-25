@@ -22,6 +22,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Scanner;
 
 public class ViewAllRecaps extends AppCompatActivity {
     DatabaseReference dr;
@@ -99,11 +100,23 @@ public class ViewAllRecaps extends AppCompatActivity {
         rView.setLayoutManager(rLayoutManager);
     }
 
+    /**
+     * converts the String to a parsable json string
+     *
+     * @param s String of information gotten from the get request
+     * @return String of json info to parse through
+     */
+    private String convertStringToJson(String s) {
+        Scanner sc = new Scanner(s).useDelimiter("\\A");
+        return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
+    }
+
     private void getAllRecaps() {
         dr.child("users").child(username).child("recaps").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
-                    JSONObject recaps = new JSONObject(String.valueOf(task.getResult().getValue()));
+                    String json = convertStringToJson(String.valueOf(task.getResult().getValue()));
+                    JSONObject recaps = new JSONObject(json);
                     Log.i("recaps", recaps.toString());
                     Iterator<String> recapIterator = recaps.keys();
 
@@ -116,7 +129,6 @@ public class ViewAllRecaps extends AppCompatActivity {
                 } catch (JSONException | NullPointerException e) {
                     e.printStackTrace();
                 }
-
             }
         });
     }
