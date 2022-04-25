@@ -98,7 +98,6 @@ public class ChooseTemplate extends AppCompatActivity {
     public void choosePhotos(View v) {
         if (!chosenTemplate.equals("Select Template")){
             Intent i = new Intent(this, ChoosePhotos.class);
-            i.putExtra("chosenTemplateName", chosenTemplate.replaceAll(" ", ""));
             i.putExtra("recapName", recapName);
             startActivity(i);
         } else {

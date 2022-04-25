@@ -3,6 +3,7 @@ package com.benockert.numadsp22_quester_final_project.Templates;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
@@ -12,6 +13,7 @@ import android.graphics.drawable.GradientDrawable;
 import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -23,9 +25,13 @@ import androidx.core.content.ContextCompat;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 
 import java.io.ByteArrayOutputStream;
 import java.time.LocalDate;
@@ -49,9 +55,6 @@ public class ChoosePhotos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
-
-        ColorDrawable drawable = (ColorDrawable) findViewById(R.id.finalImageView).getBackground();
-        backgroundColor = drawable.getColor();
 
         switch (template) {
             case "Triangle1":
@@ -112,20 +115,20 @@ public class ChoosePhotos extends AppCompatActivity {
     }
 
     public void selectImg1(View v) {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.setType("image/*");
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        i.setType("image/*");
         img1.launch(i);
     }
 
     public void selectImg2(View v) {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.setType("image/*");
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        i.setType("image/*");
         img2.launch(i);
     }
 
     public void selectImg3(View v) {
-        Intent i = new Intent(Intent.ACTION_GET_CONTENT);
-        i.setType("image/*");
+        Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        i.setType("image/*");
         img3.launch(i);
     }
 
@@ -143,20 +146,6 @@ public class ChoosePhotos extends AppCompatActivity {
             }
         });
         x.show();
-        //TODO: allow user to change border of boxes
-        //potential way to change the box border
-        //                StateListDrawable d = (StateListDrawable) ContextCompat.getDrawable(v.getContext(), R.drawable.box);
-////                assert d != null;
-////                d.set
-////                d.setStroke(2, color);
-//
-//        StateListDrawable gradientDrawable = (StateListDrawable) ContextCompat.getDrawable(v.getContext(), R.drawable.box);
-//        assert gradientDrawable != null;
-//        DrawableContainer.DrawableContainerState drawableContainerState = (DrawableContainer.DrawableContainerState) gradientDrawable.getConstantState();
-//        Drawable[] children = drawableContainerState.getChildren();
-//        GradientDrawable selectedItem = (GradientDrawable) children[0];
-////                GradientDrawable selectedDrawable = (GradientDrawable) selectedItem.getDrawable(0);
-//        selectedItem.setStroke(2, color);
     }
 
     public void saveToFirebase() {
@@ -172,19 +161,41 @@ public class ChoosePhotos extends AppCompatActivity {
         dr.child("users").child(userName).child("recaps")
                 .child(recapName).child("dateGenerated").setValue(dateGenerated);
 
-        //TODO:save image URI to db
-        dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("img1Uri").setValue(img1Uri.toString());
-        dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("img2Uri").setValue(img2Uri.toString());
-        dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("img3Uri").setValue(img3Uri.toString());
-        dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("backgroundColor").setValue(backgroundColor);
+        //TODO:save image.jpg to db
+    }
+
+    private void grabAndSaveScreenshot() {
+        String username = Objects.requireNonNull(FirebaseAuth.getInstance()
+                .getCurrentUser()).getDisplayName();
+        String name = recapName.replaceAll("//|", "_");
+
+        View view = findViewById(R.id.viewRecapLayout);
+        //create screenshot of recap
+        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        view.draw(canvas);
+
+        // Create a storage reference from our app
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+
+        //reference to where the screenshot will be saves
+        StorageReference recapRef = storageRef.child(username + "/" + name + ".JPEG");
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        byte[] data = baos.toByteArray();
+
+        //uploading image to database
+        UploadTask uploadTask = recapRef.putBytes(data);
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // taskSnapshot.getMetadata() contains file metadata such as size, content-type, etc.
+            Log.i("success", "image upload success");
+        });
     }
 
     public void finish(View v) {
         saveToFirebase();
+        grabAndSaveScreenshot();
         Intent i = new Intent(this, ViewRecap.class);
         i.putExtra("recapName", recapName);
         startActivity(i);
