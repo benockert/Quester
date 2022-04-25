@@ -53,8 +53,8 @@ public class ViewAllRecapsAdapter extends RecyclerView.Adapter<ViewAllRecapsHold
         //getting the current card
         RecapCard currentCard = rCardList.get(pos);
         //setting the values of the current card
-        holder.recapName.setText(currentCard.getRecapName(pos));
-        holder.recapDate.setText(currentCard.getRecapDate(pos));
+        holder.recapName.setText(currentCard.getRecapName());
+        holder.recapDate.setText(currentCard.getRecapDate());
     }
 
     /**

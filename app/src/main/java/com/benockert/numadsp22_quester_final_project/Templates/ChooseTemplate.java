@@ -99,6 +99,7 @@ public class ChooseTemplate extends AppCompatActivity {
         if (!chosenTemplate.equals("Select Template")){
             Intent i = new Intent(this, ChoosePhotos.class);
             i.putExtra("recapName", recapName);
+            i.putExtra("chosenTemplateName", chosenTemplate.replaceAll(" ", ""));
             startActivity(i);
         } else {
             Snackbar.make(v, "Select A Template", BaseTransientBottomBar.LENGTH_LONG).show();

@@ -78,20 +78,20 @@ public class ViewAllRecaps extends AppCompatActivity {
             public void onCardClick(int pos) {
                 temp = recapCardList.get(pos);
                 Intent i = new Intent(this.contxt, ViewRecap.class);
-                i.putExtra("recapName", temp.getRecapName(pos));
+                i.putExtra("recapName", temp.getRecapName());
                 startActivity(i);
             }
 
             @Override
             public String getRecapName(int pos) {
                 temp = recapCardList.get(pos);
-                return temp.getRecapName(pos);
+                return temp.getRecapName();
             }
 
             @Override
             public String getRecapDate(int pos) {
                 temp = recapCardList.get(pos);
-                return temp.getRecapDate(pos);
+                return temp.getRecapDate();
             }
         };
 
