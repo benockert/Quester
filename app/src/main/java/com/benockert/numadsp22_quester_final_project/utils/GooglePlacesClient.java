@@ -1,6 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.utils;
 
-import android.location.Location;
+import java.util.Random;
 import android.util.Log;
 
 import com.benockert.numadsp22_quester_final_project.types.Activity;
@@ -17,29 +17,33 @@ import com.google.maps.model.PriceLevel;
 
 import java.io.IOException;
 import java.util.Arrays;
-import java.util.Map;
+import java.util.List;
 import java.util.stream.Collectors;
 
 public class GooglePlacesClient {
     private final String TAG = "LOG_QUESTER_GOOGLE_API_CLIENT";
+
     private final GeoApiContext context;
     private LatLng locationLatLng;
     private String locationString;
     private final int radius;
+    private final Random rand;
 
     public GooglePlacesClient(GeoApiContext context, int radius, String location) {
         this.context = context;
         this.radius = radius;
         this.locationString = location;
+        rand = new Random();
     }
 
     public GooglePlacesClient(GeoApiContext context, int radius, LatLng location) {
         this.context = context;
         this.radius = radius;
         this.locationLatLng = location;
+        rand = new Random();
     }
 
-    public PlacesSearchResult[] textSearch(String query, PriceLevel priceLevel) {
+    public Activity textSearch(String query, PriceLevel priceLevel) {
         TextSearchRequest request = new TextSearchRequest(context);
 
         // if location was provided manually by user, add location to query parameter
@@ -59,12 +63,16 @@ public class GooglePlacesClient {
             PlacesSearchResult[] results = response.results;
             Log.d(TAG, "Number of Place results returned: " + results.length);
 
-            //Arrays.stream(results).filter()
+            // filter places to make sure they are popular and are operational
+            List<PlacesSearchResult> filteredPlaces = Arrays.stream(results).filter(a -> a.rating > 3.8 && !a.permanentlyClosed && a.businessStatus.equals("OPERATIONAL")).collect(Collectors.toList());
+            int filteredPlacesLength = filteredPlaces.size();
+            int randomSelection = rand.nextInt(filteredPlacesLength);
 
-            PlacesSearchResult r = results[0];
-            Activity a = new Activity(r.formattedAddress, r.name, null, r.placeId, r.geometry.location.lat, r.geometry.location.lng, priceLevel.ordinal(), query);
+            PlacesSearchResult p = filteredPlaces.get(randomSelection);
+            Activity a = new Activity(p.formattedAddress, p.name, null, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
+            Log.d(TAG, "Randomly selected activity: " + a.toString());
+            return a;
 
-            return results;
         } catch (ApiException | IOException | InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in text search request");

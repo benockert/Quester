@@ -12,7 +12,7 @@ public class AddActivityCard {
 
     public String searchQuery;
     public int priceLevel;
-    public float popularity;
+    public int popularity;
     public boolean isCollapsed;
 
     public Slider.OnChangeListener popularityListener;
@@ -20,14 +20,14 @@ public class AddActivityCard {
     public AddActivityCard() {
         this.searchQuery = "";
         this.priceLevel = 2;
-        this.popularity = 7.0f;
+        this.popularity = 2;
         this.isCollapsed = false;
     }
 
     public AddActivityCard(String searchQuery, int priceLevel, float popularity, boolean isCollapsed) {
         this.searchQuery = searchQuery;
         this.priceLevel = priceLevel;
-        this.popularity = popularity;
+        this.popularity = Math.round(popularity);
         this.isCollapsed = isCollapsed;
     }
 
@@ -51,11 +51,11 @@ public class AddActivityCard {
         this.searchQuery = searchQuery;
     }
 
-    public void setPriceLevel(int priceLevel) {
+    public void setPriceLevel(int priceLevelText) {
         this.priceLevel = priceLevel;
     }
 
-    public void setPopularity(float popularity) {
+    public void setPopularity(int popularity) {
         this.popularity = popularity;
     }
 

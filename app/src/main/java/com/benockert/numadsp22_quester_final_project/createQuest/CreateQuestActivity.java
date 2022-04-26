@@ -100,12 +100,18 @@ public class CreateQuestActivity extends AppCompatActivity {
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
     }
 
+    @Override
+    protected void onSaveInstanceState(final Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        Log.d(TAG, "SAVING INSTANCE STATE?");
+    }
+
     private void createRecyclerView() {
         recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recyclerView = findViewById(R.id.activityCardRecyclerView);
         recyclerView.setHasFixedSize(true);
-        //Collections.sort(cardList, new ReceivedStickerComparator());
-        activityCardAdapter = new AddActivityCardAdapter(activityCards);
+        activityCardAdapter = new AddActivityCardAdapter(activityCards, context);
         recyclerView.setAdapter(activityCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
     }
@@ -119,7 +125,7 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
         activityCardAdapter.notifyItemInserted(activityCards.indexOf(newCard));
 
-        // collapse all other cards except last
+        // collapse all other cards except last, retain state
         for (int i=0; i < activityCards.size() - 1; i++) {
             activityCards.get(i).setIsCollapsed(true);
             activityCardAdapter.notifyItemChanged(i);
@@ -140,11 +146,13 @@ public class CreateQuestActivity extends AppCompatActivity {
 
         List<Activity> questActivities = new ArrayList<>();
         for (AddActivityCard activity : activityCards) {
-            Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.priceLevel]);
+            Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()]);
+            currentActivity.toString();
             if (currentActivity != null) {
                 questActivities.add(currentActivity);
             }
         }
+        Log.v(TAG, "Loaded activities: " + questActivities.toString());
 
         // stop loading and open new intent with the list of activities
     }

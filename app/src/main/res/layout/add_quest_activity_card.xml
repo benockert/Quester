@@ -40,19 +40,6 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.5" />
 
-            <TextView
-                android:id="@+id/activityPriceLevelCollapsedView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="$$"
-                android:textStyle="italic"
-                android:textColor="@color/green_200"
-                android:textSize="14sp"
-                android:visibility="invisible"
-                android:layout_marginLeft="10dp"
-                app:layout_constraintStart_toEndOf="@id/activityQueryText"
-                app:layout_constraintTop_toTopOf="@id/activityQueryText"
-                app:layout_constraintBottom_toBottomOf="@id/activityQueryText"/>
 
             <ImageView
                 android:id="@+id/dropdownCarrot"
@@ -82,61 +69,62 @@
 
             <com.google.android.material.button.MaterialButtonToggleGroup
                 android:id="@+id/priceLevelButtonToggleGroup"
-                android:layout_width="match_parent"
-                android:layout_height="45dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:singleSelection="true"
+                app:selectionRequired="true"
                 app:checkedButton="@+id/priceLevelTwoButton"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/priceLevelPromptText">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/priceLevelOneButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                app:strokeColor="?attr/colorPrimaryVariant"
-                app:strokeWidth="2dp"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="@color/white"
-                android:backgroundTintMode="add"
-                android:text="$" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/priceLevelOneButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    app:strokeColor="?attr/colorPrimaryVariant"
+                    app:strokeWidth="2dp"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    android:backgroundTint="@color/white"
+                    android:backgroundTintMode="add"
+                    android:text="$" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/priceLevelTwoButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                app:strokeColor="?attr/colorPrimaryVariant"
-                app:strokeWidth="2dp"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="@color/white"
-                android:backgroundTintMode="add"
-                android:text="$$" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/priceLevelTwoButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    app:strokeColor="?attr/colorPrimaryVariant"
+                    app:strokeWidth="2dp"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    android:backgroundTint="@color/white"
+                    android:backgroundTintMode="add"
+                    android:text="$$" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/priceLevelThreeButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                app:strokeColor="?attr/colorPrimaryVariant"
-                app:strokeWidth="2dp"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="@color/white"
-                android:backgroundTintMode="add"
-                android:text="$$$" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/priceLevelThreeButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    app:strokeColor="?attr/colorPrimaryVariant"
+                    app:strokeWidth="2dp"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    android:backgroundTint="@color/white"
+                    android:backgroundTintMode="add"
+                    android:text="$$$" />
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/priceLevelFourButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textSize="12dp"
-                app:strokeColor="?attr/colorPrimaryVariant"
-                app:strokeWidth="2dp"
-                android:textColor="?attr/colorPrimaryVariant"
-                android:backgroundTint="@color/white"
-                android:backgroundTintMode="add"
-                android:text="$$$$" />
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/priceLevelFourButton"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="12dp"
+                    app:strokeColor="?attr/colorPrimaryVariant"
+                    app:strokeWidth="2dp"
+                    android:textColor="?attr/colorPrimaryVariant"
+                    android:backgroundTint="@color/white"
+                    android:backgroundTintMode="add"
+                    android:text="$$$$" />
         </com.google.android.material.button.MaterialButtonToggleGroup>
 
             <TextView
@@ -169,9 +157,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="-10dp"
                 android:valueFrom="0.0"
-                android:valueTo="10.0"
-                android:value="5.0"
-                app:labelBehavior="floating"
+                android:valueTo="3.0"
+                android:value="2.0"
+                android:stepSize="1.0"
+                app:labelBehavior="gone"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/popularityLevelPromptText"/>

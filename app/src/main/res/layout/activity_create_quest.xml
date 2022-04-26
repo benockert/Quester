@@ -159,6 +159,7 @@
         android:textColor="@color/white"
         android:padding="12dp"
         android:layout_marginBottom="10dp"
+        android:onClick="onGenerateQuestButtonClick"
         app:cornerRadius="20dp"
         app:strokeWidth="4dp"
         app:strokeColor="?attr/colorSecondary"

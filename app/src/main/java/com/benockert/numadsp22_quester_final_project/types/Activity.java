@@ -7,17 +7,17 @@ public class Activity {
     public String gPlaceId;
     public double gPlaceLat;
     public double gPlaceLng;
-    public int gPriceLevel;
+    public int uPriceLevel;
     public String uQuery;
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int gPriceLevel, String uQuery) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
         this.gPlaceId = gPlaceId;
         this.gPlaceLat = gPlaceLat;
         this.gPlaceLng = gPlaceLng;
-        this.gPriceLevel = gPriceLevel;
+        this.uPriceLevel = uPriceLevel;
         this.uQuery = uQuery;
     }
 
@@ -45,11 +45,12 @@ public class Activity {
         return gPlaceLng;
     }
 
-    public int getgPriceLevel() {
-        return gPriceLevel;
+    public int getuPriceLevel() {
+        return uPriceLevel;
     }
 
     public String getuQuery() {
         return uQuery;
     }
+
 }
