@@ -14,4 +14,16 @@
     <string name="reset_Pass">Reset Password</string>
     <string name="back">Back</string>
     <string name="log_out">Log Out</string>
+    <string name="title_activity_nav_bar">NavBarActivity</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
+
+    <string name="my_quests">My Quests</string>
+    <string name="location">Location</string>
+    <string name="date">Date</string>
+    <string name="num_participants"># of Participants: %o</string>
+    <string name="num_activities"># of Activities: %o</string>
+    <string name="description">Quest Location Image</string>
+    <string name="no_quests_message">No Quests Created Yet!</string>
 </resources>
