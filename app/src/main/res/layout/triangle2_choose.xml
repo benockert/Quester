@@ -43,7 +43,6 @@
             android:text="@string/select"
             app:layout_constraintBottom_toBottomOf="@+id/imageView1"
             app:layout_constraintEnd_toEndOf="@+id/imageView1"
-            app:layout_constraintHorizontal_bias="0.35"
             app:layout_constraintStart_toStartOf="@+id/imageView1"
             app:layout_constraintTop_toTopOf="@+id/imageView1" />
 
@@ -61,7 +60,6 @@
             android:text="@string/select"
             app:layout_constraintBottom_toBottomOf="@+id/imageView2"
             app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintHorizontal_bias="0.87"
             app:layout_constraintStart_toStartOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/imageView2" />
 
@@ -94,10 +92,8 @@
             android:contentDescription="@string/recap"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.479"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"
             app:srcCompat="@drawable/box" />
 
         <ImageView
@@ -112,6 +108,7 @@
             app:layout_constraintStart_toEndOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/imageView1"
             app:srcCompat="@drawable/box"
+            android:onClick="selectImg3"
             tools:ignore="ImageContrastCheck" />
 
         <ImageView
@@ -122,10 +119,10 @@
             android:layout_alignBottom="@+id/finalImageView"
             android:layout_marginStart="40dp"
             android:contentDescription="@string/image2"
+            android:onClick="selectImg2"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/finalImageView"
             app:layout_constraintTop_toBottomOf="@+id/imageView1"
-            app:layout_constraintVertical_bias="0.644"
             app:srcCompat="@drawable/box" />
 
         <ImageView
@@ -135,9 +132,9 @@
             android:layout_above="@+id/imageView3"
             android:layout_alignStart="@+id/imageView3"
             android:layout_marginTop="16dp"
+            android:onClick="selectImg1"
             android:contentDescription="@string/image1"
             app:layout_constraintEnd_toEndOf="@+id/imageView2"
-            app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/imageView2"
             app:layout_constraintTop_toTopOf="@+id/finalImageView"
             app:srcCompat="@drawable/box" />
