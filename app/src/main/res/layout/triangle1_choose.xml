@@ -172,6 +172,4 @@
         android:text="@string/change_background_color"
         app:layout_constraintBottom_toTopOf="@+id/L2"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

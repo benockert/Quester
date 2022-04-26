@@ -1,6 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.Templates;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,11 +29,12 @@ public class ChooseTemplate extends AppCompatActivity {
     String recapName;
     DatabaseReference dr;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_template);
-
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         dr = FirebaseDatabase.getInstance().getReference();
         recapName = this.getIntent().getStringExtra("recapName");
 

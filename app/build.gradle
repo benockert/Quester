@@ -11,7 +11,7 @@ android {
     defaultConfig {
         applicationId "com.benockert.numadsp22_quester_final_project"
         minSdk 26
-        targetSdk 32
+        targetSdk 30
         versionCode 1
         versionName "1.0"
 

@@ -1,31 +1,24 @@
 package com.benockert.numadsp22_quester_final_project.Templates;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.Drawable;
-import android.graphics.drawable.DrawableContainer;
-import android.graphics.drawable.GradientDrawable;
-import android.graphics.drawable.StateListDrawable;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.ContextCompat;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -50,12 +43,19 @@ public class ChoosePhotos extends AppCompatActivity {
     Uri img3Uri;
     int backgroundColor;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
 
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+
+        /*
+         * switch statement to display the template that was chosen in the choose template activity
+         * so that users may add photos to it
+         */
         switch (template) {
             case "Triangle1":
                 setContentView(R.layout.triangle1_choose);
@@ -79,13 +79,11 @@ public class ChoosePhotos extends AppCompatActivity {
                         Intent data = result.getData();
                         assert data != null;
                         img1Uri = data.getData();
-                        ImageView imageView = findViewById(R.id.imageView1);
-                        imageView.setImageURI(img1Uri);
+                        ImageView imgV1 = findViewById(R.id.imageView1);
+                        imgV1.setImageURI(img1Uri);
                         findViewById(R.id.selectImg1).setVisibility(View.INVISIBLE);
-                        Log.i("im1Uri", img1Uri.toString());
                     }
                 });
-
         img2 = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -94,8 +92,8 @@ public class ChoosePhotos extends AppCompatActivity {
                         Intent data = result.getData();
                         assert data != null;
                         img2Uri = data.getData();
-                        ImageView imageView = findViewById(R.id.imageView2);
-                        imageView.setImageURI(img2Uri);
+                        ImageView imgV2 = findViewById(R.id.imageView2);
+                        imgV2.setImageURI(img2Uri);
                         findViewById(R.id.selectImg2).setVisibility(View.INVISIBLE);
                     }
                 });
@@ -107,36 +105,55 @@ public class ChoosePhotos extends AppCompatActivity {
                         Intent data = result.getData();
                         assert data != null;
                         img3Uri = data.getData();
-                        ImageView imageView = findViewById(R.id.imageView3);
-                        imageView.setImageURI(img3Uri);
+                        ImageView imgV3 = findViewById(R.id.imageView3);
+                        imgV3.setImageURI(img3Uri);
                         findViewById(R.id.selectImg3).setVisibility(View.INVISIBLE);
                     }
                 });
     }
 
+    /**
+     * allows for user to select an image from their gallery to populate their chosen template
+     *
+     * @param v the current view
+     */
     public void selectImg1(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        i.setType("image/*");
         img1.launch(i);
     }
 
+    /**
+     * allows for user to select an image from their gallery to populate their chosen template
+     *
+     * @param v the current view
+     */
     public void selectImg2(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        i.setType("image/*");
         img2.launch(i);
     }
 
+    /**
+     * allows for user to select an image from their gallery to populate their chosen template
+     *
+     * @param v the current view
+     */
     public void selectImg3(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 //        i.setType("image/*");
         img3.launch(i);
     }
 
+    /**
+     * allows for user to change the background color of their chosen template
+     *
+     * @param v the current view
+     */
     public void changeBackgroundColor(View v) {
         AmbilWarnaDialog x = new AmbilWarnaDialog(v.getContext(), Color.BLACK, new AmbilWarnaDialog.OnAmbilWarnaListener() {
             @Override
             public void onCancel(AmbilWarnaDialog dialog) {
-
             }
 
             @Override
@@ -148,32 +165,32 @@ public class ChoosePhotos extends AppCompatActivity {
         x.show();
     }
 
+    /**
+     * helper so when the user presses finish to view their recap
+     * the recap name and date generated is saved to the firebase database
+     */
     public void saveToFirebase() {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         assert userName != null;
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
         String dateGenerated = String.valueOf(LocalDate.now());
-
-        dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("template").setValue(template.replaceAll(" ", ""));
-
         dr.child("users").child(userName).child("recaps")
                 .child(recapName).child("dateGenerated").setValue(dateGenerated);
-
-        //TODO:save image.jpg to db
     }
 
-    private void grabAndSaveScreenshot() {
+    /**
+     * creates a screenshot of the template view the user created
+     * saves the screenshot created to firebase storage
+     */
+    private void createAndSaveScreenshot() {
         String username = Objects.requireNonNull(FirebaseAuth.getInstance()
                 .getCurrentUser()).getDisplayName();
-        String name = recapName.replaceAll("//|", "_");
-
-        View view = findViewById(R.id.viewRecapLayout);
-        //create screenshot of recap
-        Bitmap bitmap = Bitmap.createBitmap(view.getWidth(),view.getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        view.draw(canvas);
+        String name = recapName.replaceAll("\\|", "_");
+        View view = findViewById(R.id.L2);
+        view.setDrawingCacheEnabled(true);
+        Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
+        view.setDrawingCacheEnabled(false);
 
         // Create a storage reference from our app
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
@@ -193,14 +210,31 @@ public class ChoosePhotos extends AppCompatActivity {
         });
     }
 
+    /**
+     * on click method called when the user is done selecting photos/changing the background
+     * of their chosen template
+     *
+     * @param v the current view
+     */
     public void finish(View v) {
         saveToFirebase();
-        grabAndSaveScreenshot();
+        createAndSaveScreenshot();
         Intent i = new Intent(this, ViewRecap.class);
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        Log.i("recapName1", recapName);
         i.putExtra("recapName", recapName);
         startActivity(i);
     }
 
+    /**
+     * brings the user back to the select template activity
+     *
+     * @param v the current view
+     */
     public void back(View v) {
         finish();
     }
