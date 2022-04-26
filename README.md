@@ -23,6 +23,7 @@ quests:
     location: string // might also be coordinates, depending on if user inputs location or uses current
     proximity: float
     photoReference: string // comes from google places
+    currentActivity: int // represents currently active activity
     users:
       user_id
       ...
