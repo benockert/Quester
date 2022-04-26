@@ -23,8 +23,19 @@ public class Quest implements Serializable {
     public float proximity;
     public List<String> users;
     public String name;
+    public int currentActivity;
 
-    public Quest(String name, int joinCode, boolean active, boolean completed, String location, LocalDateTime datetime, float proximity, String photoReference, List<Activity> activities, List<String> users) {
+    public Quest(String name
+            , int joinCode
+            , boolean active
+            , boolean completed
+            , String location
+            , LocalDateTime datetime
+            , float proximity
+            , String photoReference
+            , List<Activity> activities
+            , List<String> users
+            , int currentActivity) {
         this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
@@ -35,6 +46,7 @@ public class Quest implements Serializable {
         this.activities = activities;
         this.users = users;
         this.name = name;
+        this.currentActivity = currentActivity;
     }
 
     public int getJoinCode() {
@@ -87,6 +99,10 @@ public class Quest implements Serializable {
         return this.users.contains(username);
     }
 
+    public int getCurrentActivity() {
+        return this.currentActivity;
+    }
+
     public static Quest getQuestFromJSON(String name, String data) {
         try {
             int joinCode = 0;
@@ -97,7 +113,9 @@ public class Quest implements Serializable {
             String photoReference = "N/A";
             List<String> users = new ArrayList<>();
             List<Activity> activities = new ArrayList<>();
+            int currentActivity = 0;
             boolean active = false;
+            data=data.replace(", ",",").replace(" ","_");
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
@@ -117,6 +135,7 @@ public class Quest implements Serializable {
             photoReference = jsonResults.getString("photoReference");
             proximity = Float.parseFloat(jsonResults.getString("proximity"));
             users = new ArrayList<>();
+            currentActivity = jsonResults.getInt("currentActivity");
 
             while (usersIterator.hasNext()) {
                 users.add(usersIterator.next());
@@ -126,7 +145,8 @@ public class Quest implements Serializable {
                 String activity = activitiesIterator.next();
                 activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
             }
-            return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users);
+
+            return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();
@@ -134,3 +154,4 @@ public class Quest implements Serializable {
         }
     }
 }
+
