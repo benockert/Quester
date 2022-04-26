@@ -100,7 +100,7 @@ public class Quest implements Serializable {
     }
 
     public int getCurrentActivity() {
-        return currentActivity;
+        return this.currentActivity;
     }
 
     public static Quest getQuestFromJSON(String name, String data) {
@@ -116,6 +116,7 @@ public class Quest implements Serializable {
             int currentActivity = 0;
             boolean active = false;
             data=data.replace(", ",",").replace(" ","_");
+
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
             Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
@@ -135,6 +136,7 @@ public class Quest implements Serializable {
             proximity = Float.parseFloat(jsonResults.getString("proximity"));
             users = new ArrayList<>();
             currentActivity = jsonResults.getInt("currentActivity");
+
             while (usersIterator.hasNext()) {
                 users.add(usersIterator.next());
             }
@@ -143,6 +145,7 @@ public class Quest implements Serializable {
                 String activity = activitiesIterator.next();
                 activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
             }
+
             return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
