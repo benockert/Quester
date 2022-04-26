@@ -3,7 +3,11 @@ package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
@@ -19,86 +23,70 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.time.LocalDate;
+import java.io.ByteArrayOutputStream;
 import java.util.Objects;
-import java.util.Scanner;
 
 public class ViewRecap extends AppCompatActivity {
     String questRecapName;
-    FirebaseStorage storage;
+    Toolbar toolbar;
     String username;
     DatabaseReference dr;
+    TextView title;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recap);
-        questRecapName = this.getIntent().getExtras().getString("recapName");
-        storage = FirebaseStorage.getInstance();
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
-
+        questRecapName = this.getIntent().getExtras().getString("recapName");
         username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-        Toolbar toolbar = findViewById(R.id.viewRecapToolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_baseline_share_24);
 
-        TextView title = findViewById(R.id.toolbar_title);
+        title = findViewById(R.id.toolbar_title);
         title.setText(questRecapName);
+
+        // Reference to an image file in Cloud Storage
+        String recapName = questRecapName.replaceAll("\\|", "_");
+        Log.i("name", recapName);
+        StorageReference storageReference = FirebaseStorage.getInstance().getReference();
+        StorageReference pathReference = storageReference.child(username + "/" + recapName + ".jpg");
+
+        // ImageView in your Activity
+        ImageView imageView = findViewById(R.id.finalImageView);
+        //grab recap from storage and display it
+        final long ONE_MEGABYTE = 1024 * 1024;
+        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
+            Bitmap bm = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
+            imageView.setImageBitmap(bm);
+            setToolbar(bm);
+        });
+
+        //TODO: share image/fetch image with URI
+    }
+
+    private void setToolbar(Bitmap bm) {
+        toolbar = findViewById(R.id.viewRecapToolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_baseline_share_24);
 
         toolbar.setNavigationOnClickListener(view -> {
             Log.i("success", "success");
             Intent shareIntent = new Intent();
+
             shareIntent.setAction(Intent.ACTION_SEND);
-            // shareIntent.putExtra(Intent.EXTRA_STREAM, uriToImage);
             shareIntent.setType("image/*");
+
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            bm.compress(Bitmap.CompressFormat.JPEG, 100, b);
+            String path = MediaStore.Images.Media.insertImage(this.getContentResolver(), bm, null, null);
+            Uri uri = Uri.parse(path);
+            shareIntent.putExtra(Intent.EXTRA_STREAM, uri);
             startActivity(Intent.createChooser(shareIntent, null));
-        });
-
-        retrieveRecap();
-    }
-
-    private void retrieveRecap() {
-        //        retrieves and displays recap that was generated or saved
-
-        // ImageView in your Activity
-        ImageView imageView = findViewById(R.id.viewRecapImg);
-        // Reference to an image file in Cloud Storage
-        StorageReference storageRef = storage.getReference();
-        String imgRecapName = questRecapName.replaceAll("\\|", "_");
-        String path = username + "/" + imgRecapName + ".jpg";
-        StorageReference pathReference = storageRef.child(path);
-
-        final long ONE_MEGABYTE = 1024 * 1024;
-        pathReference.getBytes(ONE_MEGABYTE).addOnSuccessListener(bytes -> {
-
-            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes, 0, bytes.length);
-            imageView.setImageBitmap(bitmap);
-
-        }).addOnFailureListener(exception -> {
-            // Handle any errors
         });
     }
 
     public void delete(View v) {
-
-      //  DatabaseReference df = dr.re
-
         dr.child("users").child(username).child("recaps").child(questRecapName).removeValue();
-
-        Log.i("dtae", String.valueOf(LocalDate.now()));
-
         Intent i = new Intent(this, ViewAllRecaps.class);
         startActivity(i);
-    }
-
-    /**
-     * converts the String to a parsable json string
-     *
-     * @param s String of information gotten from the get request
-     * @return String of json info to parse through
-     */
-    private String convertStingToJson(String s) {
-        Scanner sc = new Scanner(s).useDelimiter("\\A");
-        return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
     }
 }
