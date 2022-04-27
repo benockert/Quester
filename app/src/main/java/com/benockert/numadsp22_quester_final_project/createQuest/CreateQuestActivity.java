@@ -2,6 +2,7 @@ package com.benockert.numadsp22_quester_final_project.createQuest;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecy
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import com.google.maps.GeoApiContext;
@@ -63,7 +65,7 @@ public class CreateQuestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AddActivityCardAdapter activityCardAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
-    private MaterialCardView progressCardView;
+    private Group progressIndicatorGroup;
     private TextView progressTextView;
 
     @Override
@@ -81,7 +83,8 @@ public class CreateQuestActivity extends AppCompatActivity {
         addActivityButton = findViewById(R.id.addActivityButton);
         generateQuestButton = findViewById(R.id.generateQuestButton);
         addFirstActivityTextView = findViewById(R.id.noActivityMessageText);
-        progressCardView = findViewById(R.id.progressPopup);
+
+        progressIndicatorGroup = findViewById(R.id.progressIndicatorGroup);
         progressTextView = findViewById(R.id.progressText);
 
         proximitySlider.setLabelFormatter(new LabelFormatter() {
@@ -149,7 +152,7 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
 
         // start loading icon
-        progressCardView.setVisibility(View.VISIBLE);
+        progressIndicatorGroup.setVisibility(View.VISIBLE);
         GenerateQuest task = new GenerateQuest();
         task.execute(activityCards);
     }
@@ -183,7 +186,7 @@ public class CreateQuestActivity extends AppCompatActivity {
             Log.d(TAG, "In onPostExecute");
             super.onPostExecute(activities); // potentially don't need to call
             // stop loading icon
-            progressCardView.setVisibility(View.GONE);
+            progressIndicatorGroup.setVisibility(View.GONE);
             // open new activity with intent and activities
         }
 

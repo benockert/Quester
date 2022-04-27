@@ -15,8 +15,6 @@ public class AddActivityCard {
     public int popularity;
     public boolean isCollapsed;
 
-    public Slider.OnChangeListener popularityListener;
-
     public AddActivityCard() {
         this.searchQuery = "";
         this.priceLevel = 2;
@@ -51,7 +49,7 @@ public class AddActivityCard {
         this.searchQuery = searchQuery;
     }
 
-    public void setPriceLevel(int priceLevelText) {
+    public void setPriceLevel(int priceLevel) {
         this.priceLevel = priceLevel;
     }
 

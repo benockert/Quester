@@ -29,7 +29,7 @@ public class AddActivityCardHolder extends RecyclerView.ViewHolder {
     public AddActivityCardHolder(View itemView) {
         super(itemView);
         userTextQueryView = itemView.findViewById(R.id.activityQueryText);
-        priceLevelButtonGroup = itemView.findViewById(R.id.priceLevelButtonToggleGroup);
+//        priceLevelButtonGroup = itemView.findViewById(R.id.priceLevelButtonToggleGroup);
         popularityTextView = itemView.findViewById(R.id.popularityLevelTextRepresentation);
         popularitySlider = itemView.findViewById(R.id.popularitySlider);
 

@@ -18,6 +18,7 @@ import com.benockert.numadsp22_quester_final_project.R;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.slider.Slider;
+import com.google.maps.model.PriceLevel;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -26,7 +27,8 @@ import java.util.List;
 public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCardHolder> {
     private static final String TAG = "CREATE_QUEST_ACTIVITY_CARD";
     private ArrayList<AddActivityCard> activityCardList;
-    final List<String> popularityLevels = Arrays.asList("Hole In The Wall", "Hidden Gem", "Everyday Spot", "Talk Of The Town");
+    private final List<String> popularityLevels = Arrays.asList("Hole In The Wall", "Hidden Gem", "Everyday Spot", "Talk Of The Town");
+    private final List<String> priceLevelStrings = Arrays.asList("", "$", "$$", "$$$", "$$$$");
 
     private Context context;
 
@@ -46,30 +48,19 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
     public void onBindViewHolder(@NonNull AddActivityCardHolder holder, int position) {
         AddActivityCard currentCard = activityCardList.get(position);
         holder.userTextQueryView.setText(currentCard.searchQuery);
+        holder.priceLevelSlider.setValue((float) currentCard.priceLevel);
+        holder.priceLevelTextView.setText(priceLevelStrings.get(currentCard.priceLevel));
         holder.popularitySlider.setValue((float) currentCard.popularity);
         holder.popularityTextView.setText(popularityLevels.get(currentCard.popularity));
 
-        // set and style checked button on bind
-        MaterialButton checkedButton = (MaterialButton)holder.priceLevelButtonGroup.getChildAt(activityCardList.get(holder.getAdapterPosition()).getPriceLevel() - 1);
-        Log.d(TAG, "Button checked on bind " + checkedButton.getText() + " ; card at position => " + activityCardList.get(holder.getAdapterPosition()).getPriceLevel());
-        checkedButton.setChecked(true);
-        checkedButton.setTextColor(ContextCompat.getColor(context, R.color.white));
-        checkedButton.setBackgroundColor(ContextCompat.getColor(context, R.color.green_700));
-
-        holder.priceLevelButtonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
+        // handle price level slider changes
+        holder.priceLevelSlider.addOnChangeListener(new Slider.OnChangeListener() {
+            @SuppressLint("RestrictedApi")
             @Override
-            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                MaterialButton changedButton = holder.cardView.findViewById(checkedId);
-                if (isChecked) {
-                    Log.d(TAG, "Button checked " + checkedId);
-                    activityCardList.get(holder.getAdapterPosition()).setPriceLevel(changedButton.getText().length());
-                    Log.d(TAG, "Activity card price level " + changedButton.getText().length());
-                    changedButton.setTextColor(ContextCompat.getColor(context, R.color.white));
-                    changedButton.setBackgroundColor(ContextCompat.getColor(context, R.color.green_700));
-                } else {
-                    changedButton.setTextColor(ContextCompat.getColor(context, R.color.green_700));
-                    changedButton.setBackgroundColor(ContextCompat.getColor(context, R.color.white));
-                }
+            public void onValueChange(@NonNull Slider slider, float value, boolean fromUser) {
+                int priceLevelInt = Math.round(value);
+                holder.priceLevelTextView.setText(priceLevelStrings.get(priceLevelInt));
+                activityCardList.get(holder.getAdapterPosition()).setPriceLevel(priceLevelInt);
             }
         });
 
@@ -102,6 +93,7 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
             }
         });
 
+        // handle card collapse
         if (currentCard.isCollapsed) {
             holder.collapsableGroup.setVisibility(View.GONE);
         }

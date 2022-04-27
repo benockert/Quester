@@ -21,8 +21,8 @@ import com.google.android.material.slider.Slider;
 public class AddActivityCardHolder extends RecyclerView.ViewHolder {
     public TextView userTextQueryView;
     public ImageView dropdownArrowImageView;
-    public TextView collapsedPriceLevelTextView;
-    public MaterialButtonToggleGroup priceLevelButtonGroup;
+    public Slider priceLevelSlider;
+    public TextView priceLevelTextView;
     public TextView popularityTextView;
     public Slider popularitySlider;
     public Group collapsableGroup;
@@ -31,7 +31,8 @@ public class AddActivityCardHolder extends RecyclerView.ViewHolder {
     public AddActivityCardHolder(View itemView) {
         super(itemView);
         userTextQueryView = itemView.findViewById(R.id.activityQueryText);
-        priceLevelButtonGroup = itemView.findViewById(R.id.priceLevelButtonToggleGroup);
+        priceLevelSlider = itemView.findViewById(R.id.priceLevelSlider);
+        priceLevelTextView = itemView.findViewById(R.id.priceLevelTextRepresentation);
         popularityTextView = itemView.findViewById(R.id.popularityLevelTextRepresentation);
         popularitySlider = itemView.findViewById(R.id.popularitySlider);
 
