@@ -16,6 +16,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,6 +28,7 @@ import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecy
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
+import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import com.google.maps.GeoApiContext;
@@ -61,6 +63,8 @@ public class CreateQuestActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private AddActivityCardAdapter activityCardAdapter;
     private RecyclerView.LayoutManager recyclerLayoutManager;
+    private MaterialCardView progressCardView;
+    private TextView progressTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,8 @@ public class CreateQuestActivity extends AppCompatActivity {
         addActivityButton = findViewById(R.id.addActivityButton);
         generateQuestButton = findViewById(R.id.generateQuestButton);
         addFirstActivityTextView = findViewById(R.id.noActivityMessageText);
+        progressCardView = findViewById(R.id.progressPopup);
+        progressTextView = findViewById(R.id.progressText);
 
         proximitySlider.setLabelFormatter(new LabelFormatter() {
             @NonNull
@@ -133,6 +139,7 @@ public class CreateQuestActivity extends AppCompatActivity {
     }
 
     public void onGenerateQuestButtonClick(View v) {
+        Log.d(TAG, "Generate quest button clicked");
         CharSequence locationString = startLocationTextView.getText();
         int radiusInMeters = Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE);
         if (locationString != "") {
@@ -142,19 +149,49 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
 
         // start loading icon
+        progressCardView.setVisibility(View.VISIBLE);
+        GenerateQuest task = new GenerateQuest();
+        task.execute(activityCards);
+    }
 
+    @SuppressLint("StaticFieldLeak")
+    private class GenerateQuest extends AsyncTask<ArrayList<AddActivityCard>, String, List<Activity>> {
 
-        List<Activity> questActivities = new ArrayList<>();
-        for (AddActivityCard activity : activityCards) {
-            Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()]);
-            currentActivity.toString();
-            if (currentActivity != null) {
-                questActivities.add(currentActivity);
+        @Override
+        protected List<Activity> doInBackground(ArrayList<AddActivityCard>... addActivityCards) {
+            Log.d(TAG, "In doInBackground");
+            List<Activity> questActivities = new ArrayList<>();
+            for (AddActivityCard activity : addActivityCards[0]) {
+                try {
+                    publishProgress(activity.searchQuery);
+                    Log.d(TAG, "Activity card being sent: " + activity.getSearchQuery());
+                    Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()]);
+                    if (currentActivity != null) {
+                        Log.d(TAG, "Activity generated: " + currentActivity.gName);
+                        questActivities.add(currentActivity);
+                    }
+                } catch (Exception e) {
+                    Log.e(TAG, e.getMessage());
+                }
             }
+            Log.d(TAG, "Returning from doInBackground");
+            return questActivities;
         }
-        Log.v(TAG, "Loaded activities: " + questActivities.toString());
 
-        // stop loading and open new intent with the list of activities
+        @Override
+        protected void onPostExecute(List<Activity> activities) {
+            Log.d(TAG, "In onPostExecute");
+            super.onPostExecute(activities); // potentially don't need to call
+            // stop loading icon
+            progressCardView.setVisibility(View.GONE);
+            // open new activity with intent and activities
+        }
+
+        @Override
+        protected void onProgressUpdate(String... values) {
+            super.onProgressUpdate(values);
+            progressTextView.setText("Looking for " + values[0] + "...");
+        }
     }
 
 

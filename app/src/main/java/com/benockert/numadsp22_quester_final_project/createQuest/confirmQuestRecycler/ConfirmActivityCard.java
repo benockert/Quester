@@ -1,6 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.createQuest.confirmQuestRecycler;
 
-import com.google.android.material.slider.Slider;
 import com.google.maps.model.PriceLevel;
 
 import java.util.Arrays;

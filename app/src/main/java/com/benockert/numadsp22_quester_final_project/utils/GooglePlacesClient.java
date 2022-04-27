@@ -58,6 +58,8 @@ public class GooglePlacesClient {
         request.minPrice(priceLevel);
         request.maxPrice(priceLevel);
 
+        Log.v("CREATE_QUEST", query + " :: " + priceLevel.toString());
+
         try {
             PlacesSearchResponse response  = request.await();
             PlacesSearchResult[] results = response.results;

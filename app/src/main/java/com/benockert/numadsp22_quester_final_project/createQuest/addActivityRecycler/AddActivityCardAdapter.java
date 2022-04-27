@@ -50,8 +50,8 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
         holder.popularityTextView.setText(popularityLevels.get(currentCard.popularity));
 
         // set and style checked button on bind
-        MaterialButton checkedButton = (MaterialButton)holder.priceLevelButtonGroup.getChildAt(currentCard.priceLevel - 1);
-        Log.d(TAG, "Button checked on bind " + checkedButton.getText() + " ; card at position => " + currentCard.priceLevel);
+        MaterialButton checkedButton = (MaterialButton)holder.priceLevelButtonGroup.getChildAt(activityCardList.get(holder.getAdapterPosition()).getPriceLevel() - 1);
+        Log.d(TAG, "Button checked on bind " + checkedButton.getText() + " ; card at position => " + activityCardList.get(holder.getAdapterPosition()).getPriceLevel());
         checkedButton.setChecked(true);
         checkedButton.setTextColor(ContextCompat.getColor(context, R.color.white));
         checkedButton.setBackgroundColor(ContextCompat.getColor(context, R.color.green_700));
