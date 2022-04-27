@@ -52,20 +52,5 @@ public class AddActivityCardHolder extends RecyclerView.ViewHolder {
             }
         });
 
-        priceLevelButtonGroup.addOnButtonCheckedListener(new MaterialButtonToggleGroup.OnButtonCheckedListener() {
-            @Override
-            public void onButtonChecked(MaterialButtonToggleGroup group, int checkedId, boolean isChecked) {
-                MaterialButton changedButton = itemView.findViewById(checkedId);
-                if (isChecked) {
-                    changedButton.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.white));
-                    changedButton.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.green_700));
-                } else {
-                    changedButton.setTextColor(ContextCompat.getColor(itemView.getContext(), R.color.green_700));
-                    changedButton.setBackgroundColor(ContextCompat.getColor(itemView.getContext(), R.color.white));
-                }
-            }
-        });
-
-
     }
 }

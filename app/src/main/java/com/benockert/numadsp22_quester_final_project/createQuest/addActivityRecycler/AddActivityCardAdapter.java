@@ -27,7 +27,7 @@ import java.util.List;
 public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCardHolder> {
     private static final String TAG = "CREATE_QUEST_ACTIVITY_CARD";
     private ArrayList<AddActivityCard> activityCardList;
-    private final List<String> popularityLevels = Arrays.asList("Hole In The Wall", "Hidden Gem", "Everyday Spot", "Talk Of The Town");
+    private final List<String> popularityLevels = Arrays.asList("Hidden Gem", "Everyday Spot", "Well Established", "Talk Of The Town");
     private final List<String> priceLevelStrings = Arrays.asList("", "$", "$$", "$$$", "$$$$");
 
     private Context context;

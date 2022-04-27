@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".createQuest.CreateQuestActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/activity_baseCardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingBottom="15dp">
+
+            <ImageView
+                android:id="@+id/placeImageView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="140dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"/>
+
+            <TextView
+                android:id="@+id/placeNameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Name"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:layout_marginLeft="15dp"
+                android:layout_marginVertical="10dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/placeImageView"/>
+
+            <TextView
+                android:id="@+id/userQueryTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Steakhouse in Boston"
+                android:textColor="@color/green_500"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                app:layout_constraintTop_toBottomOf="@id/placeNameTextView"
+                app:layout_constraintStart_toStartOf="@id/placeNameTextView"/>
+
+<!--            <TextView-->
+<!--                android:id="@+id/popularityLevelPromptText"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                android:text="Popularity:"-->
+<!--                android:textColor="?attr/colorPrimaryVariant"-->
+<!--                android:textSize="12sp"-->
+<!--                android:textStyle="italic"-->
+<!--                app:layout_constraintStart_toStartOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/priceLevelSlider" />-->
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

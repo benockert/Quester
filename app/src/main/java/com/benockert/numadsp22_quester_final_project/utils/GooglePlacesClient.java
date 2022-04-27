@@ -23,6 +23,8 @@ import java.util.stream.Collectors;
 public class GooglePlacesClient {
     private final String TAG = "LOG_QUESTER_GOOGLE_API_CLIENT";
 
+    private final double MINIMUM_ALLOWED_RATING = 3.8;
+
     private final GeoApiContext context;
     private LatLng locationLatLng;
     private String locationString;
@@ -43,7 +45,8 @@ public class GooglePlacesClient {
         rand = new Random();
     }
 
-    public Activity textSearch(String query, PriceLevel priceLevel) {
+    public Activity textSearch(String query, PriceLevel priceLevel, double popularity, boolean addPriceConstraints) {
+        Log.d(TAG, "In Place TextSearch, searching for: " + query + " | Price: " + priceLevel + " | Popularity: " + popularity);
         TextSearchRequest request = new TextSearchRequest(context);
 
         // if location was provided manually by user, add location to query parameter
@@ -55,41 +58,50 @@ public class GooglePlacesClient {
             request.location(locationLatLng);
         }
         request.radius(radius);
-        request.minPrice(priceLevel);
-        request.maxPrice(priceLevel);
 
-        Log.v("CREATE_QUEST", query + " :: " + priceLevel.toString());
+        // for non food/drink activities, prices are irrelevant and including them sometimes results in 0 places found
+        if (addPriceConstraints) {
+            request.minPrice(priceLevel);
+            request.maxPrice(priceLevel);
+        }
 
         try {
             PlacesSearchResponse response  = request.await();
             PlacesSearchResult[] results = response.results;
             Log.d(TAG, "Number of Place results returned: " + results.length);
 
-            // filter places to make sure they are popular and are operational
-            List<PlacesSearchResult> filteredPlaces = Arrays.stream(results).filter(a -> a.rating > 3.8 && !a.permanentlyClosed && a.businessStatus.equals("OPERATIONAL")).collect(Collectors.toList());
-            int filteredPlacesLength = filteredPlaces.size();
-            int randomSelection = rand.nextInt(filteredPlacesLength);
+            if (results.length > 0) {
+                boolean isRestaurant = Arrays.stream(results[0].types).anyMatch(x -> x.equals("restaurant"));
+                Log.d(TAG, "Places are restaurants? " + isRestaurant);
 
-            PlacesSearchResult p = filteredPlaces.get(randomSelection);
-            Activity a = new Activity(p.formattedAddress, p.name, null, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
-            Log.d(TAG, "Randomly selected activity: " + a.toString());
-            return a;
+                // filter places to make sure they are popular and are operational
+                List<PlacesSearchResult> filteredPlaces = Arrays.stream(results).filter(a -> a.rating > MINIMUM_ALLOWED_RATING && (!isRestaurant || a.userRatingsTotal < getRatingsThreshold((int)popularity)) && !a.permanentlyClosed && a.businessStatus.equals("OPERATIONAL")).collect(Collectors.toList());
+                int filteredPlacesLength = filteredPlaces.size();
+                Log.d(TAG, "Places left after filtering: " + filteredPlacesLength);
+                int randomSelection = rand.nextInt(filteredPlacesLength);
+
+                PlacesSearchResult p = filteredPlaces.get(randomSelection);
+                String pPhotoReference = getPlacePhotoReference(p.placeId);
+                Activity a = new Activity(p.formattedAddress, p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
+                Log.d(TAG, "Randomly selected activity: " + a.gName + " | Ratings: " + p.userRatingsTotal + " | Stars: " + p.rating);
+                return a;
+            } else {
+                // rerun without price constraints
+                return textSearch(query, priceLevel, popularity, false);
+            }
 
         } catch (ApiException | IOException | InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in text search request");
         }
 
-        // parse response
-        // 3.8 rating and above, random selection
         return null;
     }
 
-    public PlaceDetails getPlaceDetails(String placeId) {
+    private String getPlacePhotoReference(String placeId) {
         try {
             PlaceDetails response = PlacesApi.placeDetails(this.context, placeId).await();
-            Log.d(TAG, "Photo reference from Place details: " + response.photos[0].photoReference);
-            return response;
+            return response.photos[0].photoReference;
         } catch (ApiException | IOException | InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in place details request");
@@ -108,5 +120,19 @@ public class GooglePlacesClient {
             Log.e(TAG, "Error in place photo request");
         }
         return null;
+    }
+
+    private int getRatingsThreshold(int popularity) {
+        switch (popularity) {
+            case 0:
+                return 300;
+            case 1:
+                return 600;
+            case 2:
+                return 1000;
+            default:
+            case 3:
+                return 1000000; // reasonable upper limit of google reviews
+        }
     }
 }

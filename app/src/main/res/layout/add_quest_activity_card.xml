@@ -134,7 +134,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:visibility="visible"
-                app:constraint_referenced_ids="priceLevelPromptText,priceLevelSlider,priceLevelTextRepresentation,popularityLevelPromptText,popularityLevelTextRepresentation,popularitySlider" />
+                app:constraint_referenced_ids="priceLevelPromptText,priceLevelSlider,priceLevelTextRepresentation,popularityLevelPromptText,popularityLevelTextRepresentation,popularitySlider"
+                tools:layout_editor_absoluteX="15dp"
+                tools:layout_editor_absoluteY="10dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>

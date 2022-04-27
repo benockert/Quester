@@ -12,11 +12,11 @@ import com.benockert.numadsp22_quester_final_project.types.Activity;
 
 import java.util.ArrayList;
 
-public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCardHolder> {
-    private static final String TAG = "CREATE_QUEST_ACTIVITY_CARD";
+public class ConfirmActivityCardAdapter extends RecyclerView.Adapter<AddActivityCardHolder> {
+    private static final String TAG = "CONFIRM_QUEST_ACTIVITY_CARD";
     private ArrayList<Activity> confirmActivityList;
 
-    public AddActivityCardAdapter(ArrayList<Activity> confirmActivityList) {
+    public ConfirmActivityCardAdapter(ArrayList<Activity> confirmActivityList) {
         this.confirmActivityList = confirmActivityList;
     }
 

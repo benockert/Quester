@@ -1,6 +1,9 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
-public class Activity {
+import android.os.Parcel;
+import android.os.Parcelable;
+
+public class Activity implements Parcelable {
     public String gFormattedAddress;
     public String gName;
     public String gPhotoReference;
@@ -20,6 +23,29 @@ public class Activity {
         this.uPriceLevel = uPriceLevel;
         this.uQuery = uQuery;
     }
+
+    public Activity(Parcel in) {
+        gFormattedAddress = in.readString();
+        gName = in.readString();
+        gPhotoReference = in.readString();
+        gPlaceId = in.readString();
+        gPlaceLat = in.readDouble();
+        gPlaceLng = in.readDouble();
+        uPriceLevel = in.readInt();
+        uQuery = in.readString();
+    }
+
+    public static final Creator<Activity> CREATOR = new Creator<Activity>() {
+        @Override
+        public Activity createFromParcel(Parcel in) {
+            return new Activity(in);
+        }
+
+        @Override
+        public Activity[] newArray(int size) {
+            return new Activity[size];
+        }
+    };
 
     public String getgFormattedAddress() {
         return gFormattedAddress;
@@ -53,4 +79,20 @@ public class Activity {
         return uQuery;
     }
 
+    @Override
+    public int describeContents() {
+        return this.hashCode();
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeString(gFormattedAddress);
+        parcel.writeString(gName);
+        parcel.writeString(gPhotoReference);
+        parcel.writeString(gPlaceId);
+        parcel.writeDouble(gPlaceLat);
+        parcel.writeDouble(gPlaceLng);
+        parcel.writeInt(uPriceLevel);
+        parcel.writeString(uQuery);
+    }
 }

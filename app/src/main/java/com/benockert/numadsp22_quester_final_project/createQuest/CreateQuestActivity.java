@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
@@ -19,6 +20,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -43,6 +45,7 @@ import java.util.Locale;
 
 public class CreateQuestActivity extends AppCompatActivity {
     private String TAG = "LOG_QUESTER_CREATE_QUEST_ACTIVITY";
+    public static String CONFIRM_ACTIVITY_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.ConfirmQuestActivities";
     private int LOCATION_PERMISSION_ID = 1;
     private int METERS_IN_ONE_MILE = 1609;
 
@@ -112,8 +115,7 @@ public class CreateQuestActivity extends AppCompatActivity {
     @Override
     protected void onSaveInstanceState(final Bundle outState) {
         super.onSaveInstanceState(outState);
-
-        Log.d(TAG, "SAVING INSTANCE STATE?");
+        Log.d(TAG, "SAVING INSTANCE STATE");
     }
 
     private void createRecyclerView() {
@@ -158,17 +160,17 @@ public class CreateQuestActivity extends AppCompatActivity {
     }
 
     @SuppressLint("StaticFieldLeak")
-    private class GenerateQuest extends AsyncTask<ArrayList<AddActivityCard>, String, List<Activity>> {
+    private class GenerateQuest extends AsyncTask<ArrayList<AddActivityCard>, String, ArrayList<Activity>> {
 
         @Override
-        protected List<Activity> doInBackground(ArrayList<AddActivityCard>... addActivityCards) {
+        protected ArrayList<Activity> doInBackground(ArrayList<AddActivityCard>... addActivityCards) {
             Log.d(TAG, "In doInBackground");
-            List<Activity> questActivities = new ArrayList<>();
+            ArrayList<Activity> questActivities = new ArrayList<>();
             for (AddActivityCard activity : addActivityCards[0]) {
                 try {
                     publishProgress(activity.searchQuery);
                     Log.d(TAG, "Activity card being sent: " + activity.getSearchQuery());
-                    Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()]);
+                    Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()], activity.getPopularity(), true);
                     if (currentActivity != null) {
                         Log.d(TAG, "Activity generated: " + currentActivity.gName);
                         questActivities.add(currentActivity);
@@ -182,12 +184,15 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
 
         @Override
-        protected void onPostExecute(List<Activity> activities) {
+        protected void onPostExecute(ArrayList<Activity> activities) {
             Log.d(TAG, "In onPostExecute");
             super.onPostExecute(activities); // potentially don't need to call
             // stop loading icon
             progressIndicatorGroup.setVisibility(View.GONE);
             // open new activity with intent and activities
+            Intent intent = new Intent(context, ConfirmQuestActivity.class);
+            intent.putParcelableArrayListExtra(CONFIRM_ACTIVITY_INTENT_MESSAGE, activities);
+            context.startActivity(intent);
         }
 
         @Override
@@ -197,14 +202,13 @@ public class CreateQuestActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         apiContext.shutdown(); // todo NetworkOnMainThreadException
     }
 
-    // LOCATION method
+    // LOCATION methods
 
     public void useCurrentLocation(View v) {
         startLocationTextView.setTypeface(startLocationTextView.getTypeface(), Typeface.ITALIC);
