@@ -1,10 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.myQuests;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -12,6 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.benockert.numadsp22_quester_final_project.PastQuests.PastQuests;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.google.firebase.auth.FirebaseAuth;
@@ -29,7 +29,6 @@ import java.util.Objects;
 import java.util.Scanner;
 
 public class MyQuestsActivity extends AppCompatActivity {
-    private FirebaseAuth mAuth;
     private DatabaseReference dr;
 
     private String apiKey;
@@ -37,14 +36,9 @@ public class MyQuestsActivity extends AppCompatActivity {
 
     private ArrayList<QuestCard> questList = new ArrayList<>();
 
-    private RecyclerView recyclerView;
     private RecyclerViewAdaptor recyclerViewAdapter;
-    private RecyclerView.LayoutManager recyclerLayoutManger;
 
     private String currentUser;
-
-    private static final String KEY_OF_INSTANCE = "KEY_OF_INSTANCE";
-    private static final String NUMBER_OF_ITEMS = "NUMBER_OF_ITEMS";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +46,7 @@ public class MyQuestsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_quests);
 
         //init data from db
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
 
         // get the API key for the Places SDK to use
@@ -73,51 +67,32 @@ public class MyQuestsActivity extends AppCompatActivity {
 
         createRecyclerView();
 
-        initLinkData(savedInstanceState);
-
         getAllQuests();
-    }
-
-    private void initLinkData(Bundle savedInstanceState) {
-        if (savedInstanceState != null && savedInstanceState.containsKey(NUMBER_OF_ITEMS)) {
-            if (questList == null || questList.size() == 0) {
-                int size = savedInstanceState.getInt(NUMBER_OF_ITEMS);
-
-                // Retrieve keys we stored in the instance
-                for (int i = 0; i < size; i++) {
-                    Quest quest = (Quest) savedInstanceState.getSerializable(KEY_OF_INSTANCE + i);
-
-                    QuestCard questCard = new QuestCard(quest);
-
-                    questList.add(questCard);
-                }
-            }
-        }
     }
 
     private void createRecyclerView() {
         recyclerViewAdapter = new RecyclerViewAdaptor(questList, apiContext);
-        recyclerLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        RecyclerView.LayoutManager recyclerLayoutManger = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
 
-        recyclerView = findViewById(R.id.quest_recycler_view);
+        RecyclerView recyclerView = findViewById(R.id.quest_recycler_view);
         recyclerView.setHasFixedSize(true);
 
         // Listener to open Quest when card is clicked
-        LinkClickListener itemClickListener = new LinkClickListener() {
-            @Override
-            public void onItemClick(int position, View view) {
-//                QuestCard questCard = questList.get(position);
+        LinkClickListener itemClickListener = (position, view) -> {
+            QuestCard questCard = questList.get(position);
 //                if (questCard.getQuest().isActive()) {
 //                     Intent intent = new Intent(this, ActiveQuests.class);
 //                     intent.putExtra("questName", questCard.getQuest().getName());
 //                     view.getContext().startActivity(intent);
 //                } else {
-//                     Intent intent = new Intent(this, PastQuests.class);
-//                     intent.putExtra("questName", questCard.getQuest().getName());
-//                     view.getContext().startActivity(intent);
+            //startIntent(questCard);
+            Intent intent = new Intent(this, PastQuests.class);
+            intent.putExtra("questName", String.valueOf(questCard.getQuest().getDateTime()));
+            startActivity(intent);
+
+//            generateJoinCode();
 //                }
-//                recyclerViewAdapter.notifyItemChanged(position);
-            }
+            recyclerViewAdapter.notifyItemChanged(position);
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 
@@ -149,9 +124,10 @@ public class MyQuestsActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonResults = new JSONObject(result);
                     Iterator<String> questsIterator = jsonResults.keys();
-                    while(questsIterator.hasNext()){
+                    while (questsIterator.hasNext()) {
                         String name = questsIterator.next();
                         Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
+                        assert quest != null;
                         if (quest.isUserInQuest(currentUser)) {
                             if (quest.isActive()) {
                                 usersActiveQuests.add(quest);
@@ -178,23 +154,11 @@ public class MyQuestsActivity extends AppCompatActivity {
 
                     findViewById(R.id.no_quests_text).setVisibility(View.GONE);
                     recyclerViewAdapter.notifyDataSetChanged();
-                }
-                catch(Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         });
     }
 
-    // Handling Orientation Changes
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        int size = questList == null ? 0 : questList.size();
-        outState.putInt(NUMBER_OF_ITEMS, size);
-
-        for (int i = 0; i < size; i++) {
-            outState.putSerializable(KEY_OF_INSTANCE + i, questList.get(i).getQuest());
-        }
-        super.onSaveInstanceState(outState);
-    }
 }

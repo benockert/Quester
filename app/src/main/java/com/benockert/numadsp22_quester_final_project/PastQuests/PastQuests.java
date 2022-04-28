@@ -1,5 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
-
+//https://material.io/components/bottom-navigation#anatomy
+//recaps, home, my quests, active quest, recap
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -25,7 +26,6 @@ import com.google.firebase.database.FirebaseDatabase;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -51,8 +51,7 @@ public class PastQuests extends AppCompatActivity {
         dr = FirebaseDatabase.getInstance().getReference();
 
         questName = this.getIntent().getExtras().get("questName").toString();
-
-        String qRecap = questName + "_recap";
+        String qRecap = "q" + questName + "_recap";
         Log.i("name", qRecap);
         if (currentUser != null) {
 
@@ -73,6 +72,8 @@ public class PastQuests extends AppCompatActivity {
             }
         }
 
+        questName = "q" + questName.replaceAll(":", "\\|");
+        Log.i("questName", questName);
         context = this;
         TextView qName = findViewById(R.id.pastQuest_questName);
         qName.setText(this.getIntent().getExtras().get("questName").toString());
@@ -233,6 +234,7 @@ public class PastQuests extends AppCompatActivity {
         i.putExtra("recapName", questName + "_recap");
         startActivity(i);
     }
+
     /**
      * converts the String to a parsable json string
      *
