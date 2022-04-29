@@ -46,17 +46,7 @@ public class GooglePlacesClient {
         return null;
     }
 
-    public PlaceDetails getPlaceDetails(String placeId) {
-        try {
-            PlaceDetails response = PlacesApi.placeDetails(this.context, placeId).await();
-            Log.d(TAG, "Photo reference from Place details: " + response.photos[0].photoReference);
-            return response;
-        } catch (ApiException | IOException | InterruptedException e) {
-            e.printStackTrace();
-            Log.e(TAG, "Error in place details request");
-        }
-        return null;
-    }
+
 
     public byte[] getPlacePhoto(String photoReference, int maxWidth, int maxHeight) {
         try {

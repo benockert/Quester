@@ -150,8 +150,8 @@ public class MyQuestsActivity extends AppCompatActivity {
                     JSONObject jsonResults = new JSONObject(result);
                     Iterator<String> questsIterator = jsonResults.keys();
                     while(questsIterator.hasNext()){
-                        String name = questsIterator.next();
-                        Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
+                        String joinCode = questsIterator.next();
+                        Quest quest = Quest.getQuestFromJSON(jsonResults.getString(joinCode));
                         if (quest.isUserInQuest(currentUser)) {
                             if (quest.isActive()) {
                                 usersActiveQuests.add(quest);

@@ -16,27 +16,22 @@ public class Quest implements Serializable {
     public boolean active;
     public List<Activity> activities;
     public boolean completed;
-    public int joinCode;
     public String location;
-    public LocalDateTime datetime;
+    public String datetime;
     public String photoReference;
     public float proximity;
     public List<String> users;
-    public String name;
     public int currentActivity;
 
-    public Quest(String name
-            , int joinCode
-            , boolean active
+    public Quest(boolean active
             , boolean completed
             , String location
-            , LocalDateTime datetime
+            , String datetime
             , float proximity
             , String photoReference
             , List<Activity> activities
             , List<String> users
             , int currentActivity) {
-        this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
         this.location = location;
@@ -45,12 +40,7 @@ public class Quest implements Serializable {
         this.photoReference = photoReference;
         this.activities = activities;
         this.users = users;
-        this.name = name;
         this.currentActivity = currentActivity;
-    }
-
-    public int getJoinCode() {
-        return this.joinCode;
     }
 
     public boolean isActive() {
@@ -61,22 +51,20 @@ public class Quest implements Serializable {
         return this.location;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDatetime() {
         return this.datetime;
     }
 
+    public LocalDateTime getDateTime() { return LocalDateTime.parse(this.datetime);}
+
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        return this.datetime.format(formatter);
-    }
-
-    public String getName(){
-        return this.name;
+        return LocalDateTime.parse(this.datetime).format(formatter);
     }
 
     public String getTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
-        return this.datetime.format(formatter);
+        return LocalDateTime.parse(this.datetime).format(formatter);
     }
 
     public float getProximity() {
@@ -103,13 +91,12 @@ public class Quest implements Serializable {
         return this.currentActivity;
     }
 
-    public static Quest getQuestFromJSON(String name, String data) {
+    public static Quest getQuestFromJSON(String data) {
         try {
-            int joinCode = 0;
             boolean completed = false;
             String location = "N/A";
             float proximity = 0;
-            LocalDateTime date = null;
+            String date = "";
             String photoReference = "N/A";
             List<String> users = new ArrayList<>();
             List<Activity> activities = new ArrayList<>();
@@ -129,9 +116,8 @@ public class Quest implements Serializable {
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
-            joinCode = jsonResults.getInt("joinCode");
-            location = jsonResults.getString("location").replaceAll("_", " ");;
-            date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
+            location = jsonResults.getString("location").replace("_", " ");;
+            date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
             proximity = Float.parseFloat(jsonResults.getString("proximity"));
             users = new ArrayList<>();
@@ -146,7 +132,7 @@ public class Quest implements Serializable {
                 activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
             }
 
-            return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
+            return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();
