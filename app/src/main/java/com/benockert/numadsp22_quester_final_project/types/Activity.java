@@ -7,6 +7,7 @@ import android.util.Log;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+
 public class Activity implements Parcelable {
     public String gFormattedAddress;
     public String gName;
@@ -16,12 +17,12 @@ public class Activity implements Parcelable {
     public double gPlaceLng;
     public int uPriceLevel;
     public String uQuery;
-    public double gRating;
+    public float gRating;
 
     public Activity() {
     }
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery, double gRating) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -42,7 +43,7 @@ public class Activity implements Parcelable {
         gPlaceLng = in.readDouble();
         uPriceLevel = in.readInt();
         uQuery = in.readString();
-        gRating = in.readDouble();
+        gRating = in.readFloat();
     }
 
     public static final Creator<Activity> CREATOR = new Creator<Activity>() {
@@ -108,7 +109,8 @@ public class Activity implements Parcelable {
         parcel.writeDouble(gPlaceLng);
         parcel.writeInt(uPriceLevel);
         parcel.writeString(uQuery);
-        parcel.writeDouble(gRating);
+        parcel.writeFloat(gRating);
+
     }
 
     public static Activity getActivityFromJSON(String data) {
@@ -116,14 +118,14 @@ public class Activity implements Parcelable {
             JSONObject activityObj = new JSONObject(data);
             Log.i("activities", activityObj.toString());
             String gFormattedAddress = activityObj.getString("gFormattedAddress").replaceAll("_", " ");
-            ;
             String gName = activityObj.getString("gName").replaceAll("_", " ");
             String gPhotoReference = activityObj.getString("gPhotoReference");
             String gPlaceId = activityObj.getString("gPlaceId");
-            double gPlaceLat = Float.parseFloat(activityObj.getString("gPlaceLat"));
-            double gPlaceLng = Float.parseFloat(activityObj.getString("gPlaceLng"));
+            double gPlaceLat = activityObj.getDouble("gPlaceLat");
+            double gPlaceLng = activityObj.getDouble("gPlaceLng");
             int gPriceLevel = activityObj.getInt("gPriceLevel");
-            double gRating = activityObj.getDouble("gRating");
+            float gRating = Float.parseFloat(activityObj.getString("gRating"));
+
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
 
             return new Activity(gFormattedAddress,
@@ -142,3 +144,4 @@ public class Activity implements Parcelable {
         }
     }
 }
+

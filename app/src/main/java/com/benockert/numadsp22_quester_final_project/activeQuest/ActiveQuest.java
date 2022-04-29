@@ -1,7 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.activeQuest;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.camera.core.ImageCapture;
 import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
@@ -79,6 +78,7 @@ public class ActiveQuest extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
+        currentUser = mAuth.getCurrentUser().getDisplayName();
 
         textCurrentStopName = findViewById(R.id.textCurrentStopName);
         textUserSearchTerm = findViewById(R.id.textUserSearchTerm);
@@ -98,7 +98,7 @@ public class ActiveQuest extends AppCompatActivity {
 
         // retrieve active quest
         // fill in values
-        currentQuestId = "newshi";
+        currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
         getActiveQuest();
 
         // get the API key for the Places SDK to use
@@ -145,7 +145,7 @@ public class ActiveQuest extends AppCompatActivity {
         textCurrentStopName.setText(currentActivity.getgName());
         textUserSearchTerm.setText(currentActivity.getuQuery());
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
-        ratingBar.setRating(currentActivity.rating);
+        ratingBar.setRating(currentActivity.getgRating());
         textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activities.size()));
         textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
         textPreviewStopName.setText(previewActivity.getgName());
