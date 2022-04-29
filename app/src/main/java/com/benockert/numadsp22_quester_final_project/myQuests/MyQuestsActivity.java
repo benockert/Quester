@@ -124,10 +124,9 @@ public class MyQuestsActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonResults = new JSONObject(result);
                     Iterator<String> questsIterator = jsonResults.keys();
-                    while (questsIterator.hasNext()) {
-                        String name = questsIterator.next();
-                        Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
-                        assert quest != null;
+                    while(questsIterator.hasNext()){
+                        String joinCode = questsIterator.next();
+                        Quest quest = Quest.getQuestFromJSON(jsonResults.getString(joinCode));
                         if (quest.isUserInQuest(currentUser)) {
                             if (quest.isActive()) {
                                 usersActiveQuests.add(quest);
@@ -137,8 +136,8 @@ public class MyQuestsActivity extends AppCompatActivity {
                         }
                     }
 
-                    usersActiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
-                    usersInactiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
+                    usersActiveQuests.sort(Comparator.comparing(Quest::getLocalDateTime).reversed());
+                    usersInactiveQuests.sort(Comparator.comparing(Quest::getLocalDateTime).reversed());
 
                     for (Quest quest : usersActiveQuests) {
                         QuestCard questCard = new QuestCard(quest);
@@ -161,4 +160,15 @@ public class MyQuestsActivity extends AppCompatActivity {
         });
     }
 
+//    // Handling Orientation Changes
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        int size = questList == null ? 0 : questList.size();
+//        outState.putInt(NUMBER_OF_ITEMS, size);
+//
+//        for (int i = 0; i < size; i++) {
+//            outState.putSerializable(KEY_OF_INSTANCE + i, questList.get(i).getQuest());
+//        }
+//        super.onSaveInstanceState(outState);
+//    }
 }
