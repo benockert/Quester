@@ -16,4 +16,8 @@
         <item name="windowNoTitle">true</item>
         <item name="android:windowFullscreen">false</item>
     </style>
+    <style name="DisabledButtonStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="backgroundTint">@color/color_states_button</item>
+        <item name="strokeColor">@color/color_states_button</item>
+    </style>
 </resources>

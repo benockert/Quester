@@ -151,22 +151,36 @@
         app:layout_constraintEnd_toStartOf="@id/generateQuestButton"/>
 
     <com.google.android.material.button.MaterialButton
+        style="@style/DisabledButtonStyle"
         android:id="@+id/generateQuestButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="10dp"
-        android:backgroundTint="?attr/colorSecondary"
         android:onClick="onGenerateQuestButtonClick"
         android:padding="12dp"
         android:text="Generate"
+        android:enabled="false"
         android:textColor="@color/white"
         app:cornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@id/addActivityButton"
-        app:strokeColor="?attr/colorSecondary"
         app:strokeWidth="4dp" />
+
+    <TextView
+        android:id="@+id/missingLocationText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:textColor="@color/red"
+        android:textSize="12sp"
+        android:textStyle="italic"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/activityCardRecyclerView"
+        app:layout_constraintVertical_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.5"/>
 
     <TextView
         android:id="@+id/progressText"

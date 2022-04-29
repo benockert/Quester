@@ -30,7 +30,7 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
     private final List<String> popularityLevels = Arrays.asList("Hidden Gem", "Everyday Spot", "Well Established", "Talk Of The Town");
     private final List<String> priceLevelStrings = Arrays.asList("", "$", "$$", "$$$", "$$$$");
 
-    private Context context;
+    private Context context; // todo Do we need context here?
 
     public AddActivityCardAdapter(ArrayList<AddActivityCard> activityCardList, Context context) {
         this.activityCardList = activityCardList;

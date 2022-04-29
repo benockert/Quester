@@ -13,6 +13,9 @@ public class Activity implements Parcelable {
     public int uPriceLevel;
     public String uQuery;
 
+    public Activity() {
+    }
+
     public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;

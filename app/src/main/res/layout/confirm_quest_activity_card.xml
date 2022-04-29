@@ -29,7 +29,11 @@
                 android:id="@+id/placeImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="140dp"
+                android:minHeight="120dp"
+                android:maxHeight="200dp"
+                android:maxWidth="300dp"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"/>
@@ -59,16 +63,24 @@
                 app:layout_constraintTop_toBottomOf="@id/placeNameTextView"
                 app:layout_constraintStart_toStartOf="@id/placeNameTextView"/>
 
-<!--            <TextView-->
-<!--                android:id="@+id/popularityLevelPromptText"-->
-<!--                android:layout_width="wrap_content"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:text="Popularity:"-->
-<!--                android:textColor="?attr/colorPrimaryVariant"-->
-<!--                android:textSize="12sp"-->
-<!--                android:textStyle="italic"-->
-<!--                app:layout_constraintStart_toStartOf="parent"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/priceLevelSlider" />-->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/reSpinActivityButton"
+                android:layout_width="50dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginRight="20dp"
+                android:insetLeft="0dp"
+                android:insetTop="0dp"
+                android:insetRight="0dp"
+                android:insetBottom="0dp"
+                android:backgroundTint="@color/orange_500"
+                app:icon="@drawable/ic_baseline_refresh_24"
+                app:iconGravity="textStart"
+                app:iconPadding="0dp"
+                android:visibility="gone"
+                app:layout_constraintTop_toBottomOf="@id/placeImageView"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

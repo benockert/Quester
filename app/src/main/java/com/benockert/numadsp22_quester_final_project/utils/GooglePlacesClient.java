@@ -1,14 +1,22 @@
 package com.benockert.numadsp22_quester_final_project.utils;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
+
+import android.location.Location;
 import android.util.Log;
 
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.maps.GeoApiContext;
+import com.google.maps.GeocodingApi;
+import com.google.maps.GeolocationApi;
 import com.google.maps.ImageResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.TextSearchRequest;
 import com.google.maps.errors.ApiException;
+import com.google.maps.model.AddressType;
+import com.google.maps.model.GeocodingResult;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
@@ -28,8 +36,8 @@ public class GooglePlacesClient {
     private final GeoApiContext context;
     private LatLng locationLatLng;
     private String locationString;
-    private final int radius;
-    private final Random rand;
+    private int radius;
+    private Random rand;
 
     public GooglePlacesClient(GeoApiContext context, int radius, String location) {
         this.context = context;
@@ -45,6 +53,11 @@ public class GooglePlacesClient {
         rand = new Random();
     }
 
+    // for just the photos method
+    public GooglePlacesClient(GeoApiContext context) {
+        this.context = context;
+    }
+
     public Activity textSearch(String query, PriceLevel priceLevel, double popularity, boolean addPriceConstraints) {
         Log.d(TAG, "In Place TextSearch, searching for: " + query + " | Price: " + priceLevel + " | Popularity: " + popularity);
         TextSearchRequest request = new TextSearchRequest(context);
@@ -55,6 +68,7 @@ public class GooglePlacesClient {
         }
         // if user's current location is provided, set it as a parameter
         if (locationLatLng != null) {
+            request.query(query);
             request.location(locationLatLng);
         }
         request.radius(radius);
@@ -82,7 +96,7 @@ public class GooglePlacesClient {
 
                 PlacesSearchResult p = filteredPlaces.get(randomSelection);
                 String pPhotoReference = getPlacePhotoReference(p.placeId);
-                Activity a = new Activity(p.formattedAddress, p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
+                Activity a = new Activity(p.formattedAddress.replace(",", ""), p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
                 Log.d(TAG, "Randomly selected activity: " + a.gName + " | Ratings: " + p.userRatingsTotal + " | Stars: " + p.rating);
                 return a;
             } else {
@@ -98,6 +112,39 @@ public class GooglePlacesClient {
         return null;
     }
 
+    public Map<String, String> locationTextSearch() {
+        Log.d(TAG, "In locationTextSearch, searching for: " + locationString);
+        TextSearchRequest request = new TextSearchRequest(context);
+
+        // if location was provided manually by user, add location to query parameter
+        if (locationString != null) {
+            request.query(locationString);
+        }
+
+        try {
+            PlacesSearchResponse response  = request.await();
+            PlacesSearchResult[] results = response.results;
+            Log.d(TAG, "Number of Place results returned (should be 1): " + results.length);
+
+            Map<String, String> info = new HashMap<>();
+            if (results.length > 0) {
+                PlacesSearchResult p = results[0];
+                String gName = p.name;
+                info.put("placeName", gName);
+                String gPhotoReference = getPlacePhotoReference(p.placeId);
+                info.put("photoReference", gPhotoReference);
+            } else {
+                // use the user's original query
+                info.put("placeName", locationString);
+            }
+            return info;
+        } catch (ApiException | IOException | InterruptedException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error in location text search request");
+        }
+        return null;
+    }
+
     private String getPlacePhotoReference(String placeId) {
         try {
             PlaceDetails response = PlacesApi.placeDetails(this.context, placeId).await();
@@ -109,15 +156,43 @@ public class GooglePlacesClient {
         return null;
     }
 
-    public byte[] getPlacePhoto(String photoReference) {
+    public byte[] getPlacePhoto(String photoReference, int maxWidth, int maxHeight) {
+        Log.v(TAG, "Getting place photo --- " + photoReference);
         try {
-            ImageResult response = PlacesApi.photo(this.context, photoReference).await();
+            if (this.context == null) {
+                Log.v(TAG, "CONTEXT IS NULL");
+            }
+            ImageResult response = PlacesApi.photo(this.context, photoReference).maxHeight(maxHeight).maxWidth(maxWidth).await();
             byte[] photoData = response.imageData;
             Log.d(TAG, "Place photo content type " + response.contentType);
             return photoData;
-        } catch (ApiException | IOException | InterruptedException e) {
+        } catch (ApiException | IOException | InterruptedException |IllegalArgumentException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in place photo request");
+        }
+        return null;
+    }
+
+    // for getting location names and photos from coordinates
+    public Map<String, String> getReverseGeoLocationInfo(LatLng location) {
+        Map<String, String> result = new HashMap<>();
+        try {
+            Log.d(TAG, "In getReverseGeoLocationInfo");
+            GeocodingResult[] response = GeocodingApi.reverseGeocode(this.context, new LatLng(location.lat, location.lng)).await();
+            List<GeocodingResult> filteredPlaces = Arrays.stream(response).filter(r -> Arrays.stream(r.types).allMatch(addressType -> addressType.toString().equals(AddressType.NEIGHBORHOOD.toString()) || addressType.toString().equals(AddressType.POLITICAL.toString()))).collect(Collectors.toList());
+            if (filteredPlaces.size() > 0) {
+                Log.d(TAG, "Filtered place addresses has results");
+                String placeId = filteredPlaces.get(0).placeId;
+                String photoReference = getPlacePhotoReference(placeId);
+                result.put("photoReference", photoReference);
+
+                String placeString = Arrays.stream(filteredPlaces.get(0).addressComponents).findFirst().get().longName;
+                result.put("placeName", placeString);
+            }
+            return result;
+        } catch (ApiException | IOException | InterruptedException |IllegalArgumentException e) {
+            e.printStackTrace();
+            Log.e(TAG, "Error in reverse geocode request");
         }
         return null;
     }

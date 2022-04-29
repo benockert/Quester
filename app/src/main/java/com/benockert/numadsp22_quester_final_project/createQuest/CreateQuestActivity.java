@@ -20,7 +20,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Parcelable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -31,8 +32,6 @@ import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecy
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
-import com.google.android.material.card.MaterialCardView;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
 import com.google.maps.GeoApiContext;
@@ -40,14 +39,22 @@ import com.google.maps.model.LatLng;
 import com.google.maps.model.PriceLevel;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class CreateQuestActivity extends AppCompatActivity {
     private String TAG = "LOG_QUESTER_CREATE_QUEST_ACTIVITY";
-    public static String CONFIRM_ACTIVITY_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.ConfirmQuestActivities";
+
+    // Intent strings
+    public static String APIKEY_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.APIKEY";
+    public static String CONFIRM_ACTIVITIES_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.ConfirmQuestActivities";
+    public static String LOCATION_STRING_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.UserLocationString";
+    public static String PROXIMITY_METERS_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.UserQuestProximity";
+    public static String PHOTO_REFERENCE_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.QuestLocationPhotoReference";
+
+
     private int LOCATION_PERMISSION_ID = 1;
-    private int METERS_IN_ONE_MILE = 1609;
+    public static int METERS_IN_ONE_MILE = 1609;
 
     private LocationManager locationManager;
     private String apiKey;
@@ -70,6 +77,7 @@ public class CreateQuestActivity extends AppCompatActivity {
     private RecyclerView.LayoutManager recyclerLayoutManager;
     private Group progressIndicatorGroup;
     private TextView progressTextView;
+    private TextView missingLocationTextView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +95,7 @@ public class CreateQuestActivity extends AppCompatActivity {
         generateQuestButton = findViewById(R.id.generateQuestButton);
         addFirstActivityTextView = findViewById(R.id.noActivityMessageText);
 
+        missingLocationTextView = findViewById(R.id.missingLocationText);
         progressIndicatorGroup = findViewById(R.id.progressIndicatorGroup);
         progressTextView = findViewById(R.id.progressText);
 
@@ -95,6 +104,22 @@ public class CreateQuestActivity extends AppCompatActivity {
             @Override
             public String getFormattedValue(float value) {
                 return String.format(Locale.US, "%.2f", value) + " mi";
+            }
+        });
+
+        // text change listener to remove the "missing text" message when a location is added manually
+        startLocationTextView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                missingLocationTextView.setText("");
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
             }
         });
 
@@ -128,12 +153,16 @@ public class CreateQuestActivity extends AppCompatActivity {
     }
 
     public void addNewActivity(View v) {
+        // if first card is being added
+        if (activityCards.size() == 0) {
+            addFirstActivityTextView.setVisibility(View.GONE);
+            if (mLocation != null || startLocationTextView.getText() != "") {
+                generateQuestButton.setEnabled(true);
+            }
+        }
+
         AddActivityCard newCard = new AddActivityCard();
         activityCards.add(newCard);
-
-        if (activityCards.size() > 0) {
-            addFirstActivityTextView.setVisibility(View.GONE);
-        }
         activityCardAdapter.notifyItemInserted(activityCards.indexOf(newCard));
 
         // collapse all other cards except last, retain state
@@ -145,25 +174,57 @@ public class CreateQuestActivity extends AppCompatActivity {
 
     public void onGenerateQuestButtonClick(View v) {
         Log.d(TAG, "Generate quest button clicked");
-        CharSequence locationString = startLocationTextView.getText();
-        int radiusInMeters = Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE);
-        if (locationString != "") {
-            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, locationString.toString());
-        } else if (mLocation != null) {
-            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, mLocation);
-        }
-
         // start loading icon
         progressIndicatorGroup.setVisibility(View.VISIBLE);
-        GenerateQuest task = new GenerateQuest();
+
+        // get location and proximity (in meters)
+        String locationString = startLocationTextView.getText().toString();
+        int radiusInMeters = Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE);
+
+        if (locationString.equals("") && mLocation == null) {
+            missingLocationTextView.setText("Please enter a start location.");
+        } else if (!locationString.equals("")) {
+            progressIndicatorGroup.setVisibility(View.VISIBLE);
+            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, locationString);
+            // get location info from location string
+            Log.d(TAG, "Using manual location entry: getting place info");
+            Map<String, String> result = placesClient.locationTextSearch();
+            if (result != null) {
+                Log.d(TAG, "Result not null, generating request");
+                generateQuest(result.get("placeName"), result.get("photoReference"));
+            }
+        } else if (mLocation != null) {
+            progressIndicatorGroup.setVisibility(View.VISIBLE);
+            placesClient = new GooglePlacesClient(apiContext, radiusInMeters, mLocation);
+            // reverse geo code to get location info from coordinates
+            Log.d(TAG, "Using current location: getting reverse geocode information");
+            Map<String, String> result = placesClient.getReverseGeoLocationInfo(mLocation);
+            if (result != null) {
+                Log.d(TAG, "Result not null, generating request");
+                generateQuest(result.get("placeName"), result.get("photoReference"));
+            }
+        }
+    }
+
+    private void generateQuest(String questLocation, String questLocationPhotoReference) {
+        // find activities asynchronously
+        GenerateQuest task = new GenerateQuest(questLocation, questLocationPhotoReference);
         task.execute(activityCards);
     }
 
     @SuppressLint("StaticFieldLeak")
     private class GenerateQuest extends AsyncTask<ArrayList<AddActivityCard>, String, ArrayList<Activity>> {
+        String questLocation;
+        String questLocationPhotoReference;
 
+        public GenerateQuest(String questLocation, String questLocationPhotoReference) {
+            this.questLocation = questLocation;
+            this.questLocationPhotoReference = questLocationPhotoReference;
+        }
+
+        @SafeVarargs
         @Override
-        protected ArrayList<Activity> doInBackground(ArrayList<AddActivityCard>... addActivityCards) {
+        protected final ArrayList<Activity> doInBackground(ArrayList<AddActivityCard>... addActivityCards) {
             Log.d(TAG, "In doInBackground");
             ArrayList<Activity> questActivities = new ArrayList<>();
             for (AddActivityCard activity : addActivityCards[0]) {
@@ -187,12 +248,18 @@ public class CreateQuestActivity extends AppCompatActivity {
         protected void onPostExecute(ArrayList<Activity> activities) {
             Log.d(TAG, "In onPostExecute");
             super.onPostExecute(activities); // potentially don't need to call
-            // stop loading icon
-            progressIndicatorGroup.setVisibility(View.GONE);
+
             // open new activity with intent and activities
             Intent intent = new Intent(context, ConfirmQuestActivity.class);
-            intent.putParcelableArrayListExtra(CONFIRM_ACTIVITY_INTENT_MESSAGE, activities);
+            intent.putExtra(APIKEY_INTENT_MESSAGE, apiKey);
+            intent.putExtra(LOCATION_STRING_INTENT_MESSAGE, questLocation);
+            intent.putExtra(PROXIMITY_METERS_INTENT_MESSAGE, Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE));
+            intent.putExtra(PHOTO_REFERENCE_INTENT_MESSAGE, questLocationPhotoReference);
+            intent.putParcelableArrayListExtra(CONFIRM_ACTIVITIES_INTENT_MESSAGE, activities);
             context.startActivity(intent);
+
+            // stop loading icon
+            progressIndicatorGroup.setVisibility(View.GONE);
         }
 
         @Override
@@ -224,6 +291,7 @@ public class CreateQuestActivity extends AppCompatActivity {
 
     @SuppressLint("MissingPermission")
     private void getLocation() {
+        missingLocationTextView.setText("");
         startLocationTextView.setHint("Getting current location...");
         locationManager = (LocationManager)getSystemService(LOCATION_SERVICE);
         Criteria criteria = setLocationCriteria();

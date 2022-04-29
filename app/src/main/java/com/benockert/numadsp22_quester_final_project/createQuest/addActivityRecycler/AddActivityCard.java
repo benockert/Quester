@@ -15,6 +15,7 @@ public class AddActivityCard {
     public int popularity;
     public boolean isCollapsed;
 
+    // default constructor for creating a new blank card
     public AddActivityCard() {
         this.searchQuery = "";
         this.priceLevel = 2;
