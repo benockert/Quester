@@ -20,17 +20,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+        Intent intent;
         switch (view.getId()) {
             case R.id.my_quests:
-                System.out.println("in onclick");
-                Intent intent = new Intent(this, MyQuestsActivity.class);
+                intent = new Intent(this, MyQuestsActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.user_profile:
+                intent = new Intent(this, UserProfileActivity.class);
                 startActivity(intent);
                 break;
         }
-    }
-
-    public void logOut(View v){
-        FirebaseAuth.getInstance().signOut();
-        finish();
     }
 }

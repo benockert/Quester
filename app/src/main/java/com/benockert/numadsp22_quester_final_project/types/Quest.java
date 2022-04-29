@@ -16,7 +16,7 @@ public class Quest implements Serializable {
     public boolean active;
     public List<Activity> activities;
     public boolean completed;
-    public int joinCode;
+    public String joinCode;
     public String location;
     public LocalDateTime datetime;
     public String photoReference;
@@ -26,7 +26,7 @@ public class Quest implements Serializable {
     public int currentActivity;
 
     public Quest(String name
-            , int joinCode
+            , String joinCode
             , boolean active
             , boolean completed
             , String location
@@ -49,7 +49,7 @@ public class Quest implements Serializable {
         this.currentActivity = currentActivity;
     }
 
-    public int getJoinCode() {
+    public String getJoinCode() {
         return this.joinCode;
     }
 
@@ -105,7 +105,7 @@ public class Quest implements Serializable {
 
     public static Quest getQuestFromJSON(String name, String data) {
         try {
-            int joinCode = 0;
+            String joinCode = "N/A";
             boolean completed = false;
             String location = "N/A";
             float proximity = 0;
@@ -129,7 +129,7 @@ public class Quest implements Serializable {
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
-            joinCode = jsonResults.getInt("joinCode");
+            joinCode = jsonResults.getString("joinCode");
             location = jsonResults.getString("location").replaceAll("_", " ");;
             date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
             photoReference = jsonResults.getString("photoReference");

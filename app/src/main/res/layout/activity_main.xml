@@ -15,17 +15,17 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toTopOf="@id/user_profile" />
 
     <Button
-        android:id="@+id/log_out"
+        android:id="@+id/user_profile"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="45dp"
-        android:layout_marginBottom="73dp"
-        android:onClick="logOut"
-        android:text="@string/log_out"
+        android:onClick="onClick"
+        android:text="@string/user_profile"
+        app:layout_constraintTop_toBottomOf="@id/my_quests"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
