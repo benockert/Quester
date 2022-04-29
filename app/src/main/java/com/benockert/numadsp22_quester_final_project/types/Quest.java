@@ -5,6 +5,7 @@ import android.util.Log;
 
 import com.google.firebase.database.Exclude;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -107,11 +108,10 @@ public class Quest {
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
-            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
+
+            JSONArray questActivities = jsonResults.getJSONArray("activities");
 
             Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
-
-            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
             JSONObject usersObj = jsonResults.getJSONObject("users");
 
             active = jsonResults.getBoolean("active");
@@ -128,9 +128,8 @@ public class Quest {
                 users.add(usersIterator.next());
             }
 
-            while (activitiesIterator.hasNext()) {
-                String activity = activitiesIterator.next();
-                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+            for(int i=0; i<questActivities.length(); i++) {
+                activities.add(Activity.getActivityFromJSON(questActivities.getJSONObject(i).toString()));
             }
 
             return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
