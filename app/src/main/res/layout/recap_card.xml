@@ -15,8 +15,9 @@
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/recapLayout"
-        android:layout_width="382dp"
-        android:layout_height="84dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="75dp"
         app:layout_constraintEnd_toStartOf="@+id/activityQuery"
         app:layout_constraintStart_toStartOf="@+id/activityQuery">
 
@@ -24,33 +25,36 @@
             android:id="@+id/recapName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="60dp"
-            android:textColor="#616161"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.325"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintStart_toEndOf="@+id/rNameLabel"
+            app:layout_constraintTop_toTopOf="@+id/rNameLabel"
             tools:text="Recap Name" />
 
         <TextView
             android:id="@+id/recapDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:textColor="#616161"
+            android:layout_marginStart="5dp"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/recapName"
-            app:layout_constraintTop_toBottomOf="@+id/recapName"
-            app:layout_constraintVertical_bias="0.428"
+            app:layout_constraintStart_toEndOf="@+id/rDateGenLabel"
+            app:layout_constraintTop_toTopOf="@+id/rDateGenLabel"
+            app:layout_constraintVertical_bias="0.111"
             tools:text="Recap Date" />
 
         <TextView
             android:id="@+id/rNameLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
-            android:layout_marginTop="4dp"
-            android:text="Recap Name:"
+            android:layout_marginTop="16dp"
+            android:layout_marginStart="20dp"
+            android:gravity="left"
+            android:textSize="16sp"
+            android:textColor="@color/black"
+            android:text="@string/recap_name"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
@@ -58,12 +62,14 @@
             android:id="@+id/rDateGenLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="16dp"
-            android:text="Date Generated:"
+            android:text="@string/date_generated"
+            android:textColor="@color/black"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/rNameLabel"
-            app:layout_constraintTop_toBottomOf="@+id/rNameLabel"
-            app:layout_constraintVertical_bias="0.884" />
+            app:layout_constraintTop_toBottomOf="@+id/rNameLabel" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

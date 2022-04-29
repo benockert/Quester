@@ -7,18 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".PastQuests.PastQuests">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/pastQuestsRecylerView"
-        android:layout_width="409dp"
-        android:layout_height="470dp"
-        android:layout_marginStart="7dp"
-        android:layout_marginEnd="7dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.545"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel"
-        app:layout_constraintVertical_bias="0.891" />
+
 
     <TextView
         android:id="@+id/questNameLabel"
@@ -32,8 +21,8 @@
 
     <TextView
         android:id="@+id/pastQuest_questName"
-        android:layout_width="239dp"
-        android:layout_height="65dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:textSize="20sp"
@@ -44,7 +33,7 @@
         android:id="@+id/participantsLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="12dp"
+        android:layout_marginTop="10dp"
         android:text="@string/participant_s"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="@+id/questNameLabel"
@@ -52,8 +41,8 @@
 
     <TextView
         android:id="@+id/participants"
-        android:layout_width="271dp"
-        android:layout_height="51dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_marginStart="4dp"
         android:text=""
         android:textSize="16sp"
@@ -64,9 +53,9 @@
         android:id="@+id/activitiesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:text="@string/activities"
         android:textSize="16sp"
+        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="@+id/participantsLabel"
         app:layout_constraintTop_toBottomOf="@+id/participants" />
 
@@ -78,8 +67,6 @@
         android:layout_marginEnd="8dp"
         android:onClick="viewQuestRecap"
         android:text="@string/view_quest_recap"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/createQRecap"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -103,4 +90,16 @@
         android:text="@string/create_new_quest"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pastQuestsRecylerView"
+        android:layout_width="409dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginTop="150dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel" />
 </androidx.constraintlayout.widget.ConstraintLayout>
