@@ -34,7 +34,6 @@ import com.google.maps.GeoApiContext;
 
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ActiveQuest extends AppCompatActivity {
     private static final String TAG = "ACTIVE QUEST";
