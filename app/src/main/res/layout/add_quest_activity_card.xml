@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".createQuest.CreateQuestActivity">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/activity_baseCardView"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="20dp"
+        app:cardCornerRadius="5dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingLeft="15dp"
+            android:paddingRight="15dp"
+            android:paddingTop="10dp">
+
+            <EditText
+                android:id="@+id/activityQueryText"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="Enter anything you want to do..."
+                android:inputType="text"
+                android:textColor="?attr/colorPrimary"
+                android:textColorHint="@color/green_200"
+                android:backgroundTint="?attr/colorPrimary"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <ImageView
+                android:id="@+id/dropdownCarrot"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:padding="4dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="1.0"
+                app:layout_constraintTop_toTopOf="@+id/activityQueryText"
+                app:layout_constraintBottom_toBottomOf="@+id/activityQueryText"
+                app:srcCompat="@android:drawable/arrow_up_float"
+                app:tint="?attr/colorPrimaryVariant" />
+
+            <TextView
+                android:id="@+id/priceLevelPromptText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="5dp"
+                android:text="Price level:"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/activityQueryText"
+                app:layout_constraintVertical_bias="0.5" />
+
+            <TextView
+                android:id="@+id/priceLevelTextRepresentation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="$$"
+                android:textColor="@color/green_200"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@id/activityQueryText"
+                app:layout_constraintBaseline_toBaselineOf="@id/priceLevelPromptText"
+                app:layout_constraintLeft_toRightOf="@id/priceLevelPromptText"/>
+
+            <com.google.android.material.slider.Slider
+                android:id="@+id/priceLevelSlider"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp"
+                android:valueFrom="1.0"
+                android:valueTo="4.0"
+                android:value="2.0"
+                android:stepSize="1.0"
+                app:labelBehavior="gone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelPromptText"/>
+
+            <TextView
+                android:id="@+id/popularityLevelPromptText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Popularity:"
+                android:textColor="?attr/colorPrimaryVariant"
+                android:textSize="12sp"
+                android:textStyle="italic"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelSlider" />
+
+            <TextView
+                android:id="@+id/popularityLevelTextRepresentation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Everyday Spot"
+                android:textColor="@color/green_200"
+                android:textSize="12sp"
+                android:layout_marginLeft="10dp"
+                app:layout_constraintTop_toBottomOf="@id/priceLevelSlider"
+                app:layout_constraintBaseline_toBaselineOf="@id/popularityLevelPromptText"
+                app:layout_constraintLeft_toRightOf="@id/popularityLevelPromptText"/>
+
+            <com.google.android.material.slider.Slider
+            android:id="@+id/popularitySlider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-10dp"
+            android:valueFrom="0.0"
+            android:valueTo="3.0"
+            android:value="2.0"
+            android:stepSize="1.0"
+            app:labelBehavior="gone"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/popularityLevelPromptText"/>
+
+            <androidx.constraintlayout.widget.Group
+                android:id="@+id/activityPreferencesGroup"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:visibility="visible"
+                app:constraint_referenced_ids="priceLevelPromptText,priceLevelSlider,priceLevelTextRepresentation,popularityLevelPromptText,popularityLevelTextRepresentation,popularitySlider"
+                tools:layout_editor_absoluteX="15dp"
+                tools:layout_editor_absoluteY="10dp" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,37 +1,34 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
+import java.util.List;
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-public class Quest implements Serializable {
+public class Quest {
     public boolean active;
     public List<Activity> activities;
     public boolean completed;
     public String location;
     public String datetime;
     public String photoReference;
-    public float proximity;
+    public int proximity;
     public List<String> users;
     public int currentActivity;
 
-    public Quest(boolean active
-            , boolean completed
-            , String location
-            , String datetime
-            , float proximity
-            , String photoReference
-            , List<Activity> activities
-            , List<String> users
-            , int currentActivity) {
+    public Quest() {
+    }
+
+    public Quest(boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
         this.active = active;
         this.completed = completed;
         this.location = location;
@@ -55,19 +52,25 @@ public class Quest implements Serializable {
         return this.datetime;
     }
 
-    public LocalDateTime getDateTime() { return LocalDateTime.parse(this.datetime);}
+    @Exclude
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":"));
+    }
 
+    @Exclude
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        return LocalDateTime.parse(this.datetime).format(formatter);
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
+
     }
 
+    @Exclude
     public String getTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
-        return LocalDateTime.parse(this.datetime).format(formatter);
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
     }
 
-    public float getProximity() {
+    public int getProximity() {
         return this.proximity;
     }
 
@@ -95,8 +98,9 @@ public class Quest implements Serializable {
         try {
             boolean completed = false;
             String location = "N/A";
-            float proximity = 0;
-            String date = "";
+            int proximity = 0;
+            String date = null;
+
             String photoReference = "N/A";
             List<String> users = new ArrayList<>();
             List<Activity> activities = new ArrayList<>();
@@ -106,20 +110,20 @@ public class Quest implements Serializable {
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
-            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
+
+            JSONArray questActivities = jsonResults.getJSONArray("activities");
 
             Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
-
-            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
             JSONObject usersObj = jsonResults.getJSONObject("users");
 
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
             location = jsonResults.getString("location").replace("_", " ");;
+
             date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
-            proximity = Float.parseFloat(jsonResults.getString("proximity"));
+            proximity = jsonResults.getInt("proximity");
             users = new ArrayList<>();
             currentActivity = jsonResults.getInt("currentActivity");
 
@@ -127,9 +131,8 @@ public class Quest implements Serializable {
                 users.add(usersIterator.next());
             }
 
-            while (activitiesIterator.hasNext()) {
-                String activity = activitiesIterator.next();
-                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+            for(int i=0; i<questActivities.length(); i++) {
+                activities.add(Activity.getActivityFromJSON(questActivities.getJSONObject(i).toString()));
             }
 
             return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
@@ -139,5 +142,6 @@ public class Quest implements Serializable {
             return null;
         }
     }
+
 }
 
