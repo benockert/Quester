@@ -91,6 +91,7 @@ public class Activity implements Parcelable {
     }
 
     public double getgRating() {
+    public float getgRating() {
         return gRating;
     }
 
