@@ -61,6 +61,7 @@ public class Quest {
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
         return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
+
     }
 
     @Exclude
@@ -99,6 +100,7 @@ public class Quest {
             String location = "N/A";
             int proximity = 0;
             String date = null;
+
             String photoReference = "N/A";
             List<String> users = new ArrayList<>();
             List<Activity> activities = new ArrayList<>();
@@ -117,7 +119,8 @@ public class Quest {
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
-            location = jsonResults.getString("location").replaceAll("_", " ");;
+            location = jsonResults.getString("location").replace("_", " ");;
+
             date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
             proximity = jsonResults.getInt("proximity");

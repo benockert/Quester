@@ -1,12 +1,12 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.util.Log;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import android.os.Parcel;
-import android.os.Parcelable;
 
 public class Activity implements Parcelable {
     public String gFormattedAddress;
@@ -30,8 +30,8 @@ public class Activity implements Parcelable {
         this.gPlaceLat = gPlaceLat;
         this.gPlaceLng = gPlaceLng;
         this.uPriceLevel = uPriceLevel;
-        this.gRating = gRating;
         this.uQuery = uQuery;
+        this.gRating = gRating;
     }
 
     public Activity(Parcel in) {
@@ -90,11 +90,10 @@ public class Activity implements Parcelable {
         return uQuery;
     }
 
-    public float getgRating() {
+    public double getgRating() {
         return gRating;
     }
 
-    // for Parcelable
     @Override
     public int describeContents() {
         return this.hashCode();
@@ -111,6 +110,7 @@ public class Activity implements Parcelable {
         parcel.writeInt(uPriceLevel);
         parcel.writeString(uQuery);
         parcel.writeFloat(gRating);
+
     }
 
     public static Activity getActivityFromJSON(String data) {
@@ -125,6 +125,7 @@ public class Activity implements Parcelable {
             double gPlaceLng = activityObj.getDouble("gPlaceLng");
             int gPriceLevel = activityObj.getInt("gPriceLevel");
             float gRating = Float.parseFloat(activityObj.getString("gRating"));
+
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
 
             return new Activity(gFormattedAddress,
@@ -142,6 +143,5 @@ public class Activity implements Parcelable {
             return null;
         }
     }
-
 }
 

@@ -26,4 +26,5 @@
     <string name="num_activities"># of Activities: %o</string>
     <string name="description">Quest Location Image</string>
     <string name="no_quests_message">No Quests Created Yet!</string>
+    <string name="create_quest">Create Quest</string>
 </resources>
