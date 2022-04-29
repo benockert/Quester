@@ -96,7 +96,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
-        //currentUser = mAuth.getCurrentUser().getDisplayName();
+        currentUser = mAuth.getCurrentUser().getDisplayName();
     }
 
     private void createRecyclerView() {
@@ -170,11 +170,6 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         @Override
         public void run() { writeQuestToDb(); }
 
-        /**
-         * Contains database posts for message:
-         *  Two classes, Sent and Received are posted directly to the firebase node under the user.
-         *  Their fields must be public (or have getters) in order for firebase to parse them correctly.
-         */
         private void writeQuestToDb() {
             Log.d(TAG, "Writing Quest to the Database");
 
@@ -185,7 +180,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));
             });
-            dr.child("quests").child(joinCode).child("users").child("Ben").setValue(true); // todo update username
+            dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true);
         }
     }
 

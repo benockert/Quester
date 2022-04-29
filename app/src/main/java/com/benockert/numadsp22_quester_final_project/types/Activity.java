@@ -1,5 +1,10 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
@@ -12,11 +17,12 @@ public class Activity implements Parcelable {
     public double gPlaceLng;
     public int uPriceLevel;
     public String uQuery;
+    public float gRating;
 
     public Activity() {
     }
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -24,6 +30,7 @@ public class Activity implements Parcelable {
         this.gPlaceLat = gPlaceLat;
         this.gPlaceLng = gPlaceLng;
         this.uPriceLevel = uPriceLevel;
+        this.gRating = gRating;
         this.uQuery = uQuery;
     }
 
@@ -36,6 +43,7 @@ public class Activity implements Parcelable {
         gPlaceLng = in.readDouble();
         uPriceLevel = in.readInt();
         uQuery = in.readString();
+        gRating = in.readFloat();
     }
 
     public static final Creator<Activity> CREATOR = new Creator<Activity>() {
@@ -82,6 +90,11 @@ public class Activity implements Parcelable {
         return uQuery;
     }
 
+    public float getgRating() {
+        return gRating;
+    }
+
+    // for Parcelable
     @Override
     public int describeContents() {
         return this.hashCode();
@@ -97,5 +110,38 @@ public class Activity implements Parcelable {
         parcel.writeDouble(gPlaceLng);
         parcel.writeInt(uPriceLevel);
         parcel.writeString(uQuery);
+        parcel.writeFloat(gRating);
     }
+
+    public static Activity getActivityFromJSON(String data) {
+        try {
+            JSONObject activityObj = new JSONObject(data);
+            Log.i("activities", activityObj.toString());
+            String gFormattedAddress = activityObj.getString("gFormattedAddress").replaceAll("_", " ");
+            String gName = activityObj.getString("gName").replaceAll("_", " ");
+            String gPhotoReference = activityObj.getString("gPhotoReference");
+            String gPlaceId = activityObj.getString("gPlaceId");
+            double gPlaceLat = activityObj.getDouble("gPlaceLat");
+            double gPlaceLng = activityObj.getDouble("gPlaceLng");
+            int gPriceLevel = activityObj.getInt("gPriceLevel");
+            float gRating = Float.parseFloat(activityObj.getString("gRating"));
+            String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
+
+            return new Activity(gFormattedAddress,
+                    gName,
+                    gPhotoReference,
+                    gPlaceId,
+                    gPlaceLat,
+                    gPlaceLng,
+                    gPriceLevel,
+                    uQuery,
+                    gRating);
+        } catch (JSONException e) {
+            Log.e("ACTIVITY_PARSER", "JSONException");
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
+

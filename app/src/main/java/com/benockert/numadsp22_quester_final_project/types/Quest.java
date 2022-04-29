@@ -1,7 +1,17 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
-import java.io.Serializable;
 import java.util.List;
+import android.util.Log;
+
+import com.google.firebase.database.Exclude;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class Quest {
     public boolean active;
@@ -41,6 +51,23 @@ public class Quest {
         return this.datetime;
     }
 
+    @Exclude
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":"));
+    }
+
+    @Exclude
+    public String getDate() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
+    }
+
+    @Exclude
+    public String getTime() {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
+    }
+
     public int getProximity() {
         return this.proximity;
     }
@@ -65,4 +92,54 @@ public class Quest {
         return this.currentActivity;
     }
 
+    public static Quest getQuestFromJSON(String data) {
+        try {
+            boolean completed = false;
+            String location = "N/A";
+            int proximity = 0;
+            String date = null;
+            String photoReference = "N/A";
+            List<String> users = new ArrayList<>();
+            List<Activity> activities = new ArrayList<>();
+            int currentActivity = 0;
+            boolean active = false;
+            data=data.replace(", ",",").replace(" ","_");
+
+            JSONObject jsonResults = new JSONObject(data);
+            Log.i("json", data);
+            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
+
+            Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
+
+            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
+            JSONObject usersObj = jsonResults.getJSONObject("users");
+
+            active = jsonResults.getBoolean("active");
+            activities = new ArrayList<>();
+            completed = jsonResults.getBoolean("completed");
+            location = jsonResults.getString("location").replaceAll("_", " ");;
+            date = jsonResults.getString("datetime").replace("|", ":");
+            photoReference = jsonResults.getString("photoReference");
+            proximity = jsonResults.getInt("proximity");
+            users = new ArrayList<>();
+            currentActivity = jsonResults.getInt("currentActivity");
+
+            while (usersIterator.hasNext()) {
+                users.add(usersIterator.next());
+            }
+
+            while (activitiesIterator.hasNext()) {
+                String activity = activitiesIterator.next();
+                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+            }
+
+            return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
+        } catch (JSONException e) {
+            Log.e("QUEST_PARSER", e.toString());
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 }
+

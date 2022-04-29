@@ -4,13 +4,11 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-import android.location.Location;
 import android.util.Log;
 
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.maps.GeoApiContext;
 import com.google.maps.GeocodingApi;
-import com.google.maps.GeolocationApi;
 import com.google.maps.ImageResult;
 import com.google.maps.PlacesApi;
 import com.google.maps.TextSearchRequest;
@@ -22,7 +20,6 @@ import com.google.maps.model.PlaceDetails;
 import com.google.maps.model.PlacesSearchResponse;
 import com.google.maps.model.PlacesSearchResult;
 import com.google.maps.model.PriceLevel;
-
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
@@ -96,19 +93,17 @@ public class GooglePlacesClient {
 
                 PlacesSearchResult p = filteredPlaces.get(randomSelection);
                 String pPhotoReference = getPlacePhotoReference(p.placeId);
-                Activity a = new Activity(p.formattedAddress.replace(",", ""), p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query);
+                Activity a = new Activity(p.formattedAddress.replace(",", ""), p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query, p.rating);
                 Log.d(TAG, "Randomly selected activity: " + a.gName + " | Ratings: " + p.userRatingsTotal + " | Stars: " + p.rating);
                 return a;
             } else {
                 // rerun without price constraints
                 return textSearch(query, priceLevel, popularity, false);
             }
-
         } catch (ApiException | IOException | InterruptedException e) {
             e.printStackTrace();
             Log.e(TAG, "Error in text search request");
         }
-
         return null;
     }
 
@@ -159,10 +154,7 @@ public class GooglePlacesClient {
     public byte[] getPlacePhoto(String photoReference, int maxWidth, int maxHeight) {
         Log.v(TAG, "Getting place photo --- " + photoReference);
         try {
-            if (this.context == null) {
-                Log.v(TAG, "CONTEXT IS NULL");
-            }
-            ImageResult response = PlacesApi.photo(this.context, photoReference).maxHeight(maxHeight).maxWidth(maxWidth).await();
+            ImageResult response = PlacesApi.photo(this.context, photoReference).maxWidth(maxWidth).maxHeight(maxHeight).await();
             byte[] photoData = response.imageData;
             Log.d(TAG, "Place photo content type " + response.contentType);
             return photoData;
