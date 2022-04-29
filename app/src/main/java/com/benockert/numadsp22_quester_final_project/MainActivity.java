@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -39,8 +40,9 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra("joinCode", "62657d");
                 startActivity(intent);
                 break;
-            case R.id.refresh:
-//                refresh();
+            case R.id.create_quest:
+                intent = new Intent(this, CreateQuestActivity.class);
+                startActivity(intent);
                 break;
 
         }

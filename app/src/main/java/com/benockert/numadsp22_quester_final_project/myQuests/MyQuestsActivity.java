@@ -161,8 +161,8 @@ public class MyQuestsActivity extends AppCompatActivity {
                         }
                     }
 
-                    usersActiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
-                    usersInactiveQuests.sort(Comparator.comparing(Quest::getDateTime).reversed());
+                    usersActiveQuests.sort(Comparator.comparing(Quest::getLocalDateTime).reversed());
+                    usersInactiveQuests.sort(Comparator.comparing(Quest::getLocalDateTime).reversed());
 
                     for (Quest quest : usersActiveQuests) {
                         QuestCard questCard = new QuestCard(quest);
@@ -186,15 +186,15 @@ public class MyQuestsActivity extends AppCompatActivity {
         });
     }
 
-    // Handling Orientation Changes
-    @Override
-    protected void onSaveInstanceState(@NonNull Bundle outState) {
-        int size = questList == null ? 0 : questList.size();
-        outState.putInt(NUMBER_OF_ITEMS, size);
-
-        for (int i = 0; i < size; i++) {
-            outState.putSerializable(KEY_OF_INSTANCE + i, questList.get(i).getQuest());
-        }
-        super.onSaveInstanceState(outState);
-    }
+//    // Handling Orientation Changes
+//    @Override
+//    protected void onSaveInstanceState(@NonNull Bundle outState) {
+//        int size = questList == null ? 0 : questList.size();
+//        outState.putInt(NUMBER_OF_ITEMS, size);
+//
+//        for (int i = 0; i < size; i++) {
+//            outState.putSerializable(KEY_OF_INSTANCE + i, questList.get(i).getQuest());
+//        }
+//        super.onSaveInstanceState(outState);
+//    }
 }
