@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -14,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.benockert.numadsp22_quester_final_project.MainActivity;
+import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.Templates.ChooseTemplate;
@@ -254,5 +257,30 @@ public class PastQuests extends AppCompatActivity {
     public void toCreateQuest(View v) {
         Intent i = new Intent();
         startActivity(i);
+    }
+
+    public void onClick(MenuItem item) {
+
+        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
+            @Override
+            public boolean onMenuItemClick(MenuItem menuItem) {
+                Intent i;
+                if (menuItem.getItemId() == R.drawable.ic_home) {
+                    i = new Intent(context, MainActivity.class);
+                    startActivity(i);
+                } else if (menuItem.getItemId() == R.drawable.ic_recaps) {
+                    i = new Intent(context, ViewAllRecaps.class);
+                    startActivity(i);
+                } else if (menuItem.getItemId() == R.drawable.ic_settings) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+                } else {
+                    return false;
+                }
+                return true;
+            }
+        });
+
+
     }
 }

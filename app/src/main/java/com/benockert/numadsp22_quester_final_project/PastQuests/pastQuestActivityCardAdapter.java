@@ -53,7 +53,7 @@ public class pastQuestActivityCardAdapter extends RecyclerView.Adapter<pastQuest
         //converting the integer price range to a series of dollar signs to display the price range
         StringBuilder temp = new StringBuilder();
         temp.append("Price Range: ");
-        for (int x = 0; x < currentCard.getgPriceLevel(); x++) {
+        for (int x = 0; x < currentCard.getuPriceLevel(); x++) {
             temp.append("$");
         }
         holder.price.setText(temp);
