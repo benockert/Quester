@@ -49,4 +49,7 @@
     <string name="quests">Quests</string>
     <string name="profile">profile</string>
     <string name="active_quest">Active Quest</string>
+    <string name="new_email">New Email</string>
+    <string name="new_username">New Username</string>
+    <string name="new_password">New Password</string>
 </resources>

@@ -45,6 +45,9 @@
             android:name=".PhotoRecap.ViewAllRecaps"
             android:exported="false" />
         <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
+        <activity
             android:name=".PhotoRecap.ViewRecap"
             android:exported="false" />
         <activity

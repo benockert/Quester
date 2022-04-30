@@ -16,6 +16,7 @@ import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.PastQuests.PastQuests;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -62,7 +63,7 @@ public class MyQuestsActivity extends AppCompatActivity {
             apiKey = metaData.get("com.google.android.geo.API_KEY").toString();
         } catch (PackageManager.NameNotFoundException e) {
             e.printStackTrace();
-            Log.e("MY_QUESTS_ACTIVITY", "API_KEY not found in metadata");
+             Log.e("MY_QUESTS_ACTIVITY", "API_KEY not found in metadata");
         }
 
         // create the Google Maps Geo API context
@@ -79,8 +80,8 @@ public class MyQuestsActivity extends AppCompatActivity {
                 i = new Intent(context, ViewAllRecaps.class);
                 startActivity(i);
             } else if (item.getItemId() == R.drawable.ic_profile) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
+                i = new Intent(context, UserProfileActivity.class);
+                startActivity(i);
             }else if (item.getItemId() == R.drawable.ic_curr_activity) {
 //                    i = new Intent(context, MainActivity.class);
 //                    startActivity(i);

@@ -13,6 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -72,8 +73,8 @@ public class ViewAllRecaps extends AppCompatActivity {
                 i = new Intent(context, MyQuestsActivity.class);
                 startActivity(i);
             } else if (item.getItemId() == R.drawable.ic_profile) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
+                    i = new Intent(context, UserProfileActivity.class);
+                    startActivity(i);
             } else if (item.getItemId() == R.drawable.ic_curr_activity) {
 //                    i = new Intent(context, MainActivity.class);
 //                    startActivity(i);
