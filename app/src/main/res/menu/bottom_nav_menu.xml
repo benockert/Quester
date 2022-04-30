@@ -6,11 +6,6 @@
         android:icon="@drawable/ic_home"
         android:title="@string/home"/>
     <item
-        android:id="@+id/nav_quests"
-        android:enabled="true"
-        android:icon="@drawable/ic_quests"
-        android:title="@string/quests"/>
-    <item
         android:id="@+id/nav_currActivity"
         android:enabled="true"
         android:icon="@drawable/ic_curr_activity"

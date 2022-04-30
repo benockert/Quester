@@ -1,5 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.myQuests;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -11,9 +12,14 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.PastQuests.PastQuests;
+import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -64,7 +70,26 @@ public class MyQuestsActivity extends AppCompatActivity {
 
         //changed how current username is gotten, was: this.getIntent().getExtras().get("currentUser").toString()
         currentUser = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
+        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
 
+        Context context = this;
+        bNavView.setOnItemSelectedListener(item -> {
+            Intent i;
+            if (item.getItemId() == R.id.nav_recap) {
+                i = new Intent(context, ViewAllRecaps.class);
+                startActivity(i);
+            } else if (item.getItemId() == R.drawable.ic_profile) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+            }else if (item.getItemId() == R.drawable.ic_curr_activity) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+            }
+            return false;
+        });
+        bNavView.setOnItemReselectedListener(item -> {
+            Snackbar.make(this.getCurrentFocus(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
+        });
         createRecyclerView();
         getAllQuests();
     }
@@ -79,19 +104,16 @@ public class MyQuestsActivity extends AppCompatActivity {
         // Listener to open Quest when card is clicked
         LinkClickListener itemClickListener = (position, view) -> {
             QuestCard questCard = questList.get(position);
-//                if (questCard.getQuest().isActive()) {
+            if (questCard.getQuest().isActive()) {
 //                     Intent intent = new Intent(this, ActiveQuests.class);
 //                     intent.putExtra("questName", questCard.getQuest().getName());
 //                     view.getContext().startActivity(intent);
-//                } else {
-            //startIntent(questCard);
-            Intent intent = new Intent(this, PastQuests.class);
-            intent.putExtra("questId", questCard.getQuest().getJoinCode());
-            intent.putExtra("questName", questCard.getQuest().getDatetime());
-            startActivity(intent);
-
-//            generateJoinCode();
-//                }
+            } else {
+                Intent intent = new Intent(this, PastQuests.class);
+                intent.putExtra("questId", questCard.getQuest().getJoinCode());
+                intent.putExtra("questName", questCard.getQuest().getDatetime());
+                startActivity(intent);
+            }
             recyclerViewAdapter.notifyItemChanged(position);
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);

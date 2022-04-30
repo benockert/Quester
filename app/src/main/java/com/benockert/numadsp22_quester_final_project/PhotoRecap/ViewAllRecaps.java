@@ -69,19 +69,14 @@ public class ViewAllRecaps extends AppCompatActivity {
         bNavView.setOnItemSelectedListener(item -> {
             Intent i;
             if (item.getItemId() == R.id.nav_home) {
-                i = new Intent(context, MainActivity.class);
-                startActivity(i);
-                return true;
-            } else if (item.getItemId() == R.id.nav_recap) {
-                return true;
-            } else if (item.getItemId() == R.id.nav_quests) {
                 i = new Intent(context, MyQuestsActivity.class);
                 startActivity(i);
-                // return true;
             } else if (item.getItemId() == R.drawable.ic_profile) {
 //                    i = new Intent(context, MainActivity.class);
 //                    startActivity(i);
-                return true;
+            } else if (item.getItemId() == R.drawable.ic_curr_activity) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
             }
             return false;
         });
