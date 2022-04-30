@@ -22,19 +22,17 @@ public class Activity implements Parcelable {
     public Activity() {
     }
 
-    public Activity() {
-
-    }
-
-    public Activity(String gName, int gPriceLevel,
+    public Activity(String gName, int uPriceLevel,
                     String gPhotoReference, String gFormattedAddress) {
         this.gName = gName;
-        this.gPriceLevel = gPriceLevel;
+        this.uPriceLevel = uPriceLevel;
         this.gPhotoReference = gPhotoReference;
         this.gFormattedAddress = gFormattedAddress;
     }
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery, float gRating) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference,
+                    String gPlaceId, double gPlaceLat, double gPlaceLng,
+                    int uPriceLevel, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -156,7 +154,7 @@ public class Activity implements Parcelable {
             String gPlaceId = activityObj.getString("gPlaceId");
             double gPlaceLat = activityObj.getDouble("gPlaceLat");
             double gPlaceLng = activityObj.getDouble("gPlaceLng");
-            int gPriceLevel = activityObj.getInt("gPriceLevel");
+            int gPriceLevel = activityObj.getInt("uPriceLevel");
             float gRating = Float.parseFloat(activityObj.getString("gRating"));
 
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");

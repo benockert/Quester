@@ -46,4 +46,7 @@
     <string name="settings">Settings</string>
     <string name="recaps">Recaps</string>
     <string name="home">Home</string>
+    <string name="quests">Quests</string>
+    <string name="profile">profile</string>
+    <string name="active_quest">Active Quest</string>
 </resources>

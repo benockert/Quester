@@ -16,19 +16,20 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintLayout"
         android:layout_width="374dp"
-        android:layout_height="156dp"
+        android:layout_height="wrap_content"
+        android:minHeight="150dp"
         app:layout_constraintEnd_toStartOf="@+id/activityQuery"
         app:layout_constraintStart_toStartOf="@+id/activityQuery">
 
         <TextView
             android:id="@+id/activityName"
             android:layout_width="151dp"
-            android:layout_height="21dp"
+            android:layout_height="wrap_content"
             android:layout_marginStart="40dp"
-            android:layout_marginBottom="116dp"
             android:textColor="#616161"
-            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginTop="10dp"
             app:layout_constraintStart_toEndOf="@+id/locationImage"
+            app:layout_constraintTop_toTopOf="parent"
             tools:text="Activity Name" />
 
         <ImageView
@@ -39,40 +40,37 @@
             android:contentDescription="@string/activity_location_image"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.328" />
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/activityPrice"
-            android:layout_width="115dp"
-            android:layout_height="20dp"
-            android:layout_marginTop="8dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
             android:textColor="#616161"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="@+id/activityName"
             app:layout_constraintTop_toBottomOf="@+id/activityName"
-            app:layout_constraintVertical_bias="0.0"
             tools:text="Activity Price" />
 
         <TextView
             android:id="@+id/locationAddress"
-            android:layout_width="wrap_content"
+            android:layout_width="151dp"
             android:layout_height="wrap_content"
-            tools:text="Activity Location"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@+id/activityPrice"
-            app:layout_constraintTop_toBottomOf="@+id/activityPrice" />
+            app:layout_constraintTop_toBottomOf="@+id/activityPrice"
+            tools:text="Activity Location" />
 
         <ImageView
             android:id="@+id/mapsImg"
             android:layout_width="42dp"
             android:layout_height="33dp"
-            android:layout_marginTop="24dp"
-            android:layout_marginEnd="4dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginEnd="5dp"
+            android:contentDescription="@string/google_maps_logo"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/locationAddress"
-            app:srcCompat="@drawable/google_maps_logo"
-            android:contentDescription="@string/google_maps_logo" />
+            app:srcCompat="@drawable/google_maps_logo" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </androidx.cardview.widget.CardView>

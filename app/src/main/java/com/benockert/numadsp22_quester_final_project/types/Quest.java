@@ -24,11 +24,15 @@ public class Quest {
     public int proximity;
     public List<String> users;
     public int currentActivity;
+    public String joinCode;
 
     public Quest() {
     }
 
-    public Quest(boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
+    public Quest(String joinCode, boolean active, boolean completed, String location,
+                 String datetime, int proximity, String photoReference,
+                 List<Activity> activities, List<String> users, int currentActivity) {
+        this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
         this.location = location;
@@ -94,18 +98,19 @@ public class Quest {
         return this.currentActivity;
     }
 
-    public static Quest getQuestFromJSON(String data) {
+    public static Quest getQuestFromJSON(String data, String currentQuestId) {
         try {
+            String joinCode = currentQuestId;
             boolean completed = false;
             String location = "N/A";
             int proximity = 0;
             String date = null;
 
-            String photoReference = "N/A";
-            List<String> users = new ArrayList<>();
-            List<Activity> activities = new ArrayList<>();
-            int currentActivity = 0;
-            boolean active = false;
+            String photoReference;
+            List<String> users;
+            List<Activity> activities;
+            int currentActivity;
+            boolean active;
             data=data.replace(", ",",").replace(" ","_");
 
             JSONObject jsonResults = new JSONObject(data);
@@ -135,7 +140,7 @@ public class Quest {
                 activities.add(Activity.getActivityFromJSON(questActivities.getJSONObject(i).toString()));
             }
 
-            return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
+            return new Quest(joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();
@@ -143,5 +148,9 @@ public class Quest {
         }
     }
 
+    @Exclude
+    public String getJoinCode() {
+        return this.joinCode;
+    }
 }
 
