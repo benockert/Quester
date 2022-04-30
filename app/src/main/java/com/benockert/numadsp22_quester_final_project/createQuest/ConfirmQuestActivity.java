@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -13,7 +14,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.ConfirmActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
@@ -133,7 +136,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
     private void startQuest(boolean now) {
         // generate code
         String rand = UUID.randomUUID().toString();
-        String joinCode = rand.substring(rand.length() - 6);
+        String joinCode = "q"+ rand.substring(rand.length() - 5);
 
         String datetime = LocalDateTime.now().toString().replace(":", "|");
         String[] datetimeStrings = datetime.split("\\.");
@@ -143,11 +146,14 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         CreatingQuest creatingQuest = new CreatingQuest(joinCode, datetime, questLocation, locationPhotoReference, questUserProximity, activities);
         creatingQuest.run();
 
+        Intent intent;
         if (now) {
-            // redirect to active quest activity with join code in intent
+            intent = new Intent(this, ActiveQuest.class);
+            intent.putExtra("joinCode", joinCode);
         } else {
-            // redirect to my quests activity
+            intent = new Intent(this, MyQuestsActivity.class);
         }
+        startActivity(intent);
     }
 
     private class CreatingQuest implements Runnable {
@@ -175,7 +181,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
             List<String> listOfUsers = new ArrayList<>();
 
-            Quest newQuest = new Quest(true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
+            Quest newQuest = new Quest(joinCode,true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
 
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));

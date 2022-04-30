@@ -27,4 +27,10 @@
     <string name="description">Quest Location Image</string>
     <string name="no_quests_message">No Quests Created Yet!</string>
     <string name="create_quest">Create Quest</string>
+    <string name="up_next">Up Next</string>
+    <string name="current_stop">Current Stop</string>
+    <string name="you_searched">You searched:</string>
+    <string name="take_photo_button">TAKE PHOTO</string>
+    <string name="next_stop_button">NEXT STOP</string>
+    <string name="exit_button">EXIT</string>
 </resources>

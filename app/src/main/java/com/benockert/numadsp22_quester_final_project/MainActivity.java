@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.openActiveQuest:
                 intent = new Intent(this, ActiveQuest.class);
-                intent.putExtra("joinCode", "62657d");
+                intent.putExtra("joinCode", "q9754c");
                 startActivity(intent);
                 break;
             case R.id.create_quest:

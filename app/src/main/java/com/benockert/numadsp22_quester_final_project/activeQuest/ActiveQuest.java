@@ -48,7 +48,6 @@ public class ActiveQuest extends AppCompatActivity {
     private String currentQuestId;
     private Quest currentQuest;
     private List<Activity> activities;
-    private List<Byte[]> activityBytes;
     private Activity currentActivity;
     private Button buttonTakePicture;
     private RatingBar ratingBar;
@@ -97,9 +96,10 @@ public class ActiveQuest extends AppCompatActivity {
         buttonTakePicture.setOnClickListener(this::takePicture);
 
         // retrieve active quest
-        // fill in values
         currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
         getActiveQuest();
+
+
 
         // get the API key for the Places SDK to use
         try {
@@ -124,17 +124,18 @@ public class ActiveQuest extends AppCompatActivity {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue());
                 Log.d(TAG, String.format("Result: %s", result));
-                currentQuest = Quest.getQuestFromJSON(result);
+                currentQuest = Quest.getQuestFromJSON(currentQuestId,result);
                 if (currentQuest == null) {
                     return;
                 }
                 activities = currentQuest.activities;
                 currentActivity = activities.get(currentQuest.getCurrentActivity());
                 previewActivityIndex = currentQuest.getCurrentActivity() + 1;
-                if (activities.size() > previewActivityIndex) {
+                if (previewActivityIndex == activities.size()) {
+                    onLastStop = true;
+                } else if (activities.size() > previewActivityIndex) {
                     previewActivity = activities.get(previewActivityIndex);
                 }
-
                 setActivityFields();
             }
         });
@@ -147,9 +148,10 @@ public class ActiveQuest extends AppCompatActivity {
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
         ratingBar.setRating(currentActivity.getgRating());
         textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activities.size()));
-        textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
-        textPreviewStopName.setText(previewActivity.getgName());
-
+        if (!onLastStop) {
+            textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
+            textPreviewStopName.setText(previewActivity.getgName());
+        }
         int imgWidth = imageStopImage.getWidth();
         int imgHeight = imageStopImage.getHeight();
 
