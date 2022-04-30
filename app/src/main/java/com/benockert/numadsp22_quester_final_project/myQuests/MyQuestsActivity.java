@@ -66,7 +66,6 @@ public class MyQuestsActivity extends AppCompatActivity {
         currentUser = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
 
         createRecyclerView();
-
         getAllQuests();
     }
 
@@ -87,7 +86,8 @@ public class MyQuestsActivity extends AppCompatActivity {
 //                } else {
             //startIntent(questCard);
             Intent intent = new Intent(this, PastQuests.class);
-            intent.putExtra("questName", String.valueOf(questCard.getQuest().getDateTime()));
+            intent.putExtra("questId", questCard.getQuest().getJoinCode());
+            intent.putExtra("questName", questCard.getQuest().getDatetime());
             startActivity(intent);
 
 //            generateJoinCode();
@@ -124,9 +124,9 @@ public class MyQuestsActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonResults = new JSONObject(result);
                     Iterator<String> questsIterator = jsonResults.keys();
-                    while(questsIterator.hasNext()){
+                    while (questsIterator.hasNext()) {
                         String joinCode = questsIterator.next();
-                        Quest quest = Quest.getQuestFromJSON(jsonResults.getString(joinCode));
+                        Quest quest = Quest.getQuestFromJSON(jsonResults.getString(joinCode), joinCode);
                         if (quest.isUserInQuest(currentUser)) {
                             if (quest.isActive()) {
                                 usersActiveQuests.add(quest);

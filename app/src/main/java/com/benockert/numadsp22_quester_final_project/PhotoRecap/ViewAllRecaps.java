@@ -11,7 +11,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -55,6 +60,33 @@ public class ViewAllRecaps extends AppCompatActivity {
             } else {
                 noRecaps.setVisibility(View.VISIBLE);
             }
+        });
+
+        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
+        bNavView.setSelectedItemId(R.id.nav_recap);
+
+        Context context = this;
+        bNavView.setOnItemSelectedListener(item -> {
+            Intent i;
+            if (item.getItemId() == R.id.nav_home) {
+                i = new Intent(context, MainActivity.class);
+                startActivity(i);
+                return true;
+            } else if (item.getItemId() == R.id.nav_recap) {
+                return true;
+            } else if (item.getItemId() == R.id.nav_quests) {
+                i = new Intent(context, MyQuestsActivity.class);
+                startActivity(i);
+                // return true;
+            } else if (item.getItemId() == R.drawable.ic_profile) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+                return true;
+            }
+            return false;
+        });
+        bNavView.setOnItemReselectedListener(item -> {
+            Snackbar.make(this.getCurrentFocus(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
         });
     }
 

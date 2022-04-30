@@ -1,13 +1,11 @@
 package com.benockert.numadsp22_quester_final_project.PastQuests;
-//https://material.io/components/bottom-navigation#anatomy
-//recaps, home, my quests, active quest, recap
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
@@ -15,8 +13,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.benockert.numadsp22_quester_final_project.MainActivity;
-import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.Templates.ChooseTemplate;
@@ -26,6 +22,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -35,7 +32,8 @@ import java.util.Scanner;
 
 public class PastQuests extends AppCompatActivity {
     private DatabaseReference dr;
-    private String questName;
+    private String questId;
+    private String qRecap;
     private final ArrayList<Activity> pastQuestActivities = new ArrayList<>();
     @SuppressLint("StaticFieldLeak")
     private static Context context;
@@ -53,9 +51,12 @@ public class PastQuests extends AppCompatActivity {
         FirebaseUser currentUser = mAuth.getCurrentUser();
         dr = FirebaseDatabase.getInstance().getReference();
 
-        questName = this.getIntent().getExtras().get("questName").toString();
-        String qRecap = "q" + questName + "_recap";
-        Log.i("name", qRecap);
+        String questName = this.getIntent().getExtras().get("questName").toString();
+        Log.i("questName", questName);
+        questId = this.getIntent().getExtras().get("questId").toString();
+        qRecap = "q" + questName + "_recap";
+        Log.i("questRecap", qRecap);
+        Log.i("id", questId);
         if (currentUser != null) {
 
             String username = currentUser.getDisplayName();
@@ -63,7 +64,7 @@ public class PastQuests extends AppCompatActivity {
             //determining whether create quest recap or view quest recap is displayed
             if (username != null) {
                 dr.child("users").child(username).child("recaps")
-                        .child(qRecap).get().addOnCompleteListener(task -> {
+                        .child(questName).get().addOnCompleteListener(task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().getValue() == null) {
                             findViewById(R.id.createQRecap).setVisibility(View.VISIBLE);
@@ -75,11 +76,10 @@ public class PastQuests extends AppCompatActivity {
             }
         }
 
-        questName = "q" + questName.replaceAll(":", "\\|");
         Log.i("questName", questName);
         context = this;
         TextView qName = findViewById(R.id.pastQuest_questName);
-        qName.setText(this.getIntent().getExtras().get("questName").toString());
+        qName.setText(questName);
 
         createRecyclerView();
         getAndPlaceAllParticipants();
@@ -92,7 +92,7 @@ public class PastQuests extends AppCompatActivity {
     private void getAndPlaceAllParticipants() {
         TextView particpantV = findViewById(R.id.participants);
         //query to retrieve quest participants
-        dr.child("quests").child(questName).child("users").get().addOnCompleteListener(task -> {
+        dr.child("quests").child(questId).child("users").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
                     String results = String.valueOf(task.getResult().getValue());
@@ -144,54 +144,46 @@ public class PastQuests extends AppCompatActivity {
 //            Log.e("TAG", "API_KEY not found in metadata");
 //        }
 
-        dr.child("quests").child(questName).child("activities").get().addOnCompleteListener(task -> {
+        dr.child("quests").child(questId).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
-                    Log.i("json string", String.valueOf(task.getResult().getValue()));
                     String json = convertStringToJson(String.valueOf(task.getResult().getValue())).replaceAll(" ", "_");
-                    Log.i("json string", json);
 
-                    JSONObject objs = new JSONObject(json);
+                    JSONArray arr = new JSONArray(json);
 
-                    Iterator<String> objsIt = objs.keys();
-
-                    while (objsIt.hasNext()) {
+                    for (int x = 0; x < arr.length(); x++) {
+                        JSONObject currActivity = new JSONObject(convertStringToJson(arr.get(x).toString()));
                         String activityName;
                         String address;
                         int price;
                         String photoRef;
 
-                        String key = objsIt.next();
-
-                        if (objs.get(key) instanceof JSONObject) {
-                            JSONObject currActivity = (JSONObject) objs.get(key);
-                            try {
-                                activityName = currActivity.getString("gName")
-                                        .replaceAll("_", " ");
-                            } catch (JSONException e) {
-                                activityName = "N/A";
-                            }
-                            try {
-                                address = currActivity.getString("gFormattedAddress")
-                                        .replaceAll("_", " ");
-                            } catch (JSONException e) {
-                                address = "N/A";
-                            }
-                            try {
-                                price = currActivity.getInt("gPriceLevel");
-                            } catch (JSONException e) {
-                                price = 0;
-                            }
-                            try {
-                                photoRef = currActivity.getString("gPhotoReference");
-                            } catch (JSONException e) {
-                                photoRef = "N/A";
-                            }
-
-                            Activity temp = new Activity(activityName, price, photoRef, address);
-                            pastQuestActivities.add(temp);
-                            rviewAdapter.notifyItemInserted(0);
+                        try {
+                            activityName = currActivity.getString("gName")
+                                    .replaceAll("_", " ");
+                        } catch (JSONException e) {
+                            activityName = "N/A";
                         }
+                        try {
+                            address = currActivity.getString("gFormattedAddress")
+                                    .replaceAll("_", " ");
+                        } catch (JSONException e) {
+                            address = "N/A";
+                        }
+                        try {
+                            price = currActivity.getInt("gPriceLevel");
+                        } catch (JSONException e) {
+                            price = 0;
+                        }
+                        try {
+                            photoRef = currActivity.getString("gPhotoReference");
+                        } catch (JSONException e) {
+                            photoRef = "N/A";
+                        }
+
+                        Activity temp = new Activity(activityName, price, photoRef, address);
+                        pastQuestActivities.add(temp);
+                        rviewAdapter.notifyDataSetChanged();
                     }
                 } catch (JSONException e) {
                     Log.e("ERROR1", e.toString());
@@ -222,7 +214,7 @@ public class PastQuests extends AppCompatActivity {
      */
     public void viewQuestRecap(View v) {
         Intent i = new Intent(this, ViewRecap.class);
-        i.putExtra("recapName", questName + "_recap");
+        i.putExtra("recapName", qRecap);
         startActivity(i);
     }
 
@@ -234,7 +226,7 @@ public class PastQuests extends AppCompatActivity {
      */
     public void createQuestRecap(View v) {
         Intent i = new Intent(this, ChooseTemplate.class);
-        i.putExtra("recapName", questName + "_recap");
+        i.putExtra("recapName", qRecap);
         startActivity(i);
     }
 
@@ -257,30 +249,5 @@ public class PastQuests extends AppCompatActivity {
     public void toCreateQuest(View v) {
         Intent i = new Intent();
         startActivity(i);
-    }
-
-    public void onClick(MenuItem item) {
-
-        item.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem menuItem) {
-                Intent i;
-                if (menuItem.getItemId() == R.drawable.ic_home) {
-                    i = new Intent(context, MainActivity.class);
-                    startActivity(i);
-                } else if (menuItem.getItemId() == R.drawable.ic_recaps) {
-                    i = new Intent(context, ViewAllRecaps.class);
-                    startActivity(i);
-                } else if (menuItem.getItemId() == R.drawable.ic_settings) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
-                } else {
-                    return false;
-                }
-                return true;
-            }
-        });
-
-
     }
 }

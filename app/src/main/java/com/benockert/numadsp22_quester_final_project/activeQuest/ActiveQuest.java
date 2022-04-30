@@ -123,7 +123,7 @@ public class ActiveQuest extends AppCompatActivity {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue());
                 Log.d(TAG, String.format("Result: %s", result));
-                currentQuest = Quest.getQuestFromJSON(result);
+                currentQuest = Quest.getQuestFromJSON(result, currentQuestId);
                 if (currentQuest == null) {
                     return;
                 }
