@@ -1,6 +1,7 @@
 package com.benockert.numadsp22_quester_final_project.createQuest;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
@@ -22,21 +23,27 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCard;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
-import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.RegenerateButtonClickListener;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
-import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PriceLevel;
@@ -44,6 +51,8 @@ import com.google.maps.model.PriceLevel;
 import java.util.ArrayList;
 import java.util.Locale;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class CreateQuestActivity extends AppCompatActivity {
     private String TAG = "LOG_QUESTER_CREATE_QUEST_ACTIVITY";
@@ -55,9 +64,12 @@ public class CreateQuestActivity extends AppCompatActivity {
     public static String PROXIMITY_METERS_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.UserQuestProximity";
     public static String PHOTO_REFERENCE_INTENT_MESSAGE = "com.benockert.numadsp22_quester_final_project.createQuest.QuestLocationPhotoReference";
 
-
     private int LOCATION_PERMISSION_ID = 1;
     public static int METERS_IN_ONE_MILE = 1609;
+
+    private FirebaseAuth mAuth;
+    private DatabaseReference dr;
+    private String currentUser;
 
     private LocationManager locationManager;
     private String apiKey;
@@ -81,6 +93,7 @@ public class CreateQuestActivity extends AppCompatActivity {
     private Group progressIndicatorGroup;
     private TextView progressTextView;
     private TextView missingLocationTextView;
+    private Button joinAQuestButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,6 +114,14 @@ public class CreateQuestActivity extends AppCompatActivity {
         missingLocationTextView = findViewById(R.id.missingLocationText);
         progressIndicatorGroup = findViewById(R.id.progressIndicatorGroup);
         progressTextView = findViewById(R.id.progressText);
+        joinAQuestButton = findViewById(R.id.joinQuestButton);
+
+        joinAQuestButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                openEnterJoinCodeDialog(view);
+            }
+        });
 
         proximitySlider.setLabelFormatter(new LabelFormatter() {
             @NonNull
@@ -139,6 +160,11 @@ public class CreateQuestActivity extends AppCompatActivity {
 
         // create the Google Maps Geo API context
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
+
+        // connect to the db
+        mAuth = FirebaseAuth.getInstance();
+        dr = FirebaseDatabase.getInstance().getReference();
+        currentUser = mAuth.getCurrentUser().getDisplayName();
     }
 
     @Override
@@ -288,7 +314,7 @@ public class CreateQuestActivity extends AppCompatActivity {
             intent.putExtra(PROXIMITY_METERS_INTENT_MESSAGE, Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE));
             intent.putExtra(PHOTO_REFERENCE_INTENT_MESSAGE, questLocationPhotoReference);
             intent.putParcelableArrayListExtra(CONFIRM_ACTIVITIES_INTENT_MESSAGE, activities);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK); // once user leaves confirm quest screen, its gone-
             context.startActivity(intent);
 
             // stop loading icon
@@ -396,4 +422,44 @@ public class CreateQuestActivity extends AppCompatActivity {
             Log.d(TAG, "Provider Disabled - " + provider);
         }
     };
+
+    private void openEnterJoinCodeDialog(View v) {
+        final EditText input = new EditText(this);
+        input.setInputType(InputType.TYPE_CLASS_TEXT);
+        input.setHint("Ask your quest organizer for the code!");
+        input.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(6) });
+
+        final AlertDialog dialog = new AlertDialog.Builder(this)
+                .setView(input)
+                .setTitle("Enter Join Code")
+                .setPositiveButton("Join", null)
+                .setNegativeButton("Cancel", null)
+                .create();
+        dialog.show();
+
+        dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                String joinCode = input.getText().toString();
+                dr.child("quests").child(joinCode).get().addOnCompleteListener(task -> {
+                    if (!joinCode.equals("") && task.isSuccessful() && !String.valueOf(task.getResult().getValue()).equals("null")) {
+                        dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true);
+                        Intent intent = new Intent(v.getContext(), ActiveQuest.class);
+                        intent.putExtra("joinCode", joinCode);
+                        startActivity(intent);
+                    } else {
+                        input.setError("Unable to join quest");
+                    }
+                });
+            }
+        });
+
+        dialog.getButton(AlertDialog.BUTTON_NEGATIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                dialog.cancel();
+            }
+        });
+    }
+
 }

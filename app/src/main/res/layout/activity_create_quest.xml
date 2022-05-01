@@ -214,4 +214,16 @@
         android:visibility="gone"
         app:constraint_referenced_ids="progressText,linearProgressBar"/>
 
+    <Button
+        android:id="@+id/joinQuestButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Join A Quest"
+        android:textSize="11dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginRight="8dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteY="9dp" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

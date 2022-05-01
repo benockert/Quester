@@ -78,8 +78,6 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         questUserProximity = getIntent().getIntExtra(CreateQuestActivity.PROXIMITY_METERS_INTENT_MESSAGE, CreateQuestActivity.METERS_IN_ONE_MILE); // default to 1 mile
         activities = getIntent().getParcelableArrayListExtra(CreateQuestActivity.CONFIRM_ACTIVITIES_INTENT_MESSAGE);
 
-        createRecyclerView();
-
         questLocationImageView = findViewById(R.id.questLocationImageView);
         questLocationTextView = findViewById(R.id.questLocationTextView);
         numberOfActivitiesTextView = findViewById(R.id.questNumberOfActivitesTextView);
@@ -102,6 +100,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
             }
         });
 
+        createRecyclerView();
         populateOverviewCard();
 
         mAuth = FirebaseAuth.getInstance();
