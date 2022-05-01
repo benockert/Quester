@@ -1,41 +1,35 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
+import java.util.List;
 import android.util.Log;
 
+import com.google.firebase.database.Exclude;
+
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
-public class Quest implements Serializable {
+public class Quest {
+    public String joinCode;
     public boolean active;
     public List<Activity> activities;
     public boolean completed;
-    public String joinCode;
     public String location;
-    public LocalDateTime datetime;
+    public String datetime;
     public String photoReference;
-    public float proximity;
+    public int proximity;
     public List<String> users;
-    public String name;
     public int currentActivity;
 
-    public Quest(String name
-            , String joinCode
-            , boolean active
-            , boolean completed
-            , String location
-            , LocalDateTime datetime
-            , float proximity
-            , String photoReference
-            , List<Activity> activities
-            , List<String> users
-            , int currentActivity) {
+    public Quest() {
+    }
+
+    public Quest(String joinCode, boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
         this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
@@ -45,7 +39,6 @@ public class Quest implements Serializable {
         this.photoReference = photoReference;
         this.activities = activities;
         this.users = users;
-        this.name = name;
         this.currentActivity = currentActivity;
     }
 
@@ -61,25 +54,29 @@ public class Quest implements Serializable {
         return this.location;
     }
 
-    public LocalDateTime getDateTime() {
+    public String getDatetime() {
         return this.datetime;
     }
 
+    @Exclude
+    public LocalDateTime getLocalDateTime() {
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":"));
+    }
+
+    @Exclude
     public String getDate() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd-yyyy");
-        return this.datetime.format(formatter);
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
+
     }
 
-    public String getName(){
-        return this.name;
-    }
-
+    @Exclude
     public String getTime() {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("h:mm:ssa");
-        return this.datetime.format(formatter);
+        return LocalDateTime.parse(this.datetime.replace("\\|", ":")).format(formatter);
     }
 
-    public float getProximity() {
+    public int getProximity() {
         return this.proximity;
     }
 
@@ -103,37 +100,35 @@ public class Quest implements Serializable {
         return this.currentActivity;
     }
 
-    public static Quest getQuestFromJSON(String name, String data) {
+    public static Quest getQuestFromJSON(String joinCode, String data) {
         try {
-            String joinCode = "N/A";
             boolean completed = false;
             String location = "N/A";
-            float proximity = 0;
-            LocalDateTime date = null;
+            int proximity = 0;
+            String date = null;
+
             String photoReference = "N/A";
             List<String> users = new ArrayList<>();
             List<Activity> activities = new ArrayList<>();
             int currentActivity = 0;
             boolean active = false;
-            data=data.replace(", ",",").replace(" ","_");
+            data = data.replace(", ", ",").replace(" ", "_");
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
-            Iterator<String> activitiesIterator = jsonResults.getJSONObject("activities").keys();
+
+            JSONArray questActivities = jsonResults.getJSONArray("activities");
 
             Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
-
-            JSONObject activitiesObj = jsonResults.getJSONObject("activities");
             JSONObject usersObj = jsonResults.getJSONObject("users");
 
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
-            joinCode = jsonResults.getString("joinCode");
-            location = jsonResults.getString("location").replaceAll("_", " ");;
-            date = LocalDateTime.parse(jsonResults.getString("datetime").replace("|", ":"));
+            location = jsonResults.getString("location").replace("_", " ");
+            date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
-            proximity = Float.parseFloat(jsonResults.getString("proximity"));
+            proximity = jsonResults.getInt("proximity");
             users = new ArrayList<>();
             currentActivity = jsonResults.getInt("currentActivity");
 
@@ -141,12 +136,11 @@ public class Quest implements Serializable {
                 users.add(usersIterator.next());
             }
 
-            while (activitiesIterator.hasNext()) {
-                String activity = activitiesIterator.next();
-                activities.add(Activity.getActivityFromJSON(activitiesObj.get(activity).toString()));
+            for (int i = 0; i < questActivities.length(); i++) {
+                activities.add(Activity.getActivityFromJSON(questActivities.getJSONObject(i).toString()));
             }
 
-            return new Quest(name, joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
+            return new Quest(joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();
