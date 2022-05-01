@@ -8,6 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import androidx.annotation.ColorInt;
+import androidx.annotation.ColorRes;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -17,8 +19,9 @@ import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.maps.GeoApiContext;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-public class ConfirmActivityCardAdapter extends RecyclerView.Adapter<ConfirmActivityCardHolder> {
+public class ConfirmActivityCardAdapter extends RecyclerView.Adapter<ConfirmActivityCardHolder> implements ConfirmCardMoveCallback {
     private static final String TAG = "CONFIRM_QUEST_ACTIVITY_CARD_ADAPTER";
     private ArrayList<Activity> confirmActivityList;
     private final GeoApiContext apiContext;
@@ -62,4 +65,29 @@ public class ConfirmActivityCardAdapter extends RecyclerView.Adapter<ConfirmActi
         this.regenerateClickListener = regenerateButtonClickListener;
     }
 
+    // for drag n drop
+    @Override
+    public void onRowMoved(int fromPosition, int toPosition) {
+        if (fromPosition < toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(confirmActivityList, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(confirmActivityList, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
+
+    }
+
+    @Override
+    public void onRowSelected(ConfirmActivityCardHolder myViewHolder) {
+        myViewHolder.confirmActivityCardView.setStrokeColor(myViewHolder.activityNameTextView.getResources().getColor(R.color.green_200));
+    }
+
+    @Override
+    public void onRowClear(ConfirmActivityCardHolder myViewHolder) {
+        myViewHolder.confirmActivityCardView.setStrokeColor(myViewHolder.activityNameTextView.getResources().getColor(R.color.green_700));
+    }
 }
