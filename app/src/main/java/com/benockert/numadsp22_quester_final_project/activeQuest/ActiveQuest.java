@@ -13,11 +13,15 @@ import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -64,6 +68,7 @@ public class ActiveQuest extends AppCompatActivity {
     private ArrayList<Activity> activityArrayList;
     private Activity currentActivity;
     private Button buttonTakePicture;
+    private Button buttonExitButton;
     private RatingBar ratingBar;
 
     private RecyclerView recyclerView;
@@ -109,6 +114,9 @@ public class ActiveQuest extends AppCompatActivity {
         drawableDirections = findViewById(R.id.drawableDirections);
         drawableDirections.setOnClickListener(this::openDirections);
 
+        buttonExitButton = findViewById(R.id.buttonExitButton);
+        buttonExitButton.setOnClickListener(this::openExitMenu);
+
         buttonTakePicture = findViewById(R.id.buttonTakePhoto);
         buttonTakePicture.setOnClickListener(this::takePicture);
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
@@ -141,6 +149,7 @@ public class ActiveQuest extends AppCompatActivity {
         previewCardAdapter.notifyDataSetChanged();
 
     }
+
 
     private void getActiveQuest() {
         dr.child("quests").child(currentQuestId).get().addOnCompleteListener(task -> {
@@ -266,6 +275,26 @@ public class ActiveQuest extends AppCompatActivity {
                 , storageDir);
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void openExitMenu(View view) {
+        PopupMenu menu = new PopupMenu(view.getContext(),view, Gravity.CENTER);
+        menu.inflate(R.menu.exit_quest_menu);
+        menu.setOnMenuItemClickListener(menuItem -> {
+            Log.d(TAG + " POPUP", menuItem.getIcon().toString());
+            switch (menuItem.getItemId()) {
+                case R.id.buttonCancelQuest:
+                    cancelQuest();
+                    sendMessage("Quest cancelled!", view);
+                case R.id.buttonSaveAndExit:
+                    saveAndExitToMenu();
+                    sendMessage("Quest saved!", view);
+                case R.id.buttonFinishQuest:
+                    finishQuest();
+                    sendMessage("Quest completed!", view);
+            }
+            return true;
+        });
 
     }
 
@@ -277,7 +306,6 @@ public class ActiveQuest extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     public void finishQuest() {
@@ -291,4 +319,9 @@ public class ActiveQuest extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class).putExtra("currentUser", currentUser);
         startActivity(intent);
     }
+
+    public void sendMessage(String message, View view) {
+        Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
+    }
+
 }

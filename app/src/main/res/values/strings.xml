@@ -33,4 +33,7 @@
     <string name="take_photo_button">TAKE PHOTO</string>
     <string name="next_stop_button">NEXT STOP</string>
     <string name="exit_button">EXIT</string>
+    <string name="quest_cancel_button">Cancel Quest</string>
+    <string name="quest_save_button">Return to My Quests</string>
+    <string name="quest_finish_button">Finish Quest</string>
 </resources>
