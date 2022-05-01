@@ -14,7 +14,6 @@ import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -69,6 +68,7 @@ public class ActiveQuest extends AppCompatActivity {
     private Activity currentActivity;
     private Button buttonTakePicture;
     private Button buttonExitButton;
+    private Button buttonNextStop;
     private RatingBar ratingBar;
 
     private RecyclerView recyclerView;
@@ -87,7 +87,7 @@ public class ActiveQuest extends AppCompatActivity {
 
     ActivityResultLauncher<Intent> activityResultLauncher;
 
-    private boolean onLastStop;
+    private boolean onLastStop = false;
 
     int SELECT_PICTURE = 200;
 
@@ -113,6 +113,9 @@ public class ActiveQuest extends AppCompatActivity {
 
         drawableDirections = findViewById(R.id.drawableDirections);
         drawableDirections.setOnClickListener(this::openDirections);
+
+        buttonNextStop = findViewById(R.id.buttonNextStop);
+        buttonNextStop.setOnClickListener(this::clickNextStop);
 
         buttonExitButton = findViewById(R.id.buttonExitButton);
         buttonExitButton.setOnClickListener(this::openExitMenu);
@@ -144,8 +147,6 @@ public class ActiveQuest extends AppCompatActivity {
         // retrieve active quest
         currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
         getActiveQuest();
-        Log.d(TAG + " AADDDDDDDDDDDD", String.valueOf(activityArrayList.size()));
-        Log.d(TAG + " aaaaaaaaaaa", String.valueOf(previewCardAdapter.getItemCount()));
         previewCardAdapter.notifyDataSetChanged();
 
     }
@@ -163,7 +164,9 @@ public class ActiveQuest extends AppCompatActivity {
                 activityArrayList = new ArrayList<Activity>(currentQuest.activities);
                 currentActivity = activityArrayList.get(currentQuest.getCurrentActivity());
                 previewCardAdapter = new PreviewCardAdapter(activityArrayList);
-
+                if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
+                    onLastStop = true;
+                }
                 new Handler(Looper.getMainLooper()).post(new Runnable() {
                     public void run() {
                         previewCardAdapter.notifyDataSetChanged();
@@ -217,19 +220,25 @@ public class ActiveQuest extends AppCompatActivity {
         imageStopImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
         previewCardAdapter.notifyDataSetChanged();
         Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
+
+        if (onLastStop) {
+            buttonNextStop.setText(R.string.quest_finish_button);
+        }
     }
 
 
-    public void goToNextStop(View view) {
-
-        dr.child("quests").child(currentQuestId).child("currentActivity").setValue(currentQuest.currentActivity + 1).addOnCompleteListener(task -> {
-            currentQuest.currentActivity += 1;
-            currentActivity = activityArrayList.get(currentQuest.currentActivity);
-            populateCurrentActivityFields();
-        });
-
-        if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
-            findViewById(R.id.buttonNextStop).setVisibility(View.INVISIBLE);
+    public void clickNextStop(View view) {
+        if (!onLastStop) {
+            dr.child("quests").child(currentQuestId).child("currentActivity").setValue(currentQuest.currentActivity + 1).addOnCompleteListener(task -> {
+                currentQuest.currentActivity += 1;
+                currentActivity = activityArrayList.get(currentQuest.currentActivity);
+                if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
+                    onLastStop = true;
+                }
+                populateCurrentActivityFields();
+            });
+        } else {
+            finishQuest();
         }
     }
 
@@ -278,7 +287,7 @@ public class ActiveQuest extends AppCompatActivity {
     }
 
     private void openExitMenu(View view) {
-        PopupMenu menu = new PopupMenu(view.getContext(),view, Gravity.CENTER);
+        PopupMenu menu = new PopupMenu(view.getContext(), view, Gravity.CENTER);
         menu.inflate(R.menu.exit_quest_menu);
         menu.setOnMenuItemClickListener(menuItem -> {
             Log.d(TAG + " POPUP", menuItem.getIcon().toString());
