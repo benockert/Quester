@@ -2,7 +2,6 @@ package com.benockert.numadsp22_quester_final_project;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
@@ -19,7 +18,6 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.benockert.numadsp22_quester_final_project.myQuests.QuestCard;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.types.UserProfile;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -32,14 +30,13 @@ import com.google.firebase.auth.FirebaseAuthInvalidUserException;
 import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Objects;
@@ -108,15 +105,14 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+        this.user = mAuth.getCurrentUser();
+        this.email = Objects.requireNonNull(mAuth.getCurrentUser().getEmail());
+        this.username = Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName());
+
         populateData();
     }
 
     private void populateData() {
-        this.user = mAuth.getCurrentUser();
-        this.email = Objects.requireNonNull(mAuth.getCurrentUser().getEmail());
-        this.username = Objects.requireNonNull(mAuth.getCurrentUser().getDisplayName());
-        System.out.println(this.username);
-
         this.currentEmail.setText(String.format(getString(R.string.current_email), this.email));
         this.currentUsername.setText(String.format(getString(R.string.current_username), this.username));
     }
@@ -154,7 +150,9 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void saveEmailTriggered(View view) {
-        if (this.editEmail.getText() != null || !this.editEmail.getText().toString().equals("")) {
+        if (this.editEmail.getText() != null
+                || !this.editEmail.getText().toString().equals("")
+                || !this.editEmail.getText().toString().equals(this.email)) {
             if (this.editEmail.getText().toString().contains("@")) {
                 updateEmail(this.editEmail.getText().toString(), view);
                 this.editEmail.setText("");
@@ -231,7 +229,9 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void saveUsernameTriggered() {
-        if (this.editUsername.getText() != null || !this.editUsername.getText().toString().equals("")) {
+        if ((this.editUsername.getText() != null
+                || !this.editUsername.getText().toString().equals(""))
+                && !this.editUsername.getText().toString().equals(this.username)) {
             this.updateUsername(this.editUsername.getText().toString());
             this.editUsername.setText("");
         } else {
@@ -240,9 +240,10 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void updateUsername(String newUsername) {
+        String oldUsername = this.username;
         //update users
-        dr.child("users").child(this.username).get().addOnCompleteListener(updateUsersTask -> {
-            if (updateUsersTask.getResult().getValue() != null) {
+        dr.child("users").child(oldUsername).get().addOnCompleteListener(updateUsersTask -> {
+            if (updateUsersTask.getResult().getValue() != null ) {
                 String result = convertStingToJson(String.valueOf(updateUsersTask.getResult().getValue())).replaceAll(" ", "_");
                 try {
                     JSONObject jsonResult = new JSONObject(result);
@@ -253,8 +254,6 @@ public class UserProfileActivity extends AppCompatActivity {
                     for (UserProfile.UserRecap recap : userRecaps) {
                         dr.child("users").child(newUsername).child("recaps").child(recap.getName()).child("dateGenerated").setValue(recap.getDateGenerated());
                     }
-
-                    dr.child("users").child(this.username).removeValue();
                 } catch (Exception e) {
                     e.printStackTrace();
                     notifyUser("Username Failed To Updated");
@@ -270,6 +269,7 @@ public class UserProfileActivity extends AppCompatActivity {
         dr.child("quests").get().addOnCompleteListener(updateQuestsTask -> {
             if (updateQuestsTask.getResult().getValue() != null) {
                 String result = convertStingToJson(String.valueOf(updateQuestsTask.getResult().getValue())).replaceAll(" ", "_");
+                Log.d("json", result);
                 try {
                     List<Quest> userQuests = new ArrayList<>();
                     JSONObject jsonResults = new JSONObject(result);
@@ -278,14 +278,19 @@ public class UserProfileActivity extends AppCompatActivity {
                     while(questsIterator.hasNext()){
                         String name = questsIterator.next();
                         Quest quest = Quest.getQuestFromJSON(name, jsonResults.getString(name));
-                        if (quest.isUserInQuest(this.username)) {
+                        System.out.println(quest.getUsers());
+                        if (quest.getUsers().contains(oldUsername)) {
                             userQuests.add(quest);
                         }
                     }
 
+                    System.out.println(userQuests);
+
                     for (Quest q : userQuests) {
+                        System.out.println(newUsername);
+                        System.out.println(oldUsername);
                         dr.child("quests").child(q.joinCode).child("users").child(newUsername).setValue(true);
-                        dr.child("quests").child(q.joinCode).child("users").child(this.username).removeValue();
+                        dr.child("quests").child(q.joinCode).child("users").child(oldUsername).removeValue();
                     }
                 }
                 catch(Exception e){
@@ -296,8 +301,15 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
 
+        dr.child("users").child(oldUsername).removeValue();
+
         //update this username
+        UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                .setDisplayName(newUsername)
+                .build();
+        this.user.updateProfile(profileUpdates);
         this.username = newUsername;
+        populateData();
         notifyUser("Username Has Been Updated");
     }
 

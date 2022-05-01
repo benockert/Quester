@@ -26,7 +26,6 @@
     <string name="num_activities"># of Activities: %o</string>
     <string name="description">Quest Location Image</string>
     <string name="no_quests_message">No Quests Created Yet!</string>
-<<<<<<< HEAD
 
     <string name="user_profile">My Profile</string>
     <string name="current_settings">Current Username &amp; Password</string>
@@ -37,11 +36,8 @@
     <string name="hide_password">Hide Password</string>
     <string name="update_settings">Update Username &amp; Password</string>
     <string name="save">Save</string>
-=======
     <string name="create_quest">Create Quest</string>
-<<<<<<< HEAD
->>>>>>> main
-=======
+
     <string name="you_searched">You searched:</string>
     <string name="take_photo_button">TAKE PHOTO</string>
     <string name="next_stop_button">NEXT STOP</string>
@@ -56,5 +52,4 @@
     <string name="active_quest_header">Active Quest</string>
     <string name="invite_your_friends">Join Code:</string>
 
->>>>>>> main
 </resources>
