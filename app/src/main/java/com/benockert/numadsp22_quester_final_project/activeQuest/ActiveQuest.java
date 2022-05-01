@@ -1,6 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.activeQuest;
 
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -12,12 +14,15 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -68,6 +73,9 @@ public class ActiveQuest extends AppCompatActivity {
     private Activity currentActivity;
     private Button buttonTakePicture;
     private Button buttonExitButton;
+    Button cancelQuest;
+    Button saveAndExit;
+    Button finishQuest;
     private Button buttonNextStop;
     private RatingBar ratingBar;
 
@@ -164,7 +172,7 @@ public class ActiveQuest extends AppCompatActivity {
                 }
                 activityArrayList = new ArrayList<Activity>(currentQuest.activities);
                 currentActivity = activityArrayList.get(currentQuest.getCurrentActivity());
-                previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentQuest.getCurrentActivity());
                 if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
                     onLastStop = true;
                 }
@@ -173,7 +181,7 @@ public class ActiveQuest extends AppCompatActivity {
                         previewCardAdapter.notifyDataSetChanged();
                     }
                 });
-                previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentQuest.getCurrentActivity());
                 recyclerView.setAdapter(previewCardAdapter);
                 Log.d(TAG + "POST NOTIFY", activityArrayList.toString());
                 Log.d(TAG + " AADDDDDDDDDDDD", String.valueOf(activityArrayList.size()));
@@ -188,24 +196,26 @@ public class ActiveQuest extends AppCompatActivity {
         recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
         recyclerView = findViewById(R.id.previewCardRecycler);
         recyclerView.setHasFixedSize(true);
-        previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+        int currentPosition=0;
+        if (currentQuest != null){
+            currentPosition = currentQuest.getCurrentActivity();
+        }
+        previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentPosition);
         recyclerView.setAdapter(previewCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
         Log.d(TAG + "IN RECYCLER", activityArrayList.toString());
         snapHelper = new LinearSnapHelper();
         snapHelper.attachToRecyclerView(recyclerView);
-
     }
 
     private void populateCurrentActivityFields() {
         textCurrentStopName.setText(currentActivity.getgName());
-        String setText = "\"" + currentActivity.getuQuery() + "\"".toUpperCase();
-        textUserSearchTerm.setText(setText);
+        textUserSearchTerm.setText(currentActivity.getuQuery().toUpperCase());
         StringBuilder str_bfr = new StringBuilder();
         for (int i = 0; i < currentActivity.getuPriceLevel(); i++) {
             str_bfr.append("$");
         }
-        setText = str_bfr.toString();
+        String setText = str_bfr.toString();
         textCurrentPriceLevel.setText(setText);
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
         ratingBar.setRating(Float.parseFloat(String.format("%.1f", currentActivity.getgRating())));
@@ -220,6 +230,7 @@ public class ActiveQuest extends AppCompatActivity {
 
         Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
         imageStopImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
+        previewCardAdapter.setCurrentPosition(currentQuest.getCurrentActivity());
         previewCardAdapter.notifyDataSetChanged();
         Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
 
@@ -295,24 +306,35 @@ public class ActiveQuest extends AppCompatActivity {
     }
 
     private void openExitMenu(View view) {
-        PopupMenu menu = new PopupMenu(view.getContext(), view, Gravity.CENTER);
-        menu.inflate(R.menu.exit_quest_menu);
-        menu.setOnMenuItemClickListener(menuItem -> {
-            Log.d(TAG + " POPUP", menuItem.getIcon().toString());
-            switch (menuItem.getItemId()) {
-                case R.id.buttonCancelQuest:
-                    cancelQuest();
-                    sendMessage("Quest cancelled!", view);
-                case R.id.buttonSaveAndExit:
-                    saveAndExitToMenu();
-                    sendMessage("Quest saved!", view);
-                case R.id.buttonFinishQuest:
-                    finishQuest();
-                    sendMessage("Quest completed!", view);
-            }
-            return true;
-        });
+        Context context = view.getContext();
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.active_quest_exit_menu);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
 
+        cancelQuest = dialog.findViewById(R.id.buttonCancelQuest);
+        saveAndExit = dialog.findViewById(R.id.buttonSaveAndExit);
+        finishQuest = dialog.findViewById(R.id.buttonFinishQuest);
+
+        cancelQuest.setOnClickListener(view1 -> {
+            cancelQuest();
+            sendMessage("Quest cancelled!", view);
+        });
+        saveAndExit.setOnClickListener(view1 -> {
+            saveAndExitToMenu();
+            sendMessage("Quest saved!", view);
+        });
+        finishQuest.setOnClickListener(view1 -> {
+            finishQuest();
+            sendMessage("Quest completed!", view);
+        });
+//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+//        int dialogWidth = (int)(displayMetrics.widthPixels * 0.4);
+//        int dialogHeight = (int)(displayMetrics.heightPixels * 0.6);
+//        dialog.getWindow().setLayout(dialogWidth, dialogHeight);
+
+        dialog.show();
     }
 
 

@@ -9,12 +9,14 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.benockert.numadsp22_quester_final_project.R;
 
 public class PreviewCardHolder extends RecyclerView.ViewHolder {
+    public TextView textPreviewMessage;
     public TextView textPreviewStopName;
     public TextView textPreviewUserSearchTerm;
     public TextView textPreviewStopCount;
 
     public PreviewCardHolder(@NonNull View itemView) {
         super(itemView);
+        textPreviewMessage = itemView.findViewById(R.id.textPreviewMessage);
         textPreviewStopName = itemView.findViewById(R.id.textNextStopName);
         textPreviewUserSearchTerm = itemView.findViewById(R.id.textPreviewUserSearchTerm);
         textPreviewStopCount = itemView.findViewById(R.id.textNextStopCount);
