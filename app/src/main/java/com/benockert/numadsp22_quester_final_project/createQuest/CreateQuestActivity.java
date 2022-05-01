@@ -288,6 +288,7 @@ public class CreateQuestActivity extends AppCompatActivity {
             intent.putExtra(PROXIMITY_METERS_INTENT_MESSAGE, Math.round(proximitySlider.getValue() * METERS_IN_ONE_MILE));
             intent.putExtra(PHOTO_REFERENCE_INTENT_MESSAGE, questLocationPhotoReference);
             intent.putParcelableArrayListExtra(CONFIRM_ACTIVITIES_INTENT_MESSAGE, activities);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
 
             // stop loading icon

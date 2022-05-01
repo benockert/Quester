@@ -1,11 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.createQuest;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.ItemTouchHelper;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +8,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
@@ -25,17 +25,14 @@ import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.button.MaterialButton;
-import com.google.android.material.progressindicator.LinearProgressIndicator;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 
-import java.lang.reflect.Array;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
@@ -224,7 +221,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
     private void startQuest(boolean now) {
         // generate code
         String rand = UUID.randomUUID().toString();
-        String joinCode = rand.substring(rand.length() - 6);
+        String joinCode = "q"+ rand.substring(rand.length() - 5);
 
         String datetime = LocalDateTime.now().toString().replace(":", "|");
         String[] datetimeStrings = datetime.split("\\.");
@@ -269,7 +266,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
             List<String> listOfUsers = new ArrayList<>();
 
-            Quest newQuest = new Quest(true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
+            Quest newQuest = new Quest(joinCode,true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
 
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));

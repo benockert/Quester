@@ -1,11 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.activeQuest;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -13,16 +10,39 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
+import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.activeQuest.previewStopCard.PreviewCardAdapter;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
@@ -32,11 +52,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 
-import java.util.List;
-import java.util.UUID;
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 
 public class ActiveQuest extends AppCompatActivity {
-    private static final String TAG = "ACTIVE QUEST";
+    private static final String TAG = "ACTIVE_QUEST_ACTIVITY";
 
     private FirebaseAuth mAuth;
     DatabaseReference dr;
@@ -46,27 +69,35 @@ public class ActiveQuest extends AppCompatActivity {
     private String currentUser;
     private String currentQuestId;
     private Quest currentQuest;
-    private List<Activity> activities;
-    private List<Byte[]> activityBytes;
+    private ArrayList<Activity> activityArrayList;
     private Activity currentActivity;
     private Button buttonTakePicture;
+    private Button buttonExitButton;
+    Button cancelQuest;
+    Button saveAndExit;
+    Button finishQuest;
+    private Button buttonNextStop;
     private RatingBar ratingBar;
 
+    private RecyclerView recyclerView;
+    private PreviewCardAdapter previewCardAdapter;
+    private LinearLayoutManager recyclerLayoutManager;
 
+    private TextView textJoinCode;
     private TextView textCurrentStopName;
     private TextView textUserSearchTerm;
     private TextView textCurrentStopAddress;
+    private TextView textCurrentPriceLevel;
     private TextView textStopCount;
     private ImageView imageStopImage;
     private ShapeableImageView drawableDirections;
+    SnapHelper snapHelper;
 
-    private Activity previewActivity;
-    private int previewActivityIndex;
-    private TextView textPreviewStopName;
-    private TextView textPreviewStopCount;
-    private CardView cardPreviewStop;
+    String mCurrentPhotoPath;
 
-    private boolean onLastStop;
+    ActivityResultLauncher<Intent> activityResultLauncher;
+
+    private boolean onLastStop = false;
 
     int SELECT_PICTURE = 200;
 
@@ -77,27 +108,39 @@ public class ActiveQuest extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
+        currentUser = mAuth.getCurrentUser().getDisplayName();
 
+        activityArrayList = new ArrayList<Activity>();
+        textJoinCode = findViewById(R.id.textJoinCode);
         textCurrentStopName = findViewById(R.id.textCurrentStopName);
         textUserSearchTerm = findViewById(R.id.textUserSearchTerm);
         textCurrentStopAddress = findViewById(R.id.textCurrentStopAddress);
+        textCurrentPriceLevel = findViewById(R.id.textPriceLevel);
         textStopCount = findViewById(R.id.textStopCount);
         imageStopImage = findViewById(R.id.imageStopImage);
         ratingBar = findViewById(R.id.ratingBar);
 
-        textPreviewStopCount = findViewById(R.id.textNextStopCount);
-        textPreviewStopName = findViewById(R.id.textNextStopName);
-        cardPreviewStop = findViewById(R.id.cardNextStop);
+        createRecyclerView();
+
         drawableDirections = findViewById(R.id.drawableDirections);
         drawableDirections.setOnClickListener(this::openDirections);
 
+        buttonNextStop = findViewById(R.id.buttonNextStop);
+        buttonNextStop.setOnClickListener(this::clickNextStop);
+
+        buttonExitButton = findViewById(R.id.buttonExitButton);
+        buttonExitButton.setOnClickListener(this::openExitMenu);
+
         buttonTakePicture = findViewById(R.id.buttonTakePhoto);
         buttonTakePicture.setOnClickListener(this::takePicture);
-
-        // retrieve active quest
-        // fill in values
-        currentQuestId = "newshi";
-        getActiveQuest();
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Log.d(TAG, "Got to activity result for take picture");
+                }
+            }
+        });
 
         // get the API key for the Places SDK to use
         try {
@@ -112,41 +155,75 @@ public class ActiveQuest extends AppCompatActivity {
         // create the Google Maps Geo API context
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
 
-        // if no active quest
-        // redirect to create quest page
+        // retrieve active quest
+        currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
+        getActiveQuest();
+        previewCardAdapter.notifyDataSetChanged();
 
     }
+
 
     private void getActiveQuest() {
         dr.child("quests").child(currentQuestId).get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue());
                 Log.d(TAG, String.format("Result: %s", result));
-                currentQuest = Quest.getQuestFromJSON(result);
+                currentQuest = Quest.getQuestFromJSON(currentQuestId, result);
                 if (currentQuest == null) {
                     return;
                 }
-                activities = currentQuest.activities;
-                currentActivity = activities.get(currentQuest.getCurrentActivity());
-                previewActivityIndex = currentQuest.getCurrentActivity() + 1;
-                if (activities.size() > previewActivityIndex) {
-                    previewActivity = activities.get(previewActivityIndex);
+                activityArrayList = new ArrayList<Activity>(currentQuest.activities);
+                currentActivity = activityArrayList.get(currentQuest.getCurrentActivity());
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentQuest.getCurrentActivity());
+                if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
+                    onLastStop = true;
                 }
-
-                setActivityFields();
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    public void run() {
+                        previewCardAdapter.notifyDataSetChanged();
+                    }
+                });
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentQuest.getCurrentActivity());
+                recyclerView.setAdapter(previewCardAdapter);
+                Log.d(TAG + "POST NOTIFY", activityArrayList.toString());
+                Log.d(TAG + " AADDDDDDDDDDDD", String.valueOf(activityArrayList.size()));
+                Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
+                populateCurrentActivityFields();
             }
         });
     }
 
-    private void setActivityFields() {
+    private void createRecyclerView() {
+        Log.v(TAG, "Creating recycler view for ActiveQuest Activity");
+        recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = findViewById(R.id.previewCardRecycler);
+        recyclerView.setHasFixedSize(true);
+        int currentPosition=0;
+        if (currentQuest != null){
+            currentPosition = currentQuest.getCurrentActivity();
+        }
+        previewCardAdapter = new PreviewCardAdapter(activityArrayList, currentPosition);
+        recyclerView.setAdapter(previewCardAdapter);
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+        Log.d(TAG + "IN RECYCLER", activityArrayList.toString());
+        snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+    }
 
+    private void populateCurrentActivityFields() {
+        textJoinCode.setText(currentQuest.getJoinCode());
         textCurrentStopName.setText(currentActivity.getgName());
-        textUserSearchTerm.setText(currentActivity.getuQuery());
+        textUserSearchTerm.setText(currentActivity.getuQuery().toUpperCase());
+        StringBuilder str_bfr = new StringBuilder();
+        for (int i = 0; i < currentActivity.getuPriceLevel(); i++) {
+            str_bfr.append("$");
+        }
+        String setText = str_bfr.toString();
+        textCurrentPriceLevel.setText(setText);
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
-        ratingBar.setRating(currentActivity.gRating);
-        textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activities.size()));
-        textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
-        textPreviewStopName.setText(previewActivity.getgName());
+        ratingBar.setRating(Float.parseFloat(String.format("%.1f", currentActivity.getgRating())));
+        Log.d(TAG, String.valueOf(ratingBar.getRating()));
+        textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activityArrayList.size()));
 
         int imgWidth = imageStopImage.getWidth();
         int imgHeight = imageStopImage.getHeight();
@@ -156,21 +233,34 @@ public class ActiveQuest extends AppCompatActivity {
 
         Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
         imageStopImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
+        previewCardAdapter.setCurrentPosition(currentQuest.getCurrentActivity());
+        previewCardAdapter.notifyDataSetChanged();
+        Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
 
+
+        if (currentQuest != null){
+            Log.d(TAG + " SNAP HELPER", String.valueOf(currentQuest.currentActivity + 1));
+            recyclerLayoutManager.scrollToPosition(currentQuest.currentActivity + 1);
+        }
+
+        if (onLastStop) {
+            buttonNextStop.setText(R.string.quest_finish_button);
+        }
     }
 
 
-    public void goToNextStop(View view) {
-
-        dr.child("quests").child(currentQuestId).child("currentActivity").setValue(currentQuest.currentActivity + 1).addOnCompleteListener(task -> {
-            currentQuest.currentActivity += 1;
-            currentActivity = activities.get(currentQuest.currentActivity);
-            previewActivityIndex = currentQuest.currentActivity + 1;
-            setActivityFields();
-        });
-
-        if (currentQuest.currentActivity + 1 == activities.size()) {
-            findViewById(R.id.buttonNextStop).setVisibility(View.INVISIBLE);
+    public void clickNextStop(View view) {
+        if (!onLastStop) {
+            dr.child("quests").child(currentQuestId).child("currentActivity").setValue(currentQuest.currentActivity + 1).addOnCompleteListener(task -> {
+                currentQuest.currentActivity += 1;
+                currentActivity = activityArrayList.get(currentQuest.currentActivity);
+                if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
+                    onLastStop = true;
+                }
+                populateCurrentActivityFields();
+            });
+        } else {
+            finishQuest();
         }
     }
 
@@ -187,12 +277,67 @@ public class ActiveQuest extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(ActiveQuest.this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ActiveQuest.this, new String[]{
-                    Manifest.permission.CAMERA
+                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 100);
         } else {
-            Intent intent = new Intent((MediaStore.ACTION_IMAGE_CAPTURE));
-            startActivity(intent);
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            try {
+                File imageFile = createImageFile();
+                Log.i(TAG, imageFile.getAbsolutePath());
+
+                Uri imageURI = FileProvider.getUriForFile(this, "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                activityResultLauncher.launch(intent);
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        Log.i(TAG, timeStamp);
+        String imageFileName = "JPEG_" + currentQuest.joinCode + "_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName
+                , ".jpg"
+                , storageDir);
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
+    private void openExitMenu(View view) {
+        Context context = view.getContext();
+        final Dialog dialog = new Dialog(context);
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setContentView(R.layout.active_quest_exit_menu);
+        dialog.setCanceledOnTouchOutside(true);
+        dialog.setCancelable(true);
+
+        cancelQuest = dialog.findViewById(R.id.buttonCancelQuest);
+        saveAndExit = dialog.findViewById(R.id.buttonSaveAndExit);
+        finishQuest = dialog.findViewById(R.id.buttonFinishQuest);
+
+        cancelQuest.setOnClickListener(view1 -> {
+            cancelQuest();
+            sendMessage("Quest cancelled!", view);
+        });
+        saveAndExit.setOnClickListener(view1 -> {
+            saveAndExitToMenu();
+            sendMessage("Quest saved!", view);
+        });
+        finishQuest.setOnClickListener(view1 -> {
+            finishQuest();
+            sendMessage("Quest completed!", view);
+        });
+//        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+//        int dialogWidth = (int)(displayMetrics.widthPixels * 0.4);
+//        int dialogHeight = (int)(displayMetrics.heightPixels * 0.6);
+//        dialog.getWindow().setLayout(dialogWidth, dialogHeight);
+
+        dialog.show();
     }
 
 
@@ -203,7 +348,6 @@ public class ActiveQuest extends AppCompatActivity {
                 startActivity(intent);
             }
         });
-
     }
 
     public void finishQuest() {
@@ -218,27 +362,8 @@ public class ActiveQuest extends AppCompatActivity {
         startActivity(intent);
     }
 
-
-    public String generateJoinCode() {
-        String rand = UUID.randomUUID().toString();
-        rand = rand.substring(rand.length() - 6);
-        return rand;
-//        AtomicBoolean sendIt = new AtomicBoolean(false);
-//        dr.child("quests").child(rand).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                String result = String.valueOf(task.getResult().getValue());
-//                if (result.equals("null")) {
-//                    // quest does not already exist
-//                    sendIt.set(true);
-//                }
-//            }
-//        });
-//        if (sendIt.get()) {
-//            return rand;
-//        } else {
-//            return generateJoinCode();
-//        }
+    public void sendMessage(String message, View view) {
+        Toast.makeText(view.getContext(), message, Toast.LENGTH_LONG).show();
     }
-
 
 }
