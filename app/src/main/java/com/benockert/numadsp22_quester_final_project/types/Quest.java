@@ -1,6 +1,7 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
 import java.util.List;
+
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;

@@ -41,10 +41,12 @@ public class MainActivity extends AppCompatActivity {
                 break;
             case R.id.openActiveQuest:
                 intent = new Intent(this, ActiveQuest.class);
+                intent.putExtra("joinCode", "q9754c");
                 startActivity(intent);
                 break;
             case R.id.create_quest:
                 intent = new Intent(this, CreateQuestActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(intent);
                 break;
 

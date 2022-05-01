@@ -24,7 +24,18 @@
         <activity
             android:name=".UserProfileActivity"
             android:exported="false" />
-        
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.benockert.numadsp22_quester_final_project.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
+
         <activity
             android:name=".myQuests.MyQuestsActivity"
             android:exported="false">
@@ -44,7 +55,8 @@
         </activity>
         <activity
             android:name=".activeQuest.ActiveQuest"
-            android:exported="false">
+            android:exported="false"
+            android:screenOrientation="portrait">
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="${MAPS_API_KEY}" />

@@ -13,6 +13,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -106,17 +107,18 @@ public class MyQuestsActivity extends AppCompatActivity {
         LinkClickListener itemClickListener = new LinkClickListener() {
             @Override
             public void onItemClick(int position, View view) {
-//                QuestCard questCard = questList.get(position);
-//                if (questCard.getQuest().isActive()) {
-//                     Intent intent = new Intent(this, ActiveQuests.class);
-//                     intent.putExtra("questName", questCard.getQuest().getName());
-//                     view.getContext().startActivity(intent);
-//                } else {
+                QuestCard questCard = questList.get(position);
+                if (questCard.getQuest().isActive()) {
+                     Intent intent = new Intent(getApplicationContext(), ActiveQuest.class);
+                     intent.putExtra("joinCode", questCard.getQuest().getJoinCode());
+                     view.getContext().startActivity(intent);
+                }
+//                else {
 //                     Intent intent = new Intent(this, PastQuests.class);
 //                     intent.putExtra("questName", questCard.getQuest().getName());
 //                     view.getContext().startActivity(intent);
 //                }
-//                recyclerViewAdapter.notifyItemChanged(position);
+                recyclerViewAdapter.notifyItemChanged(position);
             }
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
