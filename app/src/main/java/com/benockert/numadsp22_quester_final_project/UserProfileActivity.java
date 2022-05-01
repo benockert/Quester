@@ -2,8 +2,8 @@ package com.benockert.numadsp22_quester_final_project;
 
 import static android.content.ContentValues.TAG;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,11 +12,16 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.auth.AuthCredential;
+import com.google.firebase.auth.EmailAuthProvider;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException;
 import com.google.firebase.auth.FirebaseAuthInvalidUserException;
+import com.google.firebase.auth.FirebaseAuthRecentLoginRequiredException;
 import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
@@ -31,7 +36,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     TextView currentEmail;
     TextView currentUsername;
-    TextView currentPassword;
 
     EditText editEmail;
     EditText editUsername;
@@ -40,9 +44,6 @@ public class UserProfileActivity extends AppCompatActivity {
     FirebaseUser user;
     String email;
     String username;
-    String password;
-
-    boolean passwordVisable;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,13 +56,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         this.currentEmail = (TextView) findViewById(R.id.current_email);
         this.currentUsername = (TextView) findViewById(R.id.current_username);
-        this.currentPassword = (TextView) findViewById(R.id.current_password);
 
         this.editEmail = (EditText) findViewById(R.id.edit_email);
         this.editUsername = (EditText) findViewById(R.id.edit_username);
         this.editPassword = (EditText) findViewById(R.id.edit_password);
-
-        this.passwordVisable = false;
 
         populateData();
     }
@@ -70,29 +68,13 @@ public class UserProfileActivity extends AppCompatActivity {
         this.user = mAuth.getCurrentUser();
         this.email = Objects.requireNonNull(mAuth.getCurrentUser()).getEmail();
         this.username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-        //this.password = Objects.requireNonNull(mAuth.getCurrentUser())
 
         this.currentEmail.setText(String.format(getString(R.string.current_email), this.email));
         this.currentUsername.setText(String.format(getString(R.string.current_username), this.currentUsername));
-        if (this.passwordVisable) {
-            this.currentPassword.setText(String.format(getString(R.string.current_password), this.password));
-        } else {
-            String passwordAlias = CharBuffer.allocate(this.password.length()).toString().replace( '\0', '*' );;
-            this.currentPassword.setText(String.format(getString(R.string.current_password), passwordAlias));
-        }
     }
 
     public void onClick(View view) {
         switch (view.getId()) {
-            case R.id.view_hide_password:
-                this.passwordVisable = !this.passwordVisable;
-                Button btn = (Button) findViewById(R.id.view_hide_password);
-                if (this.passwordVisable) {
-                    btn.setText(getString(R.string.hide_password));
-                } else {
-                    btn.setText(getString(R.string.view_password));
-                }
-                break;
             case R.id.save_email:
                 if (this.editEmail.getText() != null || !this.editEmail.getText().toString().equals("")) {
                     if (this.editEmail.getText().toString().contains("@")) {
@@ -162,13 +144,14 @@ public class UserProfileActivity extends AppCompatActivity {
     }
 
     private void updateUsername(String newUsername) {
-        //update quests in db to have new username
+        //todo update quests in db to have new username and update users child
     }
 
+    //todo split into helpers
     private void updatePassword(String newPassword, View view) {
         this.user.updatePassword(newPassword).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                this.password = newPassword;
+                //todo do we still need to populate? just have to clear text box
                 populateData();
                 Log.d("MY_PROFILE_ACTIVITY", "Password updated");
             } else {
@@ -191,6 +174,34 @@ public class UserProfileActivity extends AppCompatActivity {
             } else if (e instanceof FirebaseAuthUserCollisionException) {
                 String errorCode = ((FirebaseAuthUserCollisionException) e).getErrorCode();
                 Log.d(TAG, errorCode);
+            } else if (e instanceof FirebaseAuthRecentLoginRequiredException){
+                //todo prompt for username/email and password
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential("adrgasg", "adfgasd");
+
+                // Prompt the user to re-provide their sign-in credentials
+                this.user.reauthenticate(credential).addOnCompleteListener(task ->{
+                    if (task.isSuccessful()) {
+                        user.updatePassword(newPassword).addOnCompleteListener(updateTask -> {
+                            if (task.isSuccessful()) {
+                                populateData();
+                                Log.d("MY_PROFILE_ACTIVITY", "Password updated");
+                            } else {
+                                notifyUser("Password Update Failed");
+                                Log.d("MY_PROFILE_ACTIVITY", "Error password not updated");
+                            }
+                        });
+                    } else {
+                        notifyUser("Authentication Failed");
+                        Log.d(TAG, "Error auth failed");
+                    }
+                }).addOnFailureListener(error -> {
+                    if (error instanceof FirebaseAuthInvalidUserException) {
+                        Log.d(TAG, "Invalid User");
+                    } else if (error instanceof FirebaseAuthInvalidCredentialsException) {
+                        //todo prompt for credentials again
+                    }
+                });
             } else {
                 notifyUser(e.getMessage());
             }
