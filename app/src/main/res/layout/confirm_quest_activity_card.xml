@@ -29,8 +29,8 @@
                 android:id="@+id/placeImageView"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:minHeight="120dp"
-                android:maxHeight="200dp"
+                android:minHeight="100dp"
+                android:maxHeight="150dp"
                 android:maxWidth="300dp"
                 android:adjustViewBounds="true"
                 android:scaleType="centerCrop"
@@ -43,7 +43,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="5dp"
-                android:text="Name"
                 android:textColor="?attr/colorPrimaryVariant"
                 android:textSize="18sp"
                 android:textStyle="bold"
@@ -56,7 +55,6 @@
                 android:id="@+id/userQueryTextView"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Steakhouse in Boston"
                 android:textColor="@color/green_500"
                 android:textSize="12sp"
                 android:textStyle="italic"
@@ -77,12 +75,25 @@
                 app:icon="@drawable/ic_baseline_refresh_24"
                 app:iconGravity="textStart"
                 app:iconPadding="0dp"
-                android:visibility="gone"
                 app:layout_constraintTop_toBottomOf="@id/placeImageView"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
+
+<!--        <com.google.android.material.card.MaterialCardView-->
+<!--            android:id="@+id/regenerateLoadingCardOverlay"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="match_parent"-->
+<!--            android:layout_margin="2dp"-->
+<!--            android:translationZ="90dp"-->
+<!--            app:cardCornerRadius="5dp"-->
+<!--            android:visibility="gone"-->
+<!--            app:layout_constraintBottom_toBottomOf="parent"-->
+<!--            app:layout_constraintEnd_toEndOf="parent"-->
+<!--            app:layout_constraintStart_toStartOf="parent"-->
+<!--            app:layout_constraintTop_toTopOf="parent"-->
+<!--            app:cardBackgroundColor="@color/disabled_transparent" />-->
     </com.google.android.material.card.MaterialCardView>
 </androidx.constraintlayout.widget.ConstraintLayout>

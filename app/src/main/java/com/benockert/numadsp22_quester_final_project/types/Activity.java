@@ -3,12 +3,18 @@ package com.benockert.numadsp22_quester_final_project.types;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.util.Log;
+import android.view.View;
+
+import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
+import com.google.maps.model.PriceLevel;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 
 public class Activity implements Parcelable {
+    private static final String TAG = "ACTIVITY_CLASS";
+
     public String gFormattedAddress;
     public String gName;
     public String gPhotoReference;
@@ -18,11 +24,12 @@ public class Activity implements Parcelable {
     public int uPriceLevel;
     public String uQuery;
     public float gRating;
+    public double uPopularity;
 
     public Activity() {
     }
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, String uQuery, float gRating) {
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, double uPopularity, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -32,6 +39,7 @@ public class Activity implements Parcelable {
         this.uPriceLevel = uPriceLevel;
         this.uQuery = uQuery;
         this.gRating = gRating;
+        this.uPopularity = uPopularity;
     }
 
     public Activity(Parcel in) {
@@ -42,6 +50,7 @@ public class Activity implements Parcelable {
         gPlaceLat = in.readDouble();
         gPlaceLng = in.readDouble();
         uPriceLevel = in.readInt();
+        uPopularity = in.readDouble();
         uQuery = in.readString();
         gRating = in.readFloat();
     }
@@ -108,6 +117,7 @@ public class Activity implements Parcelable {
         parcel.writeDouble(gPlaceLat);
         parcel.writeDouble(gPlaceLng);
         parcel.writeInt(uPriceLevel);
+        parcel.writeDouble(uPopularity);
         parcel.writeString(uQuery);
         parcel.writeFloat(gRating);
 
@@ -123,7 +133,8 @@ public class Activity implements Parcelable {
             String gPlaceId = activityObj.getString("gPlaceId");
             double gPlaceLat = activityObj.getDouble("gPlaceLat");
             double gPlaceLng = activityObj.getDouble("gPlaceLng");
-            int gPriceLevel = activityObj.getInt("gPriceLevel");
+            int uPriceLevel = activityObj.getInt("uPriceLevel");
+            double uPopularity = activityObj.getDouble("uPopularity");
             float gRating = Float.parseFloat(activityObj.getString("gRating"));
 
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
@@ -134,7 +145,8 @@ public class Activity implements Parcelable {
                     gPlaceId,
                     gPlaceLat,
                     gPlaceLng,
-                    gPriceLevel,
+                    uPriceLevel,
+                    uPopularity,
                     uQuery,
                     gRating);
         } catch (JSONException e) {
@@ -142,6 +154,12 @@ public class Activity implements Parcelable {
             e.printStackTrace();
             return null;
         }
+    }
+
+    public Activity onRegenerateActivityClick(View view, int position, GooglePlacesClient client) {
+        Log.v(TAG, "onRegenerateActivityClick in Activity class, regenerating activity at position: " + position);
+        Log.v(TAG, "Query: " + uQuery + " | PriceLevel: " + uPriceLevel + " | Popularity: " + uPopularity);
+        return client.textSearch(this.uQuery, PriceLevel.values()[this.uPriceLevel], this.uPopularity, true);
     }
 }
 
