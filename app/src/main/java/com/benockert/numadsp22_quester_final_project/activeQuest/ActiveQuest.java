@@ -64,6 +64,7 @@ public class ActiveQuest extends AppCompatActivity {
     private TextView textCurrentStopName;
     private TextView textUserSearchTerm;
     private TextView textCurrentStopAddress;
+    private TextView textCurrentPriceLevel;
     private TextView textStopCount;
     private ImageView imageStopImage;
     private ShapeableImageView drawableDirections;
@@ -71,6 +72,7 @@ public class ActiveQuest extends AppCompatActivity {
     private Activity previewActivity;
     private int previewActivityIndex;
     private TextView textPreviewStopName;
+    private TextView textPreviewUserSearchTerm;
     private TextView textPreviewStopCount;
     private CardView cardPreviewStop;
 
@@ -93,12 +95,14 @@ public class ActiveQuest extends AppCompatActivity {
         textCurrentStopName = findViewById(R.id.textCurrentStopName);
         textUserSearchTerm = findViewById(R.id.textUserSearchTerm);
         textCurrentStopAddress = findViewById(R.id.textCurrentStopAddress);
+        textCurrentPriceLevel = findViewById(R.id.textPriceLevel);
         textStopCount = findViewById(R.id.textStopCount);
         imageStopImage = findViewById(R.id.imageStopImage);
         ratingBar = findViewById(R.id.ratingBar);
 
         textPreviewStopCount = findViewById(R.id.textNextStopCount);
         textPreviewStopName = findViewById(R.id.textNextStopName);
+        textPreviewUserSearchTerm = findViewById(R.id.textPreviewUserSearchTerm);
         cardPreviewStop = findViewById(R.id.cardNextStop);
         drawableDirections = findViewById(R.id.drawableDirections);
         drawableDirections.setOnClickListener(this::openDirections);
@@ -165,7 +169,12 @@ public class ActiveQuest extends AppCompatActivity {
     private void setActivityFields() {
 
         textCurrentStopName.setText(currentActivity.getgName());
-        textUserSearchTerm.setText(currentActivity.getuQuery());
+        String setText = "\""+currentActivity.getuQuery()+"\"";
+        textUserSearchTerm.setText(setText);
+        StringBuilder str_bfr = new StringBuilder();
+        for(int i=0;i<currentActivity.getuPriceLevel();i++) { str_bfr.append("$"); }
+        setText = str_bfr.toString();
+        textCurrentPriceLevel.setText(setText);
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
         ratingBar.setRating(Float.parseFloat(String.format("%.1f", currentActivity.getgRating())));
         Log.d(TAG, String.valueOf(ratingBar.getRating()));
@@ -173,6 +182,8 @@ public class ActiveQuest extends AppCompatActivity {
         if (!onLastStop) {
             textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
             textPreviewStopName.setText(previewActivity.getgName());
+            setText = "\""+previewActivity.getuQuery()+"\"";
+            textPreviewUserSearchTerm.setText(setText);
         }
         int imgWidth = imageStopImage.getWidth();
         int imgHeight = imageStopImage.getHeight();

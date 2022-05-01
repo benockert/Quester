@@ -6,15 +6,20 @@
     android:layout_height="match_parent"
     tools:context=".activeQuest.ActiveQuest">
 
-    <androidx.cardview.widget.CardView
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardNextStop"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:layout_marginHorizontal="4dp"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="0dp"
         app:cardBackgroundColor="#858585"
         app:cardCornerRadius="20dp"
-        android:layout_margin="8dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:strokeColor="?attr/colorSecondary"
+        app:strokeWidth="2dp"
+        app:layout_constraintBottom_toTopOf="@+id/cardCurrentStop"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -27,7 +32,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:text="@string/up_next"
                 android:textColor="@color/green_800"
                 android:textSize="16dp"
@@ -39,11 +44,12 @@
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginStart="16dp"
+                android:layout_marginTop="4dp"
                 android:layout_marginEnd="186dp"
-
                 android:layout_marginBottom="16dp"
                 android:textColor="@color/green_800"
                 android:textSize="20sp"
+                android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@+id/textNextStopCount"
                 app:layout_constraintStart_toStartOf="parent"
@@ -55,26 +61,41 @@
                 android:id="@+id/textNextStopCount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="12dp"
                 android:layout_marginEnd="16dp"
                 android:textColor="@color/green_800"
                 android:textSize="20sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="2/3" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </androidx.cardview.widget.CardView>
 
-    <androidx.cardview.widget.CardView
+            <TextView
+                android:id="@+id/textPreviewUserSearchTerm"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:textColor="@color/green_800"
+                android:textSize="16sp"
+                app:layout_constraintStart_toEndOf="@+id/textView6"
+                app:layout_constraintTop_toTopOf="@+id/textView6"
+                tools:text="User Search Term" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/cardCurrentStop"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_margin="4dp"
         app:cardBackgroundColor="#ACACAC"
-        app:cardCornerRadius="8dp"
+        app:cardCornerRadius="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardNextStop">
+        app:layout_constraintTop_toBottomOf="@+id/cardNextStop"
+        app:strokeColor="?attr/colorPrimary"
+        app:strokeWidth="2dp">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
@@ -97,12 +118,12 @@
                 android:id="@+id/textCurrentStopAddress"
                 android:layout_width="220dp"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="4dp"
+                android:layout_marginTop="8dp"
                 android:textColor="@color/green_800"
                 android:textSize="20sp"
                 app:layout_constraintStart_toStartOf="@+id/textCurrentStopName"
-                app:layout_constraintTop_toBottomOf="@+id/ratingBar"
+                app:layout_constraintTop_toBottomOf="@+id/textCurrentStopName"
                 tools:text="Address" />
 
             <TextView
@@ -111,68 +132,66 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom|clip_horizontal"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="16dp"
                 android:textColor="@color/green_800"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.118"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/imageStopImage"
+                app:layout_constraintTop_toBottomOf="@+id/imageStopImageView"
                 tools:text="Next Stop Name" />
 
             <TextView
                 android:id="@+id/textUserSearchTerm"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="4dp"
                 android:textColor="@color/green_800"
                 android:textSize="20sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageStopImage"
-                app:layout_constraintTop_toBottomOf="@+id/textYouSearched"
+                app:layout_constraintBottom_toTopOf="@+id/textPriceLevel"
+                app:layout_constraintStart_toStartOf="@+id/ratingBar"
+                app:layout_constraintTop_toTopOf="@+id/imageStopImageView"
                 tools:text="User Search Term" />
 
             <Button
                 android:id="@+id/buttonTakePhoto"
-                android:layout_width="160dp"
-                android:layout_height="60dp"
-                android:layout_marginEnd="32dp"
+                android:layout_width="100dp"
+                android:layout_height="110dp"
                 android:layout_marginBottom="16dp"
-                android:text="@string/take_photo_button"
-                app:layout_constraintBottom_toTopOf="@+id/buttonNextStop"
-                app:layout_constraintEnd_toEndOf="parent"
-                android:textColor="?attr/colorSecondary"
                 android:backgroundTint="@color/white"
+                android:text="@string/take_photo_button"
+                android:textColor="?attr/colorSecondary"
                 app:cornerRadius="50pt"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonNextStop"
+                app:layout_constraintStart_toEndOf="@+id/buttonExitButton"
                 app:strokeColor="?attr/colorSecondary"
-                app:strokeWidth="4sp"/>
+                app:strokeWidth="4sp" />
 
             <Button
                 android:id="@+id/buttonNextStop"
-                android:layout_width="160dp"
-                android:layout_height="80dp"
-                android:layout_marginEnd="32dp"
-                android:layout_marginBottom="32dp"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="@color/orange_700"
                 android:onClick="goToNextStop"
-                app:cornerRadius="40dp"
                 android:text="@string/next_stop_button"
+                app:cornerRadius="40dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent" />
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/buttonTakePhoto" />
 
             <com.google.android.material.imageview.ShapeableImageView
                 android:id="@+id/drawableDirections"
-                android:layout_width="103dp"
-                android:layout_height="93dp"
-                android:layout_marginTop="16dp"
+                android:layout_width="120dp"
+                android:layout_height="120dp"
+                android:layout_marginBottom="16dp"
                 android:clickable="true"
+                app:layout_constraintBottom_toTopOf="@+id/buttonNextStop"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.4"
-                app:layout_constraintStart_toEndOf="@+id/imageStopImage"
-                app:layout_constraintTop_toBottomOf="@+id/textUserSearchTerm"
-                app:srcCompat="@android:drawable/ic_menu_directions" />
+                app:layout_constraintStart_toEndOf="@+id/buttonTakePhoto"
+                app:srcCompat="@drawable/ic_baseline_directions_24" />
 
             <TextView
                 android:id="@+id/textStopCount"
@@ -191,55 +210,67 @@
                 android:id="@+id/buttonExitButton"
                 android:layout_width="100dp"
                 android:layout_height="60dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginBottom="28dp"
+                android:layout_marginBottom="16dp"
                 android:backgroundTint="#FF0000"
                 android:text="@string/exit_button"
                 app:cornerRadius="30dp"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@+id/buttonTakePhoto"
                 app:layout_constraintStart_toStartOf="parent" />
 
-            <ImageView
-                android:id="@+id/imageStopImage"
-                android:layout_width="160dp"
-                android:layout_height="160dp"
-                android:layout_marginStart="28dp"
-                android:layout_marginTop="24dp"
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/imageStopImageView"
+                android:layout_width="130dp"
+                android:layout_height="130dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="12dp"
+                app:cornerRadius="16dp"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView3"
-                app:srcCompat="@drawable/no_image_found_foreground"
-                app:cornerRadius="40dp"/>
+                app:strokeColor="?attr/colorSecondary"
+                app:strokeWidth="2dp">
 
-            <TextView
-                android:id="@+id/textYouSearched"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="40dp"
-                android:text="@string/you_searched"
-                android:textSize="16sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toEndOf="@+id/imageStopImage"
-                app:layout_constraintTop_toTopOf="@+id/imageStopImage"
-                android:textColor="@color/green_800"/>
+                <ImageView
+                    android:id="@+id/imageStopImage"
+                    android:layout_margin="1dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    app:srcCompat="@drawable/no_image_found_foreground" />
+            </com.google.android.material.card.MaterialCardView>
 
             <RatingBar
                 android:id="@+id/ratingBar"
+                style="?android:attr/ratingBarStyleIndicator"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginBottom="4dp"
                 android:isIndicator="true"
                 android:numStars="5"
                 android:stepSize="0.1"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/textCurrentStopName"
-                app:layout_constraintTop_toBottomOf="@+id/textCurrentStopName" />
+                app:layout_constraintBottom_toBottomOf="@+id/imageStopImageView"
+                app:layout_constraintStart_toEndOf="@+id/imageStopImageView"
+                app:layout_constraintTop_toBottomOf="@+id/textPriceLevel" />
+
+            <TextView
+                android:id="@+id/textPriceLevel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+                android:textColor="@color/green_800"
+                android:textSize="30dp"
+                android:textStyle="bold"
+                android:typeface="serif"
+                app:layout_constraintBottom_toTopOf="@+id/ratingBar"
+                app:layout_constraintStart_toStartOf="@+id/ratingBar"
+                app:layout_constraintTop_toBottomOf="@+id/textUserSearchTerm"
+                tools:text="$$$$" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-    </androidx.cardview.widget.CardView>
+    </com.google.android.material.card.MaterialCardView>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
