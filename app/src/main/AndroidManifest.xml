@@ -20,6 +20,18 @@
         android:roundIcon="@mipmap/quester_logo_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMADSp22_Quester_Final_Project">
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.benockert.numadsp22_quester_final_project.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths">
+            </meta-data>
+        </provider>
+
         <activity
             android:name=".myQuests.MyQuestsActivity"
             android:exported="false">

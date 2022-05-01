@@ -1,10 +1,5 @@
 package com.benockert.numadsp22_quester_final_project.activeQuest;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -13,6 +8,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -20,6 +16,16 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.RatingBar;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
@@ -32,12 +38,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 
+import java.io.File;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
-import java.util.UUID;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 public class ActiveQuest extends AppCompatActivity {
-    private static final String TAG = "ACTIVE QUEST";
+    private static final String TAG = "ACTIVE_QUEST_ACTIVITY";
 
     private FirebaseAuth mAuth;
     DatabaseReference dr;
@@ -65,6 +73,9 @@ public class ActiveQuest extends AppCompatActivity {
     private TextView textPreviewStopName;
     private TextView textPreviewStopCount;
     private CardView cardPreviewStop;
+
+    ActivityResultLauncher<Intent> activityResultLauncher;
+    private String mCurrentPhotoPath;
 
     private boolean onLastStop;
 
@@ -94,11 +105,21 @@ public class ActiveQuest extends AppCompatActivity {
 
         buttonTakePicture = findViewById(R.id.buttonTakePhoto);
         buttonTakePicture.setOnClickListener(this::takePicture);
+        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
+            @Override
+            public void onActivityResult(ActivityResult result) {
+
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                    Log.d(TAG, "Got to activity result for take picture");
+
+                }
+
+            }
+        });
 
         // retrieve active quest
         currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
         getActiveQuest();
-
 
 
         // get the API key for the Places SDK to use
@@ -124,7 +145,7 @@ public class ActiveQuest extends AppCompatActivity {
             if (task.isSuccessful()) {
                 String result = String.valueOf(task.getResult().getValue());
                 Log.d(TAG, String.format("Result: %s", result));
-                currentQuest = Quest.getQuestFromJSON(currentQuestId,result);
+                currentQuest = Quest.getQuestFromJSON(currentQuestId, result);
                 if (currentQuest == null) {
                     return;
                 }
@@ -146,7 +167,8 @@ public class ActiveQuest extends AppCompatActivity {
         textCurrentStopName.setText(currentActivity.getgName());
         textUserSearchTerm.setText(currentActivity.getuQuery());
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
-        ratingBar.setRating(currentActivity.getgRating());
+        ratingBar.setRating(Float.parseFloat(String.format("%.1f", currentActivity.getgRating())));
+        Log.d(TAG, String.valueOf(ratingBar.getRating()));
         textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activities.size()));
         if (!onLastStop) {
             textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
@@ -191,12 +213,37 @@ public class ActiveQuest extends AppCompatActivity {
         if (ContextCompat.checkSelfPermission(ActiveQuest.this, Manifest.permission.CAMERA) !=
                 PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(ActiveQuest.this, new String[]{
-                    Manifest.permission.CAMERA
+                    Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 100);
-        } else {
-            Intent intent = new Intent((MediaStore.ACTION_IMAGE_CAPTURE));
-            startActivity(intent);
         }
+        else {
+            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+             try {
+                    File imageFile = createImageFile();
+                    Log.i(TAG, imageFile.getAbsolutePath());
+
+                    Uri imageURI = FileProvider.getUriForFile(this, "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                    activityResultLauncher.launch(intent);
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+        }
+    }
+
+    private File createImageFile() throws IOException {
+        String timeStamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
+        Log.i(TAG, timeStamp);
+        String imageFileName = "JPEG_" + currentQuest.joinCode + "_" + timeStamp + "_";
+        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File image = File.createTempFile(
+                imageFileName
+                , ".jpg"
+                , storageDir);
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+
     }
 
 
@@ -221,28 +268,4 @@ public class ActiveQuest extends AppCompatActivity {
         Intent intent = new Intent(this, MainActivity.class).putExtra("currentUser", currentUser);
         startActivity(intent);
     }
-
-
-    public String generateJoinCode() {
-        String rand = UUID.randomUUID().toString();
-        rand = rand.substring(rand.length() - 6);
-        return rand;
-//        AtomicBoolean sendIt = new AtomicBoolean(false);
-//        dr.child("quests").child(rand).get().addOnCompleteListener(task -> {
-//            if (task.isSuccessful()) {
-//                String result = String.valueOf(task.getResult().getValue());
-//                if (result.equals("null")) {
-//                    // quest does not already exist
-//                    sendIt.set(true);
-//                }
-//            }
-//        });
-//        if (sendIt.get()) {
-//            return rand;
-//        } else {
-//            return generateJoinCode();
-//        }
-    }
-
-
 }

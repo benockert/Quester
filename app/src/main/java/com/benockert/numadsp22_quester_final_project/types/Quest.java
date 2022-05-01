@@ -127,8 +127,6 @@ public class Quest {
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
             location = jsonResults.getString("location").replace("_", " ");
-            ;
-
             date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
             proximity = jsonResults.getInt("proximity");
