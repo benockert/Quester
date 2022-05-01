@@ -27,7 +27,9 @@ import android.text.InputFilter;
 import android.text.InputType;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -428,6 +430,14 @@ public class CreateQuestActivity extends AppCompatActivity {
         input.setInputType(InputType.TYPE_CLASS_TEXT);
         input.setHint("Ask your quest organizer for the code!");
         input.setFilters(new InputFilter[]{ new InputFilter.LengthFilter(6) });
+        // listening for Enter key press for submitting a search
+        input.setOnKeyListener((view, i, keyEvent) -> {
+            if (keyEvent.getAction() == KeyEvent.ACTION_DOWN &&
+                    keyEvent.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
+                joinQuestWithCode(view, input);
+            }
+            return false;
+        });
 
         final AlertDialog dialog = new AlertDialog.Builder(this)
                 .setView(input)
@@ -440,17 +450,7 @@ public class CreateQuestActivity extends AppCompatActivity {
         dialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                String joinCode = input.getText().toString();
-                dr.child("quests").child(joinCode).get().addOnCompleteListener(task -> {
-                    if (!joinCode.equals("") && task.isSuccessful() && !String.valueOf(task.getResult().getValue()).equals("null")) {
-                        dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true);
-                        Intent intent = new Intent(v.getContext(), ActiveQuest.class);
-                        intent.putExtra("joinCode", joinCode);
-                        startActivity(intent);
-                    } else {
-                        input.setError("Unable to join quest");
-                    }
-                });
+                joinQuestWithCode(view, input);
             }
         });
 
@@ -461,5 +461,24 @@ public class CreateQuestActivity extends AppCompatActivity {
             }
         });
     }
+
+    private void joinQuestWithCode(View v, EditText input) {
+        InputMethodManager inputManager = (InputMethodManager)
+                getSystemService(Context.INPUT_METHOD_SERVICE);
+        inputManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(),
+                InputMethodManager.HIDE_NOT_ALWAYS);
+        String joinCode = input.getText().toString();
+        dr.child("quests").child(joinCode).get().addOnCompleteListener(task -> {
+            if (!joinCode.equals("") && task.isSuccessful() && !String.valueOf(task.getResult().getValue()).equals("null")) {
+                dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true);
+                Intent intent = new Intent(v.getContext(), ActiveQuest.class);
+                intent.putExtra("joinCode", joinCode);
+                startActivity(intent);
+            } else {
+                input.setError("Unable to join quest");
+            }
+        });
+    }
+
 
 }
