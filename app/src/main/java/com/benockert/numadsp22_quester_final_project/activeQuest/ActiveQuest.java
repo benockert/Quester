@@ -9,6 +9,8 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -22,13 +24,17 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.LinearSnapHelper;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.recyclerview.widget.SnapHelper;
 
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.activeQuest.previewStopCard.PreviewCardAdapter;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
@@ -42,7 +48,7 @@ import java.io.File;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.ArrayList;
 
 public class ActiveQuest extends AppCompatActivity {
     private static final String TAG = "ACTIVE_QUEST_ACTIVITY";
@@ -55,11 +61,14 @@ public class ActiveQuest extends AppCompatActivity {
     private String currentUser;
     private String currentQuestId;
     private Quest currentQuest;
-    private List<Activity> activities;
+    private ArrayList<Activity> activityArrayList;
     private Activity currentActivity;
     private Button buttonTakePicture;
     private RatingBar ratingBar;
 
+    private RecyclerView recyclerView;
+    private PreviewCardAdapter previewCardAdapter;
+    private LinearLayoutManager recyclerLayoutManager;
 
     private TextView textCurrentStopName;
     private TextView textUserSearchTerm;
@@ -69,15 +78,9 @@ public class ActiveQuest extends AppCompatActivity {
     private ImageView imageStopImage;
     private ShapeableImageView drawableDirections;
 
-    private Activity previewActivity;
-    private int previewActivityIndex;
-    private TextView textPreviewStopName;
-    private TextView textPreviewUserSearchTerm;
-    private TextView textPreviewStopCount;
-    private CardView cardPreviewStop;
+    String mCurrentPhotoPath;
 
     ActivityResultLauncher<Intent> activityResultLauncher;
-    private String mCurrentPhotoPath;
 
     private boolean onLastStop;
 
@@ -92,6 +95,7 @@ public class ActiveQuest extends AppCompatActivity {
         dr = FirebaseDatabase.getInstance().getReference();
         currentUser = mAuth.getCurrentUser().getDisplayName();
 
+        activityArrayList = new ArrayList<Activity>();
         textCurrentStopName = findViewById(R.id.textCurrentStopName);
         textUserSearchTerm = findViewById(R.id.textUserSearchTerm);
         textCurrentStopAddress = findViewById(R.id.textCurrentStopAddress);
@@ -100,10 +104,8 @@ public class ActiveQuest extends AppCompatActivity {
         imageStopImage = findViewById(R.id.imageStopImage);
         ratingBar = findViewById(R.id.ratingBar);
 
-        textPreviewStopCount = findViewById(R.id.textNextStopCount);
-        textPreviewStopName = findViewById(R.id.textNextStopName);
-        textPreviewUserSearchTerm = findViewById(R.id.textPreviewUserSearchTerm);
-        cardPreviewStop = findViewById(R.id.cardNextStop);
+        createRecyclerView();
+
         drawableDirections = findViewById(R.id.drawableDirections);
         drawableDirections.setOnClickListener(this::openDirections);
 
@@ -112,19 +114,11 @@ public class ActiveQuest extends AppCompatActivity {
         activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
             @Override
             public void onActivityResult(ActivityResult result) {
-
                 if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     Log.d(TAG, "Got to activity result for take picture");
-
                 }
-
             }
         });
-
-        // retrieve active quest
-        currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
-        getActiveQuest();
-
 
         // get the API key for the Places SDK to use
         try {
@@ -139,8 +133,12 @@ public class ActiveQuest extends AppCompatActivity {
         // create the Google Maps Geo API context
         apiContext = new GeoApiContext.Builder().apiKey(apiKey).build();
 
-        // if no active quest
-        // redirect to create quest page
+        // retrieve active quest
+        currentQuestId = this.getIntent().getExtras().get("joinCode").toString();
+        getActiveQuest();
+        Log.d(TAG + " AADDDDDDDDDDDD", String.valueOf(activityArrayList.size()));
+        Log.d(TAG + " aaaaaaaaaaa", String.valueOf(previewCardAdapter.getItemCount()));
+        previewCardAdapter.notifyDataSetChanged();
 
     }
 
@@ -153,38 +151,53 @@ public class ActiveQuest extends AppCompatActivity {
                 if (currentQuest == null) {
                     return;
                 }
-                activities = currentQuest.activities;
-                currentActivity = activities.get(currentQuest.getCurrentActivity());
-                previewActivityIndex = currentQuest.getCurrentActivity() + 1;
-                if (previewActivityIndex == activities.size()) {
-                    onLastStop = true;
-                } else if (activities.size() > previewActivityIndex) {
-                    previewActivity = activities.get(previewActivityIndex);
-                }
-                setActivityFields();
+                activityArrayList = new ArrayList<Activity>(currentQuest.activities);
+                currentActivity = activityArrayList.get(currentQuest.getCurrentActivity());
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+
+                new Handler(Looper.getMainLooper()).post(new Runnable() {
+                    public void run() {
+                        previewCardAdapter.notifyDataSetChanged();
+                    }
+                });
+                previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+                recyclerView.setAdapter(previewCardAdapter);
+                Log.d(TAG + "POST NOTIFY", activityArrayList.toString());
+                Log.d(TAG + " AADDDDDDDDDDDD", String.valueOf(activityArrayList.size()));
+                Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
+                populateCurrentActivityFields();
             }
         });
     }
 
-    private void setActivityFields() {
+    private void createRecyclerView() {
+        Log.v(TAG, "Creating recycler view for ActiveQuest Activity");
+        recyclerLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+        recyclerView = findViewById(R.id.previewCardRecycler);
+        recyclerView.setHasFixedSize(true);
+        previewCardAdapter = new PreviewCardAdapter(activityArrayList);
+        recyclerView.setAdapter(previewCardAdapter);
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+        Log.d(TAG + "IN RECYCLER", activityArrayList.toString());
+        SnapHelper helper = new LinearSnapHelper();
+        helper.attachToRecyclerView(recyclerView);
+    }
 
+    private void populateCurrentActivityFields() {
         textCurrentStopName.setText(currentActivity.getgName());
-        String setText = "\""+currentActivity.getuQuery()+"\"";
+        String setText = "\"" + currentActivity.getuQuery() + "\"".toUpperCase();
         textUserSearchTerm.setText(setText);
         StringBuilder str_bfr = new StringBuilder();
-        for(int i=0;i<currentActivity.getuPriceLevel();i++) { str_bfr.append("$"); }
+        for (int i = 0; i < currentActivity.getuPriceLevel(); i++) {
+            str_bfr.append("$");
+        }
         setText = str_bfr.toString();
         textCurrentPriceLevel.setText(setText);
         textCurrentStopAddress.setText(currentActivity.getgFormattedAddress());
         ratingBar.setRating(Float.parseFloat(String.format("%.1f", currentActivity.getgRating())));
         Log.d(TAG, String.valueOf(ratingBar.getRating()));
-        textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activities.size()));
-        if (!onLastStop) {
-            textPreviewStopCount.setText(String.format("%s/%s", previewActivityIndex + 1, activities.size()));
-            textPreviewStopName.setText(previewActivity.getgName());
-            setText = "\""+previewActivity.getuQuery()+"\"";
-            textPreviewUserSearchTerm.setText(setText);
-        }
+        textStopCount.setText(String.format("%s/%s", currentQuest.getCurrentActivity() + 1, activityArrayList.size()));
+
         int imgWidth = imageStopImage.getWidth();
         int imgHeight = imageStopImage.getHeight();
 
@@ -193,7 +206,8 @@ public class ActiveQuest extends AppCompatActivity {
 
         Bitmap bmp = BitmapFactory.decodeByteArray(placePhotoBytes, 0, placePhotoBytes.length);
         imageStopImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
-
+        previewCardAdapter.notifyDataSetChanged();
+        Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
     }
 
 
@@ -201,12 +215,11 @@ public class ActiveQuest extends AppCompatActivity {
 
         dr.child("quests").child(currentQuestId).child("currentActivity").setValue(currentQuest.currentActivity + 1).addOnCompleteListener(task -> {
             currentQuest.currentActivity += 1;
-            currentActivity = activities.get(currentQuest.currentActivity);
-            previewActivityIndex = currentQuest.currentActivity + 1;
-            setActivityFields();
+            currentActivity = activityArrayList.get(currentQuest.currentActivity);
+            populateCurrentActivityFields();
         });
 
-        if (currentQuest.currentActivity + 1 == activities.size()) {
+        if (currentQuest.currentActivity + 1 == activityArrayList.size()) {
             findViewById(R.id.buttonNextStop).setVisibility(View.INVISIBLE);
         }
     }
@@ -226,20 +239,19 @@ public class ActiveQuest extends AppCompatActivity {
             ActivityCompat.requestPermissions(ActiveQuest.this, new String[]{
                     Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE
             }, 100);
-        }
-        else {
+        } else {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-             try {
-                    File imageFile = createImageFile();
-                    Log.i(TAG, imageFile.getAbsolutePath());
+            try {
+                File imageFile = createImageFile();
+                Log.i(TAG, imageFile.getAbsolutePath());
 
-                    Uri imageURI = FileProvider.getUriForFile(this, "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
-                    activityResultLauncher.launch(intent);
+                Uri imageURI = FileProvider.getUriForFile(this, "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
+                activityResultLauncher.launch(intent);
 
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
