@@ -88,7 +88,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="New Email"
+            android:hint="New Email"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_email"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/update_settings"/>
@@ -109,7 +111,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="New Username"
+            android:hint="New Username"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_username"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_email"/>
@@ -130,7 +134,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:text="New Password"
+            android:hint="New Password"
+            android:imeOptions="actionDone"
+            android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_password"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/edit_username"/>
