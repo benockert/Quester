@@ -33,7 +33,7 @@ public class ConfirmActivityCardHolder extends RecyclerView.ViewHolder {
         activityUserQueryTextView = itemView.findViewById(R.id.userQueryTextView);
         activityPlaceImageView = itemView.findViewById(R.id.placeImageView);
         regenerateActivityButton = itemView.findViewById(R.id.reSpinActivityButton);
-        //disabledCardOverlay = itemView.findViewById(R.id.regenerateLoadingCardOverlay);
+        disabledCardOverlay = itemView.findViewById(R.id.regenerateLoadingCardOverlay);
 
         regenerateActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override
