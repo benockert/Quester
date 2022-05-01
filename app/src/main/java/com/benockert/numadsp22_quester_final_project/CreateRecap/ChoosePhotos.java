@@ -1,4 +1,4 @@
-package com.benockert.numadsp22_quester_final_project.Templates;
+package com.benockert.numadsp22_quester_final_project.CreateRecap;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -14,11 +14,12 @@ import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -49,7 +50,7 @@ public class ChoosePhotos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
-
+        findViewById(R.id.generatingRecap).setVisibility(View.INVISIBLE);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         /*
@@ -217,17 +218,25 @@ public class ChoosePhotos extends AppCompatActivity {
      * @param v the current view
      */
     public void finish(View v) {
-        saveToFirebase();
-        createAndSaveScreenshot();
-        Intent i = new Intent(this, ViewRecap.class);
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
+        if (findViewById(R.id.imageView1).getVisibility() == View.VISIBLE
+                || findViewById(R.id.imageView2).getVisibility() == View.VISIBLE
+                || findViewById(R.id.imageView3).getVisibility() == View.VISIBLE) {
+            Snackbar.make(v, "Please Select Three Photos",
+                    BaseTransientBottomBar.LENGTH_LONG).show();
+        } else {
+            findViewById(R.id.generatingRecap).setVisibility(View.VISIBLE);
+            saveToFirebase();
+            createAndSaveScreenshot();
+            Intent i = new Intent(this, ViewRecap.class);
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            Log.i("recapName1", recapName);
+            i.putExtra("recapName", recapName);
+            startActivity(i);
         }
-        Log.i("recapName1", recapName);
-        i.putExtra("recapName", recapName);
-        startActivity(i);
     }
 
     /**

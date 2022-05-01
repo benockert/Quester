@@ -41,7 +41,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-auth:21.0.3'
     implementation 'com.google.firebase:firebase-database:20.0.4'
     implementation 'com.google.firebase:firebase-storage:20.0.1'
-    implementation 'com.firebaseui:firebase-ui-storage:7.2.0'
+    implementation 'com.firebaseui:firebase-ui-storage:8.0.1'
     implementation 'com.google.firebase:firebase-analytics'
     implementation platform('com.google.firebase:firebase-bom:29.3.0')
     implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.4.1'

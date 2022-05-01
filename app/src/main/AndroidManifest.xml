@@ -51,10 +51,10 @@
             android:name=".PhotoRecap.ViewRecap"
             android:exported="false" />
         <activity
-            android:name=".Templates.ChoosePhotos"
+            android:name=".CreateRecap.ChoosePhotos"
             android:exported="false" />
         <activity
-            android:name=".Templates.ChooseTemplate"
+            android:name=".CreateRecap.ChooseTemplate"
             android:exported="false" />
             <activity
             android:name=".createQuest.ConfirmQuestActivity"

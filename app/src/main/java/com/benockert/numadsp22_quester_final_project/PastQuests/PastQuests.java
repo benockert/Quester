@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
-import com.benockert.numadsp22_quester_final_project.Templates.ChooseTemplate;
+import com.benockert.numadsp22_quester_final_project.CreateRecap.ChooseTemplate;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;

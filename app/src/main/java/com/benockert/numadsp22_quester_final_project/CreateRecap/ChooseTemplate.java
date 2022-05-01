@@ -1,4 +1,4 @@
-package com.benockert.numadsp22_quester_final_project.Templates;
+package com.benockert.numadsp22_quester_final_project.CreateRecap;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -17,12 +17,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-
-import java.time.LocalDate;
-import java.util.Objects;
 
 public class ChooseTemplate extends AppCompatActivity {
     String chosenTemplate;
