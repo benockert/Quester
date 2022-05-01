@@ -82,6 +82,7 @@ public class ActiveQuest extends AppCompatActivity {
     private TextView textStopCount;
     private ImageView imageStopImage;
     private ShapeableImageView drawableDirections;
+    SnapHelper snapHelper;
 
     String mCurrentPhotoPath;
 
@@ -191,8 +192,9 @@ public class ActiveQuest extends AppCompatActivity {
         recyclerView.setAdapter(previewCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
         Log.d(TAG + "IN RECYCLER", activityArrayList.toString());
-        SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(recyclerView);
+        snapHelper = new LinearSnapHelper();
+        snapHelper.attachToRecyclerView(recyclerView);
+
     }
 
     private void populateCurrentActivityFields() {
@@ -220,6 +222,12 @@ public class ActiveQuest extends AppCompatActivity {
         imageStopImage.setImageBitmap(Bitmap.createScaledBitmap(bmp, imgWidth, imgHeight, false));
         previewCardAdapter.notifyDataSetChanged();
         Log.d(TAG, String.valueOf(previewCardAdapter.getItemCount()));
+
+
+        if (currentQuest != null){
+            Log.d(TAG + " SNAP HELPER", String.valueOf(currentQuest.currentActivity + 1));
+            recyclerLayoutManager.scrollToPosition(currentQuest.currentActivity + 1);
+        }
 
         if (onLastStop) {
             buttonNextStop.setText(R.string.quest_finish_button);
