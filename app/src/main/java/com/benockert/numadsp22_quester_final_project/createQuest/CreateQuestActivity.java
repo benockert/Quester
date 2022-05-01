@@ -4,6 +4,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.Group;
 import androidx.core.app.ActivityCompat;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -30,10 +31,12 @@ import android.widget.TextView;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCard;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.RegenerateButtonClickListener;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.LatLng;
 import com.google.maps.model.PriceLevel;
@@ -116,6 +119,7 @@ public class CreateQuestActivity extends AppCompatActivity {
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
                 missingLocationTextView.setText("");
+                startLocationTextView.setTypeface(Typeface.DEFAULT);
             }
 
             @Override
@@ -150,6 +154,30 @@ public class CreateQuestActivity extends AppCompatActivity {
         activityCardAdapter = new AddActivityCardAdapter(activityCards, context);
         recyclerView.setAdapter(activityCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
+
+//        // for handling moving and deleting cards
+//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+//            @Override
+//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+//                return false;
+//            }
+//
+//            @Override
+//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+//                int position = viewHolder.getAdapterPosition();
+//                AddActivityCard deletedActivityCard = activityCards.get(position);
+//                activityCards.remove(viewHolder.getAdapterPosition());
+//                activityCardAdapter.notifyItemRemoved(position);
+//
+//                Snackbar.make(recyclerView, "Removed " + (deletedActivityCard.searchQuery.equals("") ? "blank activity" : deletedActivityCard.searchQuery), Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        activityCards.add(position, deletedActivityCard);
+//                        activityCardAdapter.notifyItemInserted(position);
+//                    }
+//                }).show();
+//            }
+//        }).attachToRecyclerView(recyclerView);
     }
 
     public void addNewActivity(View v) {
@@ -174,8 +202,6 @@ public class CreateQuestActivity extends AppCompatActivity {
 
     public void onGenerateQuestButtonClick(View v) {
         Log.d(TAG, "Generate quest button clicked");
-        // start loading icon
-        progressIndicatorGroup.setVisibility(View.VISIBLE);
 
         // get location and proximity (in meters)
         String locationString = startLocationTextView.getText().toString();
@@ -184,7 +210,9 @@ public class CreateQuestActivity extends AppCompatActivity {
         if (locationString.equals("") && mLocation == null) {
             missingLocationTextView.setText("Please enter a start location.");
         } else if (!locationString.equals("")) {
+            // start loading icon
             progressIndicatorGroup.setVisibility(View.VISIBLE);
+
             placesClient = new GooglePlacesClient(apiContext, radiusInMeters, locationString);
             // get location info from location string
             Log.d(TAG, "Using manual location entry: getting place info");
@@ -229,17 +257,21 @@ public class CreateQuestActivity extends AppCompatActivity {
             ArrayList<Activity> questActivities = new ArrayList<>();
             for (AddActivityCard activity : addActivityCards[0]) {
                 try {
-                    publishProgress(activity.searchQuery);
-                    Log.d(TAG, "Activity card being sent: " + activity.getSearchQuery());
-                    Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()], activity.getPopularity(), true);
-                    if (currentActivity != null) {
-                        Log.d(TAG, "Activity generated: " + currentActivity.gName);
-                        questActivities.add(currentActivity);
+                    if (activity.getSearchQuery() != null) {
+                        publishProgress(activity.searchQuery);
+                        Log.d(TAG, "Activity card being sent: " + activity.getSearchQuery());
+                        Activity currentActivity = placesClient.textSearch(activity.getSearchQuery(), PriceLevel.values()[activity.getPriceLevel()], activity.getPopularity(), true);
+                        if (currentActivity != null) {
+                            Log.d(TAG, "Activity generated: " + currentActivity.gName);
+                            questActivities.add(currentActivity);
+                        }
                     }
                 } catch (Exception e) {
                     Log.e(TAG, e.getMessage());
                 }
             }
+
+            apiContext.shutdown();
             Log.d(TAG, "Returning from doInBackground");
             return questActivities;
         }
@@ -273,12 +305,12 @@ public class CreateQuestActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        apiContext.shutdown(); // todo NetworkOnMainThreadException
     }
 
     // LOCATION methods
 
     public void useCurrentLocation(View v) {
+        startLocationTextView.setText("");
         startLocationTextView.setTypeface(startLocationTextView.getTypeface(), Typeface.ITALIC);
         boolean locationPermission = checkLocationPermissions();
         if (locationPermission) {
@@ -345,6 +377,7 @@ public class CreateQuestActivity extends AppCompatActivity {
         public void onLocationChanged(Location location) {
             mLocation = new LatLng(location.getLatitude(), location.getLongitude());
             Log.d(TAG, "Location Changed to: " + location.toString());
+            startLocationTextView.setTypeface(Typeface.DEFAULT);
             startLocationTextView.setHint(location.getLongitude() + ", " + location.getLatitude());
         }
 

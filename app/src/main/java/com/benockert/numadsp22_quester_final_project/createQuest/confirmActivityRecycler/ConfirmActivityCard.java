@@ -1,6 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler;
 
-public class ConfirmActivityCard {
+import android.view.View;
+
+public class ConfirmActivityCard implements RegenerateButtonClickListener {
 
     public String placeName;
     public String placeAddress;
@@ -46,4 +48,8 @@ public class ConfirmActivityCard {
         this.photoReference = photoReference;
     }
 
+    @Override
+    public void onClick(View v, int position) {
+
+    }
 }

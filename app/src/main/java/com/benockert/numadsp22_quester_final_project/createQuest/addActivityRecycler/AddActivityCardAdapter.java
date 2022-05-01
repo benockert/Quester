@@ -15,6 +15,7 @@ import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.RegenerateButtonClickListener;
 import com.google.android.material.button.MaterialButton;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.slider.Slider;
@@ -103,6 +104,4 @@ public class AddActivityCardAdapter extends RecyclerView.Adapter<AddActivityCard
     public int getItemCount() {
         return activityCardList.size();
     }
-
-
 }

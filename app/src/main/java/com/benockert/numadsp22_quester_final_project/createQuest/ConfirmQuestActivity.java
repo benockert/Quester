@@ -1,6 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.createQuest;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,11 +18,15 @@ import android.widget.TextView;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.ConfirmActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.ConfirmActivityCardHolder;
+import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.RegenerateButtonClickListener;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
 import com.google.android.material.button.MaterialButton;
+import com.google.android.material.progressindicator.LinearProgressIndicator;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -42,6 +48,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
     private String apiKey;
     private GeoApiContext apiContext;
+    private GooglePlacesClient client;
 
     private ArrayList<Activity> activities;
     private RecyclerView recyclerView;
@@ -108,8 +115,89 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.confirmActivityCardRecyclerView);
         recyclerView.setHasFixedSize(true);
         confirmActivityCardAdapter = new ConfirmActivityCardAdapter(activities, apiContext);
+
+        // listener for regenerating specific activities
+        RegenerateButtonClickListener regenerateButtonClickListener = new RegenerateButtonClickListener() {
+            @Override
+            public void onClick(View view, int position) {
+                Log.v(TAG, "onClick listener in createRecycleView");
+                Activity newActivity = activities.get(position).onRegenerateActivityClick(view, position, new GooglePlacesClient(apiContext, questUserProximity, questLocation));
+                activities.set(position, newActivity);
+                confirmActivityCardAdapter.notifyItemChanged(position);
+            }
+        };
+        confirmActivityCardAdapter.setOnRegenerateButtonClickListener(regenerateButtonClickListener); // before adding the adapter
+
         recyclerView.setAdapter(confirmActivityCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
+
+        // for handling moving and deleting cards
+        new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
+                confirmActivityCardAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                int position = viewHolder.getAdapterPosition();
+                Activity deletedActivity = activities.get(position);
+                activities.remove(viewHolder.getAdapterPosition());
+                confirmActivityCardAdapter.notifyItemRemoved(position);
+
+                Snackbar.make(recyclerView, "Removed " + deletedActivity.gName + " from your quest", Snackbar.LENGTH_LONG).setAction("Undo", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        activities.add(position, deletedActivity);
+                        confirmActivityCardAdapter.notifyItemInserted(position);
+                    }
+                }).show();
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
+            int actionState) {
+                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                    if (viewHolder instanceof ConfirmActivityCardHolder) {
+                        ConfirmActivityCardHolder myViewHolder=
+                                (ConfirmActivityCardHolder) viewHolder;
+                        confirmActivityCardAdapter.onRowSelected(myViewHolder);
+                    }
+                }
+
+                super.onSelectedChanged(viewHolder, actionState);
+            }
+            @Override
+            public void clearView(RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                if (viewHolder instanceof ConfirmActivityCardHolder) {
+                    ConfirmActivityCardHolder myViewHolder=
+                            (ConfirmActivityCardHolder) viewHolder;
+                    confirmActivityCardAdapter.onRowClear(myViewHolder);
+                }
+
+            }
+        }).attachToRecyclerView(recyclerView);
     }
 
     private void populateOverviewCard() {
