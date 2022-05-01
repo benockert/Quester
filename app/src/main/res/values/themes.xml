@@ -20,4 +20,8 @@
         <item name="backgroundTint">@color/color_states_button</item>
         <item name="strokeColor">@color/color_states_button</item>
     </style>
+    <style name="DisabledButtonOutlineStyle" parent="Widget.MaterialComponents.Button.TextButton">
+        <item name="android:textColor">@color/color_states_button</item>
+        <item name="strokeColor">@color/color_states_button</item>
+    </style>
 </resources>
