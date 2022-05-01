@@ -16,7 +16,7 @@
         app:layout_constraintBottom_toTopOf="@+id/cardCurrentStop"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textActiveQuestHeader"
         app:reverseLayout="false" />
 
 
@@ -210,6 +210,45 @@
 
 
     </com.google.android.material.card.MaterialCardView>
+
+    <TextView
+        android:id="@+id/textActiveQuestHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/active_quest_header"
+        android:textSize="30sp"
+        android:textStyle="bold"
+        android:textColor="?attr/colorPrimaryVariant"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="12dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <TextView
+        android:id="@+id/joinCodeHeader"
+        android:layout_width="58dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="4dp"
+        android:text="@string/invite_your_friends"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/textActiveQuestHeader"
+        app:layout_constraintEnd_toStartOf="@+id/textJoinCode"
+        app:layout_constraintStart_toEndOf="@+id/textActiveQuestHeader" />
+
+    <TextView
+        android:id="@+id/textJoinCode"
+        android:layout_width="92dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:textColor="?attr/colorSecondary"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@+id/joinCodeHeader"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/joinCodeHeader"
+        tools:text="Join Code" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

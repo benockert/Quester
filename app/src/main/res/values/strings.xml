@@ -38,5 +38,7 @@
     <string name="current_stop">Current Stop:</string>
     <string name="up_next">Coming up:</string>
     <string name="last_stop">Last Stop:</string>
+    <string name="active_quest_header">Active Quest</string>
+    <string name="invite_your_friends">Join Code:</string>
 
 </resources>

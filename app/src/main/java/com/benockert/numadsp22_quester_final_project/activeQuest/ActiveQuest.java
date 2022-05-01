@@ -83,6 +83,7 @@ public class ActiveQuest extends AppCompatActivity {
     private PreviewCardAdapter previewCardAdapter;
     private LinearLayoutManager recyclerLayoutManager;
 
+    private TextView textJoinCode;
     private TextView textCurrentStopName;
     private TextView textUserSearchTerm;
     private TextView textCurrentStopAddress;
@@ -110,6 +111,7 @@ public class ActiveQuest extends AppCompatActivity {
         currentUser = mAuth.getCurrentUser().getDisplayName();
 
         activityArrayList = new ArrayList<Activity>();
+        textJoinCode = findViewById(R.id.textJoinCode);
         textCurrentStopName = findViewById(R.id.textCurrentStopName);
         textUserSearchTerm = findViewById(R.id.textUserSearchTerm);
         textCurrentStopAddress = findViewById(R.id.textCurrentStopAddress);
@@ -209,6 +211,7 @@ public class ActiveQuest extends AppCompatActivity {
     }
 
     private void populateCurrentActivityFields() {
+        textJoinCode.setText(currentQuest.getJoinCode());
         textCurrentStopName.setText(currentActivity.getgName());
         textUserSearchTerm.setText(currentActivity.getuQuery().toUpperCase());
         StringBuilder str_bfr = new StringBuilder();
