@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.ConfirmActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.ConfirmActivityCardHolder;
 import com.benockert.numadsp22_quester_final_project.createQuest.confirmActivityRecycler.RegenerateButtonClickListener;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
@@ -130,10 +131,28 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(recyclerLayoutManager);
 
         // for handling moving and deleting cards
-        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
+        new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public boolean isLongPressDragEnabled() {
+                return true;
+            }
+
+            @Override
+            public boolean isItemViewSwipeEnabled() {
+                return true;
+            }
+
+            @Override
+            public int getMovementFlags(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder) {
+                int dragFlags = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
+                int swipeFlags = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
+                return makeMovementFlags(dragFlags, swipeFlags);
+            }
+
             @Override
             public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-                return false;
+                confirmActivityCardAdapter.onRowMoved(viewHolder.getAdapterPosition(), target.getAdapterPosition());
+                return true;
             }
 
             @Override
@@ -150,6 +169,32 @@ public class ConfirmQuestActivity extends AppCompatActivity {
                         confirmActivityCardAdapter.notifyItemInserted(position);
                     }
                 }).show();
+            }
+
+            @Override
+            public void onSelectedChanged(RecyclerView.ViewHolder viewHolder,
+            int actionState) {
+                if (actionState != ItemTouchHelper.ACTION_STATE_IDLE) {
+                    if (viewHolder instanceof ConfirmActivityCardHolder) {
+                        ConfirmActivityCardHolder myViewHolder=
+                                (ConfirmActivityCardHolder) viewHolder;
+                        confirmActivityCardAdapter.onRowSelected(myViewHolder);
+                    }
+                }
+
+                super.onSelectedChanged(viewHolder, actionState);
+            }
+            @Override
+            public void clearView(RecyclerView recyclerView,
+                    RecyclerView.ViewHolder viewHolder) {
+                super.clearView(recyclerView, viewHolder);
+
+                if (viewHolder instanceof ConfirmActivityCardHolder) {
+                    ConfirmActivityCardHolder myViewHolder=
+                            (ConfirmActivityCardHolder) viewHolder;
+                    confirmActivityCardAdapter.onRowClear(myViewHolder);
+                }
+
             }
         }).attachToRecyclerView(recyclerView);
     }
@@ -178,7 +223,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
     private void startQuest(boolean now) {
         // generate code
         String rand = UUID.randomUUID().toString();
-        String joinCode = rand.substring(rand.length() - 6);
+        String joinCode = "q"+ rand.substring(rand.length() - 5);
 
         String datetime = LocalDateTime.now().toString().replace(":", "|");
         String[] datetimeStrings = datetime.split("\\.");
@@ -223,7 +268,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
             List<String> listOfUsers = new ArrayList<>();
 
-            Quest newQuest = new Quest(true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
+            Quest newQuest = new Quest(joinCode,true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
 
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));

@@ -26,6 +26,7 @@ public class ConfirmActivityCardHolder extends RecyclerView.ViewHolder {
     public ImageView activityPlaceImageView;
     public MaterialButton regenerateActivityButton;
     public MaterialCardView disabledCardOverlay;
+    public MaterialCardView confirmActivityCardView;
 
     public ConfirmActivityCardHolder(View itemView, final RegenerateButtonClickListener regenerateButtonClickListener) {
         super(itemView);
@@ -33,7 +34,8 @@ public class ConfirmActivityCardHolder extends RecyclerView.ViewHolder {
         activityUserQueryTextView = itemView.findViewById(R.id.userQueryTextView);
         activityPlaceImageView = itemView.findViewById(R.id.placeImageView);
         regenerateActivityButton = itemView.findViewById(R.id.reSpinActivityButton);
-        disabledCardOverlay = itemView.findViewById(R.id.regenerateLoadingCardOverlay);
+        //disabledCardOverlay = itemView.findViewById(R.id.regenerateLoadingCardOverlay);
+        confirmActivityCardView = itemView.findViewById(R.id.activity_baseCardView);
 
         regenerateActivityButton.setOnClickListener(new View.OnClickListener() {
             @Override

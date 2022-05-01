@@ -1,6 +1,7 @@
 package com.benockert.numadsp22_quester_final_project.types;
 
 import java.util.List;
+
 import android.util.Log;
 
 import com.google.firebase.database.Exclude;
@@ -15,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class Quest {
+    public String joinCode;
     public boolean active;
     public List<Activity> activities;
     public boolean completed;
@@ -28,7 +30,8 @@ public class Quest {
     public Quest() {
     }
 
-    public Quest(boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
+    public Quest(String joinCode, boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
+        this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
         this.location = location;
@@ -38,6 +41,10 @@ public class Quest {
         this.activities = activities;
         this.users = users;
         this.currentActivity = currentActivity;
+    }
+
+    public String getJoinCode() {
+        return this.joinCode;
     }
 
     public boolean isActive() {
@@ -94,7 +101,7 @@ public class Quest {
         return this.currentActivity;
     }
 
-    public static Quest getQuestFromJSON(String data) {
+    public static Quest getQuestFromJSON(String joinCode, String data) {
         try {
             boolean completed = false;
             String location = "N/A";
@@ -106,7 +113,7 @@ public class Quest {
             List<Activity> activities = new ArrayList<>();
             int currentActivity = 0;
             boolean active = false;
-            data=data.replace(", ",",").replace(" ","_");
+            data = data.replace(", ", ",").replace(" ", "_");
 
             JSONObject jsonResults = new JSONObject(data);
             Log.i("json", data);
@@ -119,8 +126,7 @@ public class Quest {
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
             completed = jsonResults.getBoolean("completed");
-            location = jsonResults.getString("location").replace("_", " ");;
-
+            location = jsonResults.getString("location").replace("_", " ");
             date = jsonResults.getString("datetime").replace("|", ":");
             photoReference = jsonResults.getString("photoReference");
             proximity = jsonResults.getInt("proximity");
@@ -131,11 +137,11 @@ public class Quest {
                 users.add(usersIterator.next());
             }
 
-            for(int i=0; i<questActivities.length(); i++) {
+            for (int i = 0; i < questActivities.length(); i++) {
                 activities.add(Activity.getActivityFromJSON(questActivities.getJSONObject(i).toString()));
             }
 
-            return new Quest(active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
+            return new Quest(joinCode, active, completed, location, date, proximity, photoReference, activities, users, currentActivity);
         } catch (JSONException e) {
             Log.e("QUEST_PARSER", e.toString());
             e.printStackTrace();

@@ -99,7 +99,7 @@ public class Activity implements Parcelable {
         return uQuery;
     }
 
-    public double getgRating() {
+    public float getgRating() {
         return gRating;
     }
 

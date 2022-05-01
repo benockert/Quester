@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_exit"
+        android:icon="@drawable/ic_baseline_delete_outline_24"
+        android:title="@string/quest_cancel_button">
+    </item>
+    <item
+        android:id="@+id/menu_save"
+        android:icon="@drawable/ic_baseline_pause_circle_outline_24"
+        android:title="@string/quest_save_button">
+    </item>
+    <item
+        android:id="@+id/menu_finish"
+        android:icon="@drawable/ic_baseline_done_all_24"
+        android:title="@string/quest_finish_button">
+    </item>
+
+</menu>
