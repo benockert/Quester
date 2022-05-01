@@ -10,5 +10,6 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="disabled">#FFD3D3D3</color>
+    <color name="disabled_transparent">#a0D3D3D3</color>
     <color name="red">#FFcc0000</color>
 </resources>

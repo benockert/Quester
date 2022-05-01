@@ -93,7 +93,7 @@ public class GooglePlacesClient {
 
                 PlacesSearchResult p = filteredPlaces.get(randomSelection);
                 String pPhotoReference = getPlacePhotoReference(p.placeId);
-                Activity a = new Activity(p.formattedAddress.replace(",", ""), p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), query, p.rating);
+                Activity a = new Activity(p.formattedAddress.replace(",", ""), p.name, pPhotoReference, p.placeId, p.geometry.location.lat, p.geometry.location.lng, priceLevel.ordinal(), popularity, query, p.rating);
                 Log.d(TAG, "Randomly selected activity: " + a.gName + " | Ratings: " + p.userRatingsTotal + " | Stars: " + p.rating);
                 return a;
             } else {
@@ -171,7 +171,7 @@ public class GooglePlacesClient {
         try {
             Log.d(TAG, "In getReverseGeoLocationInfo");
             GeocodingResult[] response = GeocodingApi.reverseGeocode(this.context, new LatLng(location.lat, location.lng)).await();
-            List<GeocodingResult> filteredPlaces = Arrays.stream(response).filter(r -> Arrays.stream(r.types).allMatch(addressType -> addressType.toString().equals(AddressType.NEIGHBORHOOD.toString()) || addressType.toString().equals(AddressType.POLITICAL.toString()))).collect(Collectors.toList());
+            List<GeocodingResult> filteredPlaces = Arrays.stream(response).filter(r -> Arrays.stream(r.types).allMatch(addressType -> addressType.toString().equals(AddressType.NEIGHBORHOOD.toString()) || addressType.toString().equals(AddressType.LOCALITY.toString()) || addressType.toString().equals(AddressType.POLITICAL.toString()))).collect(Collectors.toList());
             if (filteredPlaces.size() > 0) {
                 Log.d(TAG, "Filtered place addresses has results");
                 String placeId = filteredPlaces.get(0).placeId;
