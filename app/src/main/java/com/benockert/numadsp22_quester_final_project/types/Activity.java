@@ -133,8 +133,8 @@ public class Activity implements Parcelable {
             String gPlaceId = activityObj.getString("gPlaceId");
             double gPlaceLat = activityObj.getDouble("gPlaceLat");
             double gPlaceLng = activityObj.getDouble("gPlaceLng");
-            double uPopularity = activityObj.getDouble("uPopularity");
             int uPriceLevel = activityObj.getInt("uPriceLevel");
+            double uPopularity = activityObj.getDouble("uPopularity");
             float gRating = Float.parseFloat(activityObj.getString("gRating"));
 
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
