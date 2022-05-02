@@ -46,6 +46,22 @@ public class Quest {
         this.currentActivity = currentActivity;
     }
 
+    public Quest(boolean active, boolean completed,
+                 String location, String datetime, int proximity,
+                 String photoReference, List<Activity> activities,
+                 List<String> users, int currentActivity) {
+        this.active = active;
+        this.completed = completed;
+        this.location = location;
+        this.datetime = datetime;
+        this.proximity = proximity;
+        this.photoReference = photoReference;
+        this.activities = activities;
+        this.users = users;
+        this.currentActivity = currentActivity;
+    }
+
+    @Exclude
     public String getJoinCode() {
         return this.joinCode;
     }
