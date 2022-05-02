@@ -103,9 +103,6 @@ public class MyQuestsActivity extends AppCompatActivity {
             }
             return false;
         });
-        bNavView.setOnItemReselectedListener(item -> {
-            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
-        });
         createRecyclerView();
         getAllQuests();
     }
