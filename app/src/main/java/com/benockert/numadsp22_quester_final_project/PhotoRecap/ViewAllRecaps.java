@@ -16,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
+import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -76,17 +77,17 @@ public class ViewAllRecaps extends AppCompatActivity {
             Intent i;
             if (item.getItemId() == R.id.nav_home) {
                 i = new Intent(context, MyQuestsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             } else if (item.getItemId() == R.id.nav_profile) {
-                    i = new Intent(context, UserProfileActivity.class);
-                    startActivity(i);
+                i = new Intent(context, UserProfileActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
             } else if (item.getItemId() == R.id.nav_createQuest) {
-                    i = new Intent(context, CreateQuestActivity.class);
-                    startActivity(i);
-            }else if (item.getItemId() == R.id.nav_currActivity) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
-            }
+                i = new Intent(context, CreateQuestActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                startActivity(i);
+            } 
             return false;
         });
         bNavView.setOnItemReselectedListener(item -> {
