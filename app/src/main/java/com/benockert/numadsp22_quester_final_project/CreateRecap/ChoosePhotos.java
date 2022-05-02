@@ -56,7 +56,6 @@ public class ChoosePhotos extends AppCompatActivity {
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
         userId = this.getIntent().getExtras().getString("userId");
-        findViewById(R.id.generatingRecap).setVisibility(View.INVISIBLE);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         /*
@@ -233,7 +232,6 @@ public class ChoosePhotos extends AppCompatActivity {
             Snackbar.make(v, "Please Select Three Photos",
                     BaseTransientBottomBar.LENGTH_LONG).show();
         } else {
-            findViewById(R.id.generatingRecap).setVisibility(View.VISIBLE);
             saveToFirebase();
             createAndSaveScreenshot();
             Intent i = new Intent(this, ViewRecap.class);
