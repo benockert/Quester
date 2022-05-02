@@ -5,6 +5,9 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.content.pm.PackageManager;
@@ -77,6 +80,17 @@ public class MyQuestsActivity extends AppCompatActivity {
         initLinkData(savedInstanceState);
 
         getAllQuests();
+
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        Intent notificationIntent = new Intent("android.media.action.DISPLAY_NOTIFICATION");
+        notificationIntent.addCategory("android.intent.category.DEFAULT");
+
+        PendingIntent broadcast = PendingIntent.getBroadcast(this, 101, notificationIntent, PendingIntent.FLAG_UPDATE_CURRENT);
+        Log.d("MAIN ACTIVITY", " Created calendar thing");
+//        alarmManager.setInexactRepeating(AlarmManager.RTC_WAKEUP, 1000, AlarmManager.INTERVAL_DAY, broadcast);
+        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, System.currentTimeMillis(), AlarmManager.INTERVAL_DAY, broadcast);
+//        Log.d("MAIN ACTIVITY: ", alarmManager.getNextAlarmClock().toString());
+        
     }
 
     private void initLinkData(Bundle savedInstanceState) {

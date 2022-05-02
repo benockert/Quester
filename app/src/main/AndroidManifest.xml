@@ -44,7 +44,7 @@
             android:exported="false" />
         <activity
             android:name=".createQuest.CreateQuestActivity"
-            android:exported="false">
+            android:exported="true">
             <meta-data
                 android:name="com.google.android.geo.API_KEY"
                 android:value="${MAPS_API_KEY}" />
@@ -74,6 +74,14 @@
         <activity
             android:name=".MainActivity"
             android:exported="false" />
+        <receiver android:name=".notifications.AlarmReceiver"
+            android:enabled="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.media.action.DISPLAY_NOTIFICATION" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>
