@@ -48,8 +48,11 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.maps.GeoApiContext;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -129,14 +132,30 @@ public class ActiveQuest extends AppCompatActivity {
 
         buttonTakePicture = findViewById(R.id.buttonTakePhoto);
         buttonTakePicture.setOnClickListener(this::takePicture);
-        activityResultLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), new ActivityResultCallback<ActivityResult>() {
-            @Override
-            public void onActivityResult(ActivityResult result) {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    Log.d(TAG, "Got to activity result for take picture");
-                }
-            }
-        });
+        Context cont = this;
+        activityResultLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(), result -> {
+                    if (result.getResultCode() == RESULT_OK && result.getData() != null) {
+                        Log.d(TAG, "Got to activity result for take picture");
+                        InputStream inputStream = null;
+                        try {
+                            inputStream = cont.getContentResolver().openInputStream(Uri.parse(String.valueOf(result.getData())));
+                            BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+
+                            Bitmap bmp = BitmapFactory.decodeStream(bufferedInputStream);
+
+                            MediaStore.Images.Media.insertImage(
+                                    getContentResolver(),
+                                    bmp,
+                                    null,
+                                    null
+                            );
+                        } catch (FileNotFoundException e) {
+                            e.printStackTrace();
+                        }
+
+                    }
+                });
 
         // get the API key for the Places SDK to use
         try {
@@ -280,16 +299,24 @@ public class ActiveQuest extends AppCompatActivity {
         } else {
             Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
             try {
+//
+//                Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//                File f = new File("com.benockert.numadsp22_quester_final_project.fileprovider");
+//                Uri contentUri = Uri.fromFile(f);
+//                mediaScanIntent.setData(contentUri);
+//               // this.sendBroadcast(mediaScanIntent);
+
                 File imageFile = createImageFile();
                 Log.i(TAG, imageFile.getAbsolutePath());
 
-                Uri imageURI = FileProvider.getUriForFile(this, "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
+                Uri imageURI = FileProvider.getUriForFile(this,
+                        "com.benockert.numadsp22_quester_final_project.fileprovider", imageFile);
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imageURI);
                 activityResultLauncher.launch(intent);
 
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         }
     }
 
