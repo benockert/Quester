@@ -198,30 +198,6 @@ public class CreateQuestActivity extends AppCompatActivity {
         activityCardAdapter = new AddActivityCardAdapter(activityCards, context);
         recyclerView.setAdapter(activityCardAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManager);
-
-//        // for handling moving and deleting cards
-//        new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.RIGHT) {
-//            @Override
-//            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder viewHolder, @NonNull RecyclerView.ViewHolder target) {
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-//                int position = viewHolder.getAdapterPosition();
-//                AddActivityCard deletedActivityCard = activityCards.get(position);
-//                activityCards.remove(viewHolder.getAdapterPosition());
-//                activityCardAdapter.notifyItemRemoved(position);
-//
-//                Snackbar.make(recyclerView, "Removed " + (deletedActivityCard.searchQuery.equals("") ? "blank activity" : deletedActivityCard.searchQuery), Snackbar.LENGTH_SHORT).setAction("Undo", new View.OnClickListener() {
-//                    @Override
-//                    public void onClick(View v) {
-//                        activityCards.add(position, deletedActivityCard);
-//                        activityCardAdapter.notifyItemInserted(position);
-//                    }
-//                }).show();
-//            }
-//        }).attachToRecyclerView(recyclerView);
     }
 
     public void addNewActivity(View v) {

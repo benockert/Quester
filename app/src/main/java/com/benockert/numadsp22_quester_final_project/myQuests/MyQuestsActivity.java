@@ -98,7 +98,7 @@ public class MyQuestsActivity extends AppCompatActivity {
                 startActivity(i);
             }else if (item.getItemId() == R.id.nav_createQuest) {
                 i = new Intent(context, CreateQuestActivity.class);
-                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY | Intent.FLAG_ACTIVITY_NEW_TASK);
                 startActivity(i);
             }
             return false;
