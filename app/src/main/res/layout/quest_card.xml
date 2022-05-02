@@ -13,16 +13,16 @@
 
         <ImageView
             android:id="@+id/location_image"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
-            android:maxHeight="80dp"
-            android:maxWidth="80dp"
+            android:layout_width="110dp"
+            android:layout_height="110dp"
             android:layout_marginStart="5dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:layout_marginBottom="5dp"
             android:adjustViewBounds="false"
             android:contentDescription="@string/description"
+            android:maxWidth="80dp"
+            android:maxHeight="80dp"
             android:padding="3dp" />
 
         <TextView
@@ -44,9 +44,11 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:layout_marginTop="7dp"
-            android:layout_toEndOf="@id/location"
-            android:textSize="20sp"
-            android:text="@string/date" />
+            android:layout_below="@id/location"
+            android:layout_toEndOf="@id/location_image"
+            android:text="@string/date"
+            android:textSize="17sp"
+            android:textStyle="bold"/>
 
         <TextView
             android:id="@+id/num_activities"
