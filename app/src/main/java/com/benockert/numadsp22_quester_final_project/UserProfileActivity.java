@@ -238,30 +238,6 @@ public class UserProfileActivity extends AppCompatActivity {
 
     private void updateUsername(String newUsername) {
         String oldUsername = this.username;
-        //update users
-        dr.child("users").child(oldUsername).get().addOnCompleteListener(updateUsersTask -> {
-            if (updateUsersTask.getResult().getValue() != null ) {
-                String result = convertStingToJson(String.valueOf(updateUsersTask.getResult().getValue())).replaceAll(" ", "_");
-                try {
-                    JSONObject jsonResult = new JSONObject(result);
-                    List<UserProfile.UserRecap> userRecaps = UserProfile.getRecapsFromJson(jsonResult.toString());
-
-                    dr.child("users").child(newUsername).child("email").setValue(jsonResult.getString("email"));
-
-                    for (UserProfile.UserRecap recap : userRecaps) {
-                        dr.child("users").child(newUsername).child("recaps").child(recap.getName()).child("dateGenerated").setValue(recap.getDateGenerated());
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                    notifyUser("Username Failed To Updated");
-                    return;
-                }
-            } else {
-                notifyUser("Current Username not Found");
-                return;
-            }
-        });
-
         //updateQuests
         dr.child("quests").get().addOnCompleteListener(updateQuestsTask -> {
             if (updateQuestsTask.getResult().getValue() != null) {
@@ -295,6 +271,30 @@ public class UserProfileActivity extends AppCompatActivity {
                     notifyUser("Username Failed To Updated");
                     return;
                 }
+            }
+        });
+
+        //update users
+        dr.child("users").child(oldUsername).get().addOnCompleteListener(updateUsersTask -> {
+            if (updateUsersTask.getResult().getValue() != null ) {
+                String result = convertStingToJson(String.valueOf(updateUsersTask.getResult().getValue())).replaceAll(" ", "_");
+                try {
+                    JSONObject jsonResult = new JSONObject(result);
+                    List<UserProfile.UserRecap> userRecaps = UserProfile.getRecapsFromJson(jsonResult.toString());
+
+                    dr.child("users").child(newUsername).child("email").setValue(jsonResult.getString("email"));
+
+                    for (UserProfile.UserRecap recap : userRecaps) {
+                        dr.child("users").child(newUsername).child("recaps").child(recap.getName()).child("dateGenerated").setValue(recap.getDateGenerated());
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    notifyUser("Username Failed To Updated");
+                    return;
+                }
+            } else {
+                notifyUser("Current Username not Found");
+                return;
             }
         });
 
