@@ -226,26 +226,19 @@ public class ChoosePhotos extends AppCompatActivity {
      * @param v the current view
      */
     public void finish(View v) {
-        if (findViewById(R.id.imageView1).getVisibility() == View.VISIBLE
-                || findViewById(R.id.imageView2).getVisibility() == View.VISIBLE
-                || findViewById(R.id.imageView3).getVisibility() == View.VISIBLE) {
-            Snackbar.make(v, "Please Select Three Photos",
-                    BaseTransientBottomBar.LENGTH_LONG).show();
-        } else {
-            saveToFirebase();
-            createAndSaveScreenshot();
-            Intent i = new Intent(this, ViewRecap.class);
-            try {
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            Log.i("recapName1", recapName);
-            i.putExtra("recapName", this.recapName);
-            i.putExtra("userId", this.userId);
-            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
-            startActivity(i);
+        saveToFirebase();
+        createAndSaveScreenshot();
+        Intent i = new Intent(this, ViewRecap.class);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
+        Log.i("recapName1", recapName);
+        i.putExtra("recapName", this.recapName);
+        i.putExtra("userId", this.userId);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
+        startActivity(i);
     }
 
     /**
