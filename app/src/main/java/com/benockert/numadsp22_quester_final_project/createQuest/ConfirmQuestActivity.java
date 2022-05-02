@@ -271,7 +271,8 @@ public class ConfirmQuestActivity extends AppCompatActivity {
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));
             });
-            dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true);
+            dr.child("quests").child(joinCode).child("users").child(currentUser).setValue(true).addOnFailureListener(task ->
+                    dr.child("quests").child(joinCode).removeValue());
         }
     }
 
