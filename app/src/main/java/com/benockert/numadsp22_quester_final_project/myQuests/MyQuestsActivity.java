@@ -17,8 +17,10 @@ import com.benockert.numadsp22_quester_final_project.PastQuests.PastQuests;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -71,9 +73,19 @@ public class MyQuestsActivity extends AppCompatActivity {
 
         //changed how current username is gotten, was: this.getIntent().getExtras().get("currentUser").toString()
         currentUser = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
 
-        Context context = this;
+        FloatingActionButton fab = findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent i = new Intent(view.getContext(), CreateQuestActivity.class);
+                startActivity(i);
+            }
+        });
+        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
+        bNavView.setBackground(null);
+        bNavView.setSelectedItemId(R.id.nav_home);
+        Context context = this.getBaseContext();
         bNavView.setOnItemSelectedListener(item -> {
             Intent i;
             if (item.getItemId() == R.id.nav_recap) {
@@ -89,7 +101,7 @@ public class MyQuestsActivity extends AppCompatActivity {
             return false;
         });
         bNavView.setOnItemReselectedListener(item -> {
-            Snackbar.make(this.getCurrentFocus(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
         });
         createRecyclerView();
         getAllQuests();

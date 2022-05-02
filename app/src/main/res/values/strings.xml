@@ -74,4 +74,5 @@
     <string name="new_email">New Email</string>
     <string name="new_username">New Username</string>
     <string name="new_password">New Password</string>
+    <string name="new_quest">New Quest</string>
 </resources>

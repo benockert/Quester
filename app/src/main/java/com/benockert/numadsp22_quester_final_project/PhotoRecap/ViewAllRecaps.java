@@ -1,7 +1,9 @@
 package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -14,6 +16,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -37,12 +40,14 @@ public class ViewAllRecaps extends AppCompatActivity {
     private ViewAllRecapsAdapter rviewAdapter;
     TextView noRecaps;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_all_recaps);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         assert currentUser != null;
         username = currentUser.getDisplayName();
         dr = FirebaseDatabase.getInstance().getReference();
@@ -72,17 +77,17 @@ public class ViewAllRecaps extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_home) {
                 i = new Intent(context, MyQuestsActivity.class);
                 startActivity(i);
-            } else if (item.getItemId() == R.drawable.ic_profile) {
+            } else if (item.getItemId() == R.id.nav_profile) {
                     i = new Intent(context, UserProfileActivity.class);
                     startActivity(i);
-            } else if (item.getItemId() == R.drawable.ic_curr_activity) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
+            } else if (item.getItemId() == R.id.nav_createQuest) {
+                    i = new Intent(context, CreateQuestActivity.class);
+                    startActivity(i);
             }
             return false;
         });
         bNavView.setOnItemReselectedListener(item -> {
-            Snackbar.make(this.getCurrentFocus(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
+            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
         });
     }
 
