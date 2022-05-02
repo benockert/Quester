@@ -121,21 +121,24 @@ public class MyQuestsActivity extends AppCompatActivity {
             public void onItemClick(int position, View view) {
                 QuestCard questCard = questList.get(position);
                 if (questCard.getQuest().isActive()) {
-                     Intent intent = new Intent(getApplicationContext(), ActiveQuest.class);
-                     intent.putExtra("joinCode", questCard.getQuest().getJoinCode());
-                     view.getContext().startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), ActiveQuest.class);
+                    intent.putExtra("joinCode", questCard.getQuest().getJoinCode());
+                    view.getContext().startActivity(intent);
                 } else {
-                Intent intent = new Intent(this, PastQuests.class);
-                intent.putExtra("questId", questCard.getQuest().getJoinCode());
-                intent.putExtra("questName", questCard.getQuest().getDatetime());
-                startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), PastQuests.class);
+                    intent.putExtra("questId", questCard.getQuest().getJoinCode());
+                    intent.putExtra("questName", questCard.getQuest().getDatetime());
+                    startActivity(intent);
+                }
+                recyclerViewAdapter.notifyItemChanged(position);
             }
-            recyclerViewAdapter.notifyItemChanged(position);
+
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 
         recyclerView.setAdapter(recyclerViewAdapter);
         recyclerView.setLayoutManager(recyclerLayoutManger);
+
     }
 
     /**

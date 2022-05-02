@@ -26,7 +26,6 @@ public class Quest {
     public int proximity;
     public List<String> users;
     public int currentActivity;
-    public String joinCode;
 
     public Quest() {
     }
@@ -104,7 +103,6 @@ public class Quest {
 
     public static Quest getQuestFromJSON(String joinCode, String data) {
         try {
-            String joinCode = currentQuestId;
             boolean completed = false;
             String location = "N/A";
             int proximity = 0;

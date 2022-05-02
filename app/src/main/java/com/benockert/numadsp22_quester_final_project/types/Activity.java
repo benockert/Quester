@@ -40,7 +40,7 @@ public class Activity implements Parcelable {
 
     public Activity(String gFormattedAddress, String gName, String gPhotoReference,
                     String gPlaceId, double gPlaceLat, double gPlaceLng,
-                    int uPriceLevel, String uQuery, float gRating) {
+                    int uPriceLevel, Double uPopularity, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;

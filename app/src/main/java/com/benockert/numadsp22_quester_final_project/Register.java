@@ -22,6 +22,8 @@ import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.util.UUID;
+
 
 public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth;
@@ -119,6 +121,9 @@ public class Register extends AppCompatActivity {
                             assert user != null;
                             //adds the registered user to the realtime database
                             dr.child("users").child(username).child("email").setValue(user.getEmail());
+                            String rand = UUID.randomUUID().toString();
+                            String id = "u"+ rand.substring(rand.length() - 5);
+                            dr.child("users").child(username).child("id").setValue(id);
 
                             //storing username in user database
                             UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()

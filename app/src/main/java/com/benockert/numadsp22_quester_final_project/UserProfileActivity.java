@@ -316,7 +316,6 @@ public class UserProfileActivity extends AppCompatActivity {
     private void updatePassword(String newPassword, View view) {
         this.user.updatePassword(newPassword).addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                //todo do we still need to populate? just have to clear text box
                 populateData();
                 notifyUser("Password Has Been Updated");
                 Log.d("MY_PROFILE_ACTIVITY", "Password updated");
