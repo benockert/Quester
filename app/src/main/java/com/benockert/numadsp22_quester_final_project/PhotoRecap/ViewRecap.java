@@ -111,6 +111,7 @@ public class ViewRecap extends AppCompatActivity {
     public void delete(View v) {
         dr.child("users").child(username).child("recaps").child(questRecapName).removeValue();
         Intent i = new Intent(this, ViewAllRecaps.class);
+        i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
     }
 

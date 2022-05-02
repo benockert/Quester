@@ -245,6 +245,7 @@ public class ChoosePhotos extends AppCompatActivity {
             Log.i("recapName1", recapName);
             i.putExtra("recapName", this.recapName);
             i.putExtra("userId", this.userId);
+            i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
             startActivity(i);
         }
     }
