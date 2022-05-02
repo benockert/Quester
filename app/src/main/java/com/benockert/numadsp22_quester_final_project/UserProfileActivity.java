@@ -57,9 +57,6 @@ public class UserProfileActivity extends AppCompatActivity {
     String email;
     String username;
 
-    String authenticateEmail;
-    String authenticatePassword;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +74,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    saveEmailTriggered(view);
+                    saveEmailTriggered(getCurrentFocus());
                 }
                 return false;
             }
@@ -99,7 +96,7 @@ public class UserProfileActivity extends AppCompatActivity {
             @Override
             public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
                 if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    savePasswordTriggered(view);
+                    savePasswordTriggered(getCurrentFocus());
                 }
                 return false;
             }
@@ -202,26 +199,9 @@ public class UserProfileActivity extends AppCompatActivity {
                     Log.d(TAG, errorCode);
                 }
             } else if (e instanceof FirebaseAuthRecentLoginRequiredException) {
-                inputCredentials(view);
-
-                AuthCredential credential = EmailAuthProvider
-                        .getCredential(this.authenticateEmail, this.authenticatePassword);
+                inputCredentials(this.getCurrentFocus(), newEmail, "email");
 
                 // Prompt the user to re-provide their sign-in credentials
-                this.user.reauthenticate(credential).addOnCompleteListener(task ->{
-                    if (task.isSuccessful()) {
-                        this.updateEmail(newEmail, view);
-                    } else {
-                        notifyUser("Authentication Failed");
-                        Log.d(TAG, "Error auth failed");
-                    }
-                }).addOnFailureListener(error -> {
-                    if (error instanceof FirebaseAuthInvalidUserException) {
-                        Log.d(TAG, "Invalid User");
-                    } else if (error instanceof FirebaseAuthInvalidCredentialsException) {
-                        inputCredentials(view);
-                    }
-                });
             } else {
                 notifyUser(e.getMessage());
             }
@@ -361,51 +341,29 @@ public class UserProfileActivity extends AppCompatActivity {
                 String errorCode = ((FirebaseAuthUserCollisionException) e).getErrorCode();
                 Log.d(TAG, errorCode);
             } else if (e instanceof FirebaseAuthRecentLoginRequiredException){
-                inputCredentials(view);
-
-                AuthCredential credential = EmailAuthProvider
-                        .getCredential(this.authenticateEmail, this.authenticatePassword);
-
-                // Prompt the user to re-provide their sign-in credentials
-                this.user.reauthenticate(credential).addOnCompleteListener(task ->{
-                    if (task.isSuccessful()) {
-                        this.updatePassword(newPassword, view);
-                    } else {
-                        notifyUser("Authentication Failed");
-                        Log.d(TAG, "Error auth failed");
-                    }
-                }).addOnFailureListener(error -> {
-                    if (error instanceof FirebaseAuthInvalidUserException) {
-                        Log.d(TAG, "Invalid User");
-                    } else if (error instanceof FirebaseAuthInvalidCredentialsException) {
-                        inputCredentials(view);
-                    }
-                });
+                inputCredentials(this.getCurrentFocus(), newPassword, "password");
             } else {
                 notifyUser(e.getMessage());
             }
         });
     }
 
-    private void inputCredentials(View view) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+    private void inputCredentials(View view, String newValue, String function) {
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(UserProfileActivity.this);
         builder.setTitle("Enter Credentials");
 
         LinearLayout layout= new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
 
-        LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) view.getLayoutParams();
-        params.setMargins(5, 0, 5, 0);
-
         final EditText inputEmail = new EditText(this);
         inputEmail.setInputType(InputType.TYPE_CLASS_TEXT);
         inputEmail.setHint("Email");
-        inputEmail.setLayoutParams(params);
 
         final EditText inputPassword = new EditText(this);
         inputPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
         inputPassword.setHint("Password");
-        inputPassword.setLayoutParams(params);
+        inputPassword.setInputType(InputType.TYPE_TEXT_VARIATION_PASSWORD);
 
         layout.addView(inputEmail);
         layout.addView(inputPassword);
@@ -415,8 +373,9 @@ public class UserProfileActivity extends AppCompatActivity {
         builder.setPositiveButton("Enter", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                authenticateEmail = inputEmail.getText().toString();
-                authenticatePassword = inputPassword.getText().toString();
+                AuthCredential credential = EmailAuthProvider
+                        .getCredential(inputEmail.getText().toString(), inputPassword.getText().toString());
+                reauthenticate(credential, newValue, view, "email");
             }
         });
         builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
@@ -427,6 +386,29 @@ public class UserProfileActivity extends AppCompatActivity {
             }
         });
         builder.show();
+    }
+
+    private void reauthenticate(AuthCredential credential, String newValue, View view, String function) {
+        this.user.reauthenticate(credential).addOnCompleteListener(task ->{
+            if (task.isSuccessful()) {
+                if (function.equals("email")) {
+                    this.updateEmail(newValue, view);
+                } else if (function.equals("password")) {
+                    this.updatePassword(newValue, view);
+                } else {
+                    Log.d("MY_PROFILE", "Authenticating for a function that does not exist");
+                }
+            } else {
+                notifyUser("Authentication Failed");
+                Log.d(TAG, "Error auth failed");
+            }
+        }).addOnFailureListener(error -> {
+            if (error instanceof FirebaseAuthInvalidUserException) {
+                Log.d(TAG, "Invalid User");
+            } else if (error instanceof FirebaseAuthInvalidCredentialsException) {
+                inputCredentials(this.getCurrentFocus(), newValue, function);
+            }
+        });
     }
 
     public void notifyUser(String message) {

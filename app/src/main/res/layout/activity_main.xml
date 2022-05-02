@@ -15,7 +15,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/user_profile" />
+        app:layout_constraintBottom_toTopOf="@id/openActiveQuest" />
 
     <Button
         android:id="@+id/user_profile"
@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:onClick="onClick"
         android:text="@string/user_profile"
-        app:layout_constraintTop_toBottomOf="@id/my_quests"
+        app:layout_constraintTop_toBottomOf="@id/create_quest"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
@@ -32,12 +32,11 @@
         android:id="@+id/openActiveQuest"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="284dp"
         android:text="Active Quest"
         android:onClick="onClick"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/my_quests"
+        app:layout_constraintBottom_toTopOf="@id/create_quest"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -49,18 +48,8 @@
         android:layout_marginTop="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/openActiveQuest"/>
-
-    <TextView
-        android:id="@+id/datestring"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
-        android:text="TextView"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@id/openActiveQuest"
+        app:layout_constraintBottom_toTopOf="@id/user_profile"/>
 
     <Button
         android:id="@+id/refresh"
@@ -73,6 +62,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/datestring" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/my_quests"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

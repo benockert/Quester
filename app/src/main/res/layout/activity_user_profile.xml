@@ -135,6 +135,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="New Password"
+            android:inputType="textPassword"
             android:imeOptions="actionDone"
             android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_password"

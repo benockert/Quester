@@ -18,13 +18,10 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
-    private TextView dateString;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        dateString = findViewById(R.id.datestring);
     }
 
 
