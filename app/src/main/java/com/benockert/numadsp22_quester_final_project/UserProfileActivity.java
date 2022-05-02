@@ -2,8 +2,6 @@ package com.benockert.numadsp22_quester_final_project;
 
 import static android.content.ContentValues.TAG;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,8 +17,9 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.appcompat.app.AppCompatActivity;
+
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
-import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
@@ -89,9 +88,6 @@ public class UserProfileActivity extends AppCompatActivity {
             }
             return false;
         });
-        bNavView.setOnItemReselectedListener(item -> {
-            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
-        });
 
         //init data from db
         mAuth = FirebaseAuth.getInstance();
@@ -101,36 +97,27 @@ public class UserProfileActivity extends AppCompatActivity {
         this.currentUsername = (TextView) findViewById(R.id.current_username);
 
         this.editEmail = (EditText) findViewById(R.id.edit_email);
-        this.editEmail.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    saveEmailTriggered(getCurrentFocus());
-                }
-                return false;
+        this.editEmail.setOnEditorActionListener((view, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                saveEmailTriggered(getCurrentFocus());
             }
+            return false;
         });
 
         this.editUsername = (EditText) findViewById(R.id.edit_username);
-        this.editUsername.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    saveUsernameTriggered();
-                }
-                return false;
+        this.editUsername.setOnEditorActionListener((view, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                saveUsernameTriggered();
             }
+            return false;
         });
 
         this.editPassword = (EditText) findViewById(R.id.edit_password);
-        this.editPassword.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView view, int actionId, KeyEvent event) {
-                if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
-                    savePasswordTriggered(getCurrentFocus());
-                }
-                return false;
+        this.editPassword.setOnEditorActionListener((view, actionId, event) -> {
+            if ((event != null && (event.getKeyCode() == KeyEvent.KEYCODE_ENTER)) || (actionId == EditorInfo.IME_ACTION_DONE)) {
+                savePasswordTriggered(getCurrentFocus());
             }
+            return false;
         });
 
         this.user = mAuth.getCurrentUser();
