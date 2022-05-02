@@ -25,9 +25,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="10dp"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toTopOf="@id/fab"
         app:layout_constraintTop_toBottomOf="@id/my_quests_header"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent" />
+        app:layout_constraintEnd_toEndOf="parent"
+        tools:ignore="NotSibling" />
 
     <TextView
         android:id="@+id/no_quests_text"

@@ -10,7 +10,7 @@
         android:id="@+id/allRecapsRView"
         android:layout_width="409dp"
         android:layout_height="669dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="50dp"
         app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
