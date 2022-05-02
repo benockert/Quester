@@ -80,4 +80,15 @@
     <string name="new_username">New Username</string>
     <string name="new_password">New Password</string>
     <string name="new_quest">New Quest</string>
+
+    <string name="user_profile">My Profile</string>
+    <string name="current_settings">Current Username &amp; Password</string>
+    <string name="current_email">Email: %s</string>
+    <string name="current_username">Username: %s</string>
+    <string name="current_password">Password: %s</string>
+    <string name="view_password">View Password</string>
+    <string name="hide_password">Hide Password</string>
+    <string name="update_settings">Update Username &amp; Password</string>
+    <string name="save">Save</string>
+    <string name="create_quest">Create Quest</string>
 </resources>
