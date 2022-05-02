@@ -68,7 +68,6 @@ public class UserProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_user_profile);
 
         BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
-        bNavView.setBackground(null);
         bNavView.setSelectedItemId(R.id.nav_profile);
         Context context = this.getBaseContext();
         bNavView.setOnItemSelectedListener(item -> {
