@@ -9,6 +9,8 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -50,8 +52,9 @@ public class Login extends AppCompatActivity {
         //ensures user says signed in unless they log out
         FirebaseUser currentUser = mAuth.getCurrentUser();
         if (currentUser != null) {
-            Intent i = new Intent(this, MainActivity.class);
+            Intent i = new Intent(this, MyQuestsActivity.class);
             i.putExtra("username", currentUser.getDisplayName());
+
             startActivity(i);
         }
     }
@@ -99,7 +102,7 @@ public class Login extends AppCompatActivity {
             if (task.isSuccessful()) {
                 // Sign in success
                 FirebaseUser user = mAuth.getCurrentUser();
-                Intent i = new Intent(this, MainActivity.class);
+                Intent i = new Intent(this, MyQuestsActivity.class);
                 //ensures the user is not null
                 if (user != null) {
                     //navigating to main app activity page
@@ -163,7 +166,7 @@ public class Login extends AppCompatActivity {
                     if (t.isSuccessful()) {
                         // Sign in success
                         FirebaseUser user = mAuth.getCurrentUser();
-                        Intent i = new Intent(this, MainActivity.class);
+                        Intent i = new Intent(this, MyQuestsActivity.class);
                         //ensures user is not null
                         if (user != null) {
                             //navigating to main app activity page

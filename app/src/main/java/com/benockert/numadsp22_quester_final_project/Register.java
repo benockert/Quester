@@ -12,6 +12,7 @@ import android.widget.EditText;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
@@ -135,7 +136,7 @@ public class Register extends AppCompatActivity {
                             //passing through username - not necessary as we just need to get the
                             // current user instance to grab the display name that was set above
                             //TODO
-                            Intent i = new Intent(this, MainActivity.class);
+                            Intent i = new Intent(this, MyQuestsActivity.class);
                             i.putExtra("username", username);
                             startActivity(i);
                         }

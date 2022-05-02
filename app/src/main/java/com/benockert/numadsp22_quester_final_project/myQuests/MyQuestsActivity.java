@@ -12,7 +12,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.PastQuests.PastQuests;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.R;
@@ -205,16 +204,4 @@ public class MyQuestsActivity extends AppCompatActivity {
             }
         });
     }
-
-//    // Handling Orientation Changes
-//    @Override
-//    protected void onSaveInstanceState(@NonNull Bundle outState) {
-//        int size = questList == null ? 0 : questList.size();
-//        outState.putInt(NUMBER_OF_ITEMS, size);
-//
-//        for (int i = 0; i < size; i++) {
-//            outState.putSerializable(KEY_OF_INSTANCE + i, questList.get(i).getQuest());
-//        }
-//        super.onSaveInstanceState(outState);
-//    }
 }
