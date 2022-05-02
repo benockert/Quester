@@ -17,5 +17,5 @@
         android:title="@string/profile"/>
     <item
         android:id="@+id/holder"
-        android:title=""/>
+        android:title="" />
 </menu>

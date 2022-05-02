@@ -25,7 +25,7 @@
     <string name="templates">Templates:</string>
     <string name="choose_a_template"><u>Select A Template</u></string>
     <string name="next">Next</string>
-    <string name="your_recaps"><u>Your Recaps</u></string>
+    <string name="my_recaps"><u>My Recaps</u></string>
     <string name="recap">Recap</string>
     <string name="view_all_recaps">View All Recaps</string>
     <string name="no_template_selected">No Template Selected</string>
@@ -69,7 +69,7 @@
 
     <string name="recap_name">Recap Name:</string>
     <string name="date_generated">Date Generated:</string>
-    <string name="no_recaps_available">No Recaps Available</string>
+    <string name="no_recaps_available">No Recaps Created Yet!</string>
     <string name="settings">Settings</string>
     <string name="recaps">Recaps</string>
     <string name="home">Home</string>
