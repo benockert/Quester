@@ -7,6 +7,9 @@ apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdk 32
+    lintOptions {
+        baseline file("lint-baseline.xml")
+    }
 
     defaultConfig {
         applicationId "com.benockert.numadsp22_quester_final_project"

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<issues format="6" by="lint 7.1.3" type="baseline" client="gradle" dependencies="false" name="AGP (7.1.3)" variant="fatal" version="7.1.3">
+
+    <issue
+        id="ExtraTranslation"
+        message="&quot;your_recaps&quot; is translated here but not found in default locale"
+        errorLine1="    &lt;string name=&quot;your_recaps&quot;>&lt;u>Your Recaps&lt;/u>&lt;/string>"
+        errorLine2="            ~~~~~~~~~~~~~~~~~~">
+        <location
+            file="src/main/res/values-night/strings.xml"
+            line="28"
+            column="13"/>
+    </issue>
+
+</issues>
