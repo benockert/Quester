@@ -47,7 +47,6 @@
         android:layout_height="match_parent"
         tools:context=".myQuests.MyQuestsActivity">
 
-        <!--the usual bottom navigation bar with items-->
         <com.google.android.material.bottomappbar.BottomAppBar
             android:id="@+id/bottomAppBar"
             android:layout_width="match_parent"
@@ -68,8 +67,6 @@
                 app:menu="@menu/bottom_nav_menu" />
         </com.google.android.material.bottomappbar.BottomAppBar>
 
-        <!--the normal Floating action button which is
-            anchored to the bottom navigation button-->
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/fab"
             android:layout_width="wrap_content"
@@ -80,7 +77,5 @@
             app:layout_anchor="@id/bottomAppBar"
             app:srcCompat="@drawable/ic_add" />
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
