@@ -23,14 +23,14 @@
     <string name="create_quest_recap">Create Quest Recap</string>
     <string name="create_new_quest">Create New Quest</string>
     <string name="templates">Templates:</string>
-    <string name="choose_a_template"><u>Select A Template</u></string>
+    <string name="choose_a_template">Select A Template</string>
     <string name="next">Next</string>
-    <string name="my_recaps"><u>My Recaps</u></string>
+    <string name="my_recaps">My Recaps</string>
     <string name="recap">Recap</string>
     <string name="view_all_recaps">View All Recaps</string>
     <string name="no_template_selected">No Template Selected</string>
     <string name="_3_photo_limit">3 Photo Limit</string>
-    <string name="select_photos"><u>Select Images For Recap</u></string>
+    <string name="select_photos">Select Images For Recap</string>
     <string name="share">SHARE</string>
     <string name="toolbarTitle">toolbar title</string>
     <string name="del">del</string>
