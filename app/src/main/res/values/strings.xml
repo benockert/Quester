@@ -53,17 +53,6 @@
     <string name="description">Quest Location Image</string>
     <string name="no_quests_message">No Quests Created Yet!</string>
 
-    <string name="user_profile">My Profile</string>
-    <string name="current_settings">Current Username &amp; Password</string>
-    <string name="current_email">Email: %s</string>
-    <string name="current_username">Username: %s</string>
-    <string name="current_password">Password: %s</string>
-    <string name="view_password">View Password</string>
-    <string name="hide_password">Hide Password</string>
-    <string name="update_settings">Update Username &amp; Password</string>
-    <string name="save">Save</string>
-    <string name="create_quest">Create Quest</string>
-
     <string name="you_searched">You searched:</string>
     <string name="take_photo_button">TAKE PHOTO</string>
     <string name="next_stop_button">NEXT STOP</string>

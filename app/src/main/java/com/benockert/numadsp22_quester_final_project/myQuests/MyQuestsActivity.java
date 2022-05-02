@@ -92,12 +92,15 @@ public class MyQuestsActivity extends AppCompatActivity {
             if (item.getItemId() == R.id.nav_recap) {
                 i = new Intent(context, ViewAllRecaps.class);
                 startActivity(i);
-            } else if (item.getItemId() == R.drawable.ic_profile) {
+            } else if (item.getItemId() == R.id.nav_profile) {
                 i = new Intent(context, UserProfileActivity.class);
                 startActivity(i);
-            }else if (item.getItemId() == R.drawable.ic_curr_activity) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
+            }else if (item.getItemId() == R.id.nav_currActivity) {
+                    i = new Intent(context, MainActivity.class);
+                    startActivity(i);
+            }else if (item.getItemId() == R.id.nav_createQuest) {
+                i = new Intent(context, CreateQuestActivity.class);
+                startActivity(i);
             }
             return false;
         });
@@ -121,16 +124,17 @@ public class MyQuestsActivity extends AppCompatActivity {
             public void onItemClick(int position, View view) {
                 QuestCard questCard = questList.get(position);
                 if (questCard.getQuest().isActive()) {
-                     Intent intent = new Intent(getApplicationContext(), ActiveQuest.class);
-                     intent.putExtra("joinCode", questCard.getQuest().getJoinCode());
-                     view.getContext().startActivity(intent);
+                    Intent intent = new Intent(getApplicationContext(), ActiveQuest.class);
+                    intent.putExtra("joinCode", questCard.getQuest().getJoinCode());
+                    view.getContext().startActivity(intent);
                 } else {
-                Intent intent = new Intent(this, PastQuests.class);
-                intent.putExtra("questId", questCard.getQuest().getJoinCode());
-                intent.putExtra("questName", questCard.getQuest().getDatetime());
-                startActivity(intent);
+                    Intent intent = new Intent(view.getContext(), PastQuests.class);
+                    intent.putExtra("questId", questCard.getQuest().getJoinCode());
+                    intent.putExtra("questName", questCard.getQuest().getDatetime());
+                    startActivity(intent);
+                }
+                recyclerViewAdapter.notifyItemChanged(position);
             }
-            recyclerViewAdapter.notifyItemChanged(position);
         };
         recyclerViewAdapter.setOnItemClickListener(itemClickListener);
 

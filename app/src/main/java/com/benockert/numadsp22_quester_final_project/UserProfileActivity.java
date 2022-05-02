@@ -5,6 +5,7 @@ import static android.content.ContentValues.TAG;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -18,8 +19,11 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.types.UserProfile;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthCredential;
@@ -61,6 +65,31 @@ public class UserProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
+
+        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
+        bNavView.setBackground(null);
+        bNavView.setSelectedItemId(R.id.nav_profile);
+        Context context = this.getBaseContext();
+        bNavView.setOnItemSelectedListener(item -> {
+            Intent i;
+            if (item.getItemId() == R.id.nav_recap) {
+                i = new Intent(context, ViewAllRecaps.class);
+                startActivity(i);
+            } else if (item.getItemId() == R.id.nav_home) {
+                i = new Intent(context, UserProfileActivity.class);
+                startActivity(i);
+            }else if (item.getItemId() == R.id.nav_currActivity) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+            }else if (item.getItemId() == R.id.nav_createQuest) {
+                i = new Intent(context, CreateQuestActivity.class);
+                startActivity(i);
+            }
+            return false;
+        });
+        bNavView.setOnItemReselectedListener(item -> {
+            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
+        });
 
         //init data from db
         mAuth = FirebaseAuth.getInstance();
