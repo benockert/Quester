@@ -104,7 +104,7 @@
         android:id="@+id/confirmQuestInfoText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Review, regenerate, or rearrange your activities"
+        android:text="Review or regenerate your activities"
         android:textSize="14sp"
         android:textColor="@color/green_200"
         android:textStyle="italic"

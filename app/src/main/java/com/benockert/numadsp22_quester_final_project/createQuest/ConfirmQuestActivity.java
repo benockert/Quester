@@ -131,7 +131,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         new ItemTouchHelper(new ItemTouchHelper.Callback() {
             @Override
             public boolean isLongPressDragEnabled() {
-                return true;
+                return false;
             }
 
             @Override
@@ -237,6 +237,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
         } else {
             intent = new Intent(this, MyQuestsActivity.class);
         }
+        finish();
         startActivity(intent);
     }
 
@@ -265,7 +266,7 @@ public class ConfirmQuestActivity extends AppCompatActivity {
 
             List<String> listOfUsers = new ArrayList<>();
 
-            Quest newQuest = new Quest(joinCode,true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
+            Quest newQuest = new Quest(true, false, locationString, qDatetime, proximityInMeters, locationPhotoReference, activities, null, 0);
 
             dr.child("quests").child(joinCode).setValue(newQuest).addOnSuccessListener(task -> {
                 Log.d(TAG, String.format("Successfully created quest: %s", joinCode));
