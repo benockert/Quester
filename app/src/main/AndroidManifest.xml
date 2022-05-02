@@ -23,10 +23,6 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.NUMADSp22_Quester_Final_Project">
 
-        <activity
-            android:name=".UserProfileActivity"
-            android:exported="false" />
-
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="com.benockert.numadsp22_quester_final_project.fileprovider"
@@ -55,14 +51,15 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="${MAPS_API_KEY}" />
         </activity>
+
+        <activity
+            android:name=".UserProfileActivity"
+            android:exported="false" />
         <activity
             android:name=".PastQuests.PastQuests"
             android:exported="false" />
        <activity
             android:name=".PhotoRecap.ViewAllRecaps"
-            android:exported="false" />
-        <activity
-            android:name=".UserProfileActivity"
             android:exported="false" />
         <activity
             android:name=".PhotoRecap.ViewRecap"
@@ -105,9 +102,6 @@
                  <category android:name="android.intent.category.LAUNCHER" />
              </intent-filter>
         </activity>
-        <activity
-            android:name=".MainActivity"
-            android:exported="false" />
     </application>
 
 </manifest>

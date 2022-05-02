@@ -44,7 +44,7 @@
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".myQuests.MyQuestsActivity">
 
         <!--the usual bottom navigation bar with items-->
         <com.google.android.material.bottomappbar.BottomAppBar

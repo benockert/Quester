@@ -14,15 +14,11 @@ import android.os.Environment;
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.MediaStore;
-import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
-import android.widget.PopupWindow;
 import android.widget.RatingBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -40,9 +36,9 @@ import androidx.recyclerview.widget.LinearSnapHelper;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.SnapHelper;
 
-import com.benockert.numadsp22_quester_final_project.MainActivity;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.activeQuest.previewStopCard.PreviewCardAdapter;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
@@ -346,7 +342,7 @@ public class ActiveQuest extends AppCompatActivity {
     public void cancelQuest() {
         dr.child("quests").child(currentQuestId).child("users").child(currentUser).removeValue().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
-                Intent intent = new Intent(this, MainActivity.class).putExtra("currentUser", currentUser);
+                Intent intent = new Intent(this, MyQuestsActivity.class).putExtra("currentUser", currentUser);
                 startActivity(intent);
             }
         });
@@ -355,12 +351,12 @@ public class ActiveQuest extends AppCompatActivity {
     public void finishQuest() {
         dr.child("quests").child(currentQuestId).child("completed").setValue(true);
         dr.child("quests").child(currentQuestId).child("active").setValue(false);
-        Intent intent = new Intent(this, MainActivity.class).putExtra("currentUser", currentUser);
+        Intent intent = new Intent(this, MyQuestsActivity.class).putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 
     public void saveAndExitToMenu() {
-        Intent intent = new Intent(this, MainActivity.class).putExtra("currentUser", currentUser);
+        Intent intent = new Intent(this, MyQuestsActivity.class).putExtra("currentUser", currentUser);
         startActivity(intent);
     }
 
