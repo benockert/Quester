@@ -20,6 +20,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
+import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
@@ -75,12 +76,15 @@ public class UserProfileActivity extends AppCompatActivity {
             Intent i;
             if (item.getItemId() == R.id.nav_recap) {
                 i = new Intent(context, ViewAllRecaps.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             } else if (item.getItemId() == R.id.nav_home) {
                 i = new Intent(context, MyQuestsActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             }else if (item.getItemId() == R.id.nav_createQuest) {
                 i = new Intent(context, CreateQuestActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             }
             return false;
