@@ -91,15 +91,15 @@ public class MyQuestsActivity extends AppCompatActivity {
             Intent i;
             if (item.getItemId() == R.id.nav_recap) {
                 i = new Intent(context, ViewAllRecaps.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             } else if (item.getItemId() == R.id.nav_profile) {
                 i = new Intent(context, UserProfileActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
-            }else if (item.getItemId() == R.id.nav_currActivity) {
-                    i = new Intent(context, MainActivity.class);
-                    startActivity(i);
             }else if (item.getItemId() == R.id.nav_createQuest) {
                 i = new Intent(context, CreateQuestActivity.class);
+                i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
             }
             return false;
