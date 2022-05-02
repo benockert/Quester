@@ -35,14 +35,20 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.benockert.numadsp22_quester_final_project.UserProfileActivity;
 import com.benockert.numadsp22_quester_final_project.activeQuest.ActiveQuest;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCard;
 import com.benockert.numadsp22_quester_final_project.createQuest.addActivityRecycler.AddActivityCardAdapter;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.benockert.numadsp22_quester_final_project.utils.GooglePlacesClient;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.android.material.slider.LabelFormatter;
 import com.google.android.material.slider.Slider;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -103,6 +109,30 @@ public class CreateQuestActivity extends AppCompatActivity {
         setContentView(R.layout.activity_create_quest);
         context = getApplicationContext();
 
+        BottomNavigationView bNavView = findViewById(R.id.bottomNavigationView);
+        bNavView.setSelectedItemId(R.id.nav_createQuest);
+
+        bNavView.setOnItemSelectedListener(item -> {
+            Intent i;
+            if (item.getItemId() == R.id.nav_home) {
+                i = new Intent(context, MyQuestsActivity.class);
+                startActivity(i);
+            } else if (item.getItemId() == R.id.nav_profile) {
+                i = new Intent(context, UserProfileActivity.class);
+                startActivity(i);
+            } else if (item.getItemId() == R.id.nav_recap) {
+                i = new Intent(context, ViewAllRecaps.class);
+                startActivity(i);
+            }else if (item.getItemId() == R.id.nav_currActivity) {
+//                    i = new Intent(context, MainActivity.class);
+//                    startActivity(i);
+            }
+            return false;
+        });
+        bNavView.setOnItemReselectedListener(item -> {
+            Snackbar.make(bNavView.getRootView(), "Already At Location", BaseTransientBottomBar.LENGTH_LONG).show();
+        });
+
         activityCards = new ArrayList<>();
         createRecyclerView();
 
@@ -118,20 +148,9 @@ public class CreateQuestActivity extends AppCompatActivity {
         progressTextView = findViewById(R.id.progressText);
         joinAQuestButton = findViewById(R.id.joinQuestButton);
 
-        joinAQuestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                openEnterJoinCodeDialog(view);
-            }
-        });
+        joinAQuestButton.setOnClickListener(view -> openEnterJoinCodeDialog(view));
 
-        proximitySlider.setLabelFormatter(new LabelFormatter() {
-            @NonNull
-            @Override
-            public String getFormattedValue(float value) {
-                return String.format(Locale.US, "%.2f", value) + " mi";
-            }
-        });
+        proximitySlider.setLabelFormatter(value -> String.format(Locale.US, "%.2f", value) + " mi");
 
         // text change listener to remove the "missing text" message when a location is added manually
         startLocationTextView.addTextChangedListener(new TextWatcher() {
