@@ -26,11 +26,15 @@ public class Quest {
     public int proximity;
     public List<String> users;
     public int currentActivity;
+    public String joinCode;
 
     public Quest() {
     }
 
-    public Quest(String joinCode, boolean active, boolean completed, String location, String datetime, int proximity, String photoReference, List<Activity> activities, List<String> users, int currentActivity) {
+    public Quest(String joinCode, boolean active, boolean completed, String location,
+                 String datetime, int proximity, String photoReference,
+                 List<Activity> activities, List<String> users, int currentActivity) {
+
         this.joinCode = joinCode;
         this.active = active;
         this.completed = completed;
@@ -41,10 +45,6 @@ public class Quest {
         this.activities = activities;
         this.users = users;
         this.currentActivity = currentActivity;
-    }
-
-    public String getJoinCode() {
-        return this.joinCode;
     }
 
     public boolean isActive() {
@@ -101,8 +101,10 @@ public class Quest {
         return this.currentActivity;
     }
 
+
     public static Quest getQuestFromJSON(String joinCode, String data) {
         try {
+            String joinCode = currentQuestId;
             boolean completed = false;
             String location = "N/A";
             int proximity = 0;
@@ -121,7 +123,6 @@ public class Quest {
             JSONArray questActivities = jsonResults.getJSONArray("activities");
 
             Iterator<String> usersIterator = jsonResults.getJSONObject("users").keys();
-            JSONObject usersObj = jsonResults.getJSONObject("users");
 
             active = jsonResults.getBoolean("active");
             activities = new ArrayList<>();
@@ -148,5 +149,11 @@ public class Quest {
             return null;
         }
     }
+
+    @Exclude
+    public String getJoinCode() {
+        return this.joinCode;
+    }
+
 }
 

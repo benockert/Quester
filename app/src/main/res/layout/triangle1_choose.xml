@@ -1,0 +1,187 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateRecap.ChoosePhotos">
+
+    <TextView
+        android:id="@+id/selPhotosLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/select_photos"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textColor="@color/black"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/L2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/fin"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/selPhotosLabel">
+
+        <Button
+            android:id="@+id/selectImg1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView1"
+            android:layout_alignTop="@+id/imageView1"
+            android:layout_alignEnd="@+id/imageView1"
+            android:layout_alignBottom="@+id/imageView1"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            android:onClick="selectImg1"
+            android:text="@string/select"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView1"
+            app:layout_constraintEnd_toEndOf="@+id/imageView1"
+            app:layout_constraintStart_toStartOf="@+id/imageView1"
+            app:layout_constraintTop_toTopOf="@+id/imageView1" />
+
+        <Button
+            android:id="@+id/selectImg2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView3"
+            android:layout_alignTop="@+id/imageView3"
+            android:layout_alignEnd="@+id/imageView3"
+            android:layout_alignBottom="@+id/imageView3"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            android:onClick="selectImg2"
+            android:text="@string/select"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/imageView2"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/imageView2" />
+
+        <Button
+            android:id="@+id/selectImg3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignStart="@+id/imageView2"
+            android:layout_alignTop="@+id/imageView2"
+            android:layout_alignEnd="@+id/imageView2"
+            android:layout_alignBottom="@+id/imageView2"
+            android:layout_marginStart="26dp"
+            android:layout_marginEnd="26dp"
+            android:onClick="selectImg3"
+            android:text="@string/select"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView3"
+            app:layout_constraintEnd_toEndOf="@+id/imageView3"
+            app:layout_constraintStart_toStartOf="@+id/imageView3"
+            app:layout_constraintTop_toTopOf="@+id/imageView3"/>
+
+        <ImageView
+            android:id="@+id/finalImageView"
+            android:layout_width="410dp"
+            android:layout_height="355dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/recap"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/box" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="147dp"
+            android:layout_height="147dp"
+            android:layout_alignStart="@+id/finalImageView"
+            android:layout_alignBottom="@+id/finalImageView"
+            android:layout_marginStart="23dp"
+            android:layout_marginEnd="10dp"
+            android:contentDescription="@string/image3"
+            app:layout_constraintBottom_toBottomOf="@+id/imageView2"
+            app:layout_constraintEnd_toEndOf="@+id/finalImageView"
+            app:layout_constraintStart_toEndOf="@+id/imageView2"
+            app:srcCompat="@drawable/box"
+            android:onClick="selectImg3"
+            tools:ignore="ImageContrastCheck" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="147dp"
+            android:layout_height="147dp"
+            android:layout_alignEnd="@+id/finalImageView"
+            android:layout_alignBottom="@+id/imageView3"
+            android:layout_marginEnd="22dp"
+            android:contentDescription="@string/image2"
+            android:onClick="selectImg2"
+            app:layout_constraintBottom_toBottomOf="@+id/finalImageView"
+            app:layout_constraintEnd_toStartOf="@+id/imageView3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageView1"
+            app:srcCompat="@drawable/box" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="147dp"
+            android:layout_height="147dp"
+            android:layout_above="@+id/imageView3"
+            android:layout_alignStart="@+id/imageView3"
+            android:layout_alignEnd="@+id/imageView2"
+            android:layout_marginStart="112dp"
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/image1"
+            android:onClick="selectImg1"
+            app:layout_constraintStart_toStartOf="@+id/imageView2"
+            app:layout_constraintTop_toTopOf="@+id/finalImageView"
+            app:srcCompat="@drawable/box" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Button
+        android:id="@+id/fin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="28dp"
+        android:layout_marginBottom="36dp"
+        android:backgroundTint="@color/orange_500"
+        android:onClick="finish"
+        android:text="@string/finish"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <Button
+        android:id="@+id/back_btnPhoto"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="28dp"
+        android:layout_marginBottom="36dp"
+        android:onClick="back"
+        android:text="@string/back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <Button
+        android:id="@+id/button4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="8dp"
+        android:onClick="changeBackgroundColor"
+        android:text="@string/change_background_color"
+        app:layout_constraintBottom_toTopOf="@+id/L2"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/generatingRecap"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/selPhotosLabel" />
+</androidx.constraintlayout.widget.ConstraintLayout>

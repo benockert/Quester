@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/pQuests_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PastQuests.PastQuests">
+
+    <TextView
+        android:id="@+id/questNameLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:text="@string/quest_name"
+        android:textSize="24sp"
+        app:layout_constraintStart_toStartOf="@+id/toCreateQuest"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/pastQuest_questName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:textSize="20sp"
+        app:layout_constraintStart_toEndOf="@+id/questNameLabel"
+        app:layout_constraintTop_toTopOf="@+id/questNameLabel" />
+
+    <TextView
+        android:id="@+id/participantsLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:text="@string/participant_s"
+        android:textSize="18sp"
+        app:layout_constraintStart_toStartOf="@+id/questNameLabel"
+        app:layout_constraintTop_toBottomOf="@+id/pastQuest_questName" />
+
+    <TextView
+        android:id="@+id/participants"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:text=""
+        android:textSize="16sp"
+        app:layout_constraintStart_toEndOf="@+id/participantsLabel"
+        app:layout_constraintTop_toTopOf="@+id/participantsLabel" />
+
+    <TextView
+        android:id="@+id/activitiesLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/activities"
+        android:textSize="16sp"
+        android:layout_marginTop="5dp"
+        app:layout_constraintStart_toStartOf="@+id/participantsLabel"
+        app:layout_constraintTop_toBottomOf="@+id/participants" />
+
+    <Button
+        android:id="@+id/viewQRecap"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:onClick="viewQuestRecap"
+        android:text="@string/view_quest_recap"
+        app:layout_constraintStart_toStartOf="@+id/createQRecap"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <Button
+        android:id="@+id/createQRecap"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:onClick="createQuestRecap"
+        android:text="@string/create_quest_recap"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/toCreateQuest" />
+
+    <Button
+        android:id="@+id/toCreateQuest"
+        android:layout_width="137dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="4dp"
+        android:onClick="toCreateQuest"
+        android:text="@string/create_new_quest"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/pastQuestsRecylerView"
+        android:layout_width="409dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="7dp"
+        android:layout_marginTop="150dp"
+        android:layout_marginEnd="7dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel" />
+</androidx.constraintlayout.widget.ConstraintLayout>

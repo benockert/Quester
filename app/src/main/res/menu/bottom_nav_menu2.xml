@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_home"
+        android:enabled="true"
+        android:icon="@drawable/ic_home"
+        android:title="@string/home"/>
+    <item
+        android:id="@+id/nav_currActivity"
+        android:enabled="true"
+        android:icon="@drawable/ic_curr_activity"
+        android:title="@string/active_quest"/>
+    <item
+        android:id="@+id/nav_createQuest"
+        android:enabled="true"
+        android:icon="@drawable/ic_add"
+        android:title="@string/new_quest"/>
+    <item
+        android:id="@+id/nav_recap"
+        android:enabled="true"
+        android:icon="@drawable/ic_recaps"
+        android:title="@string/recaps"/>
+    <item
+        android:id="@+id/nav_profile"
+        android:enabled="true"
+        android:icon="@drawable/ic_profile"
+        android:title="@string/profile"/>
+</menu>

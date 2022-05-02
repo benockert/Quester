@@ -63,11 +63,34 @@
             android:text="@string/current_username"
             android:textColor="@color/black"
             android:textSize="20sp"
+
             app:layout_constraintBottom_toTopOf="@id/update_settings"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/current_email" />
 
+        <TextView
+            android:id="@+id/current_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingStart="40dp"
+            android:text="@string/current_password"
+            android:textColor="@color/black"
+            android:textSize="20sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/current_username" />
 
+        <Button
+            android:id="@+id/view_hide_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="40dp"
+            android:backgroundTint="@color/orange_500"
+            android:onClick="onClick"
+            android:paddingStart="40dp"
+            android:text="@string/view_password"
+            app:layout_constraintBottom_toTopOf="@id/update_settings"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/current_password" />
 
         <TextView
             android:id="@+id/update_settings"
@@ -88,7 +111,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="New Email"
+            android:hint="@string/new_email"
             android:imeOptions="actionDone"
             android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_email"
@@ -111,7 +134,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="New Username"
+            android:hint="@string/new_username"
             android:imeOptions="actionDone"
             android:singleLine="true"
             app:layout_constraintEnd_toStartOf="@id/save_username"
@@ -134,7 +157,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
-            android:hint="New Password"
+            android:hint="@string/new_password"
             android:inputType="textPassword"
             android:imeOptions="actionDone"
             android:singleLine="true"
@@ -165,5 +188,24 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
+
+    <FrameLayout
+        android:id="@+id/flFragment"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/bottomNavigationView"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigationView"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@color/orange_200"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:menu="@menu/bottom_nav_menu2"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

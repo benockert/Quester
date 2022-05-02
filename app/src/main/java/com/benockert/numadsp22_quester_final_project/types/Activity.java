@@ -29,7 +29,18 @@ public class Activity implements Parcelable {
     public Activity() {
     }
 
-    public Activity(String gFormattedAddress, String gName, String gPhotoReference, String gPlaceId, double gPlaceLat, double gPlaceLng, int uPriceLevel, double uPopularity, String uQuery, float gRating) {
+
+    public Activity(String gName, int uPriceLevel,
+                    String gPhotoReference, String gFormattedAddress) {
+        this.gName = gName;
+        this.uPriceLevel = uPriceLevel;
+        this.gPhotoReference = gPhotoReference;
+        this.gFormattedAddress = gFormattedAddress;
+    }
+
+    public Activity(String gFormattedAddress, String gName, String gPhotoReference,
+                    String gPlaceId, double gPlaceLat, double gPlaceLng,
+                    int uPriceLevel, String uQuery, float gRating) {
         this.gFormattedAddress = gFormattedAddress;
         this.gName = gName;
         this.gPhotoReference = gPhotoReference;
@@ -55,6 +66,7 @@ public class Activity implements Parcelable {
         gRating = in.readFloat();
     }
 
+ 
     public static final Creator<Activity> CREATOR = new Creator<Activity>() {
         @Override
         public Activity createFromParcel(Parcel in) {
@@ -67,14 +79,29 @@ public class Activity implements Parcelable {
         }
     };
 
+   /**
+     * getter for the address of the location
+     *
+     * @return String representing the address of the location
+     */
     public String getgFormattedAddress() {
         return gFormattedAddress;
     }
 
+    /**
+     * getter for the name of the activity location
+     *
+     * @return String representing the name of the activities location
+     */
     public String getgName() {
         return gName;
     }
 
+    /**
+     * getter for the String referencing the photo of the activity location
+     *
+     * @return String representing a reference to a photo of the activity location
+     */
     public String getgPhotoReference() {
         return gPhotoReference;
     }
@@ -91,6 +118,11 @@ public class Activity implements Parcelable {
         return gPlaceLng;
     }
 
+    /**
+     * getter for the price range of the activity
+     *
+     * @return String representing the number of $signs the price range is
+     */
     public int getuPriceLevel() {
         return uPriceLevel;
     }
@@ -135,6 +167,7 @@ public class Activity implements Parcelable {
             double gPlaceLng = activityObj.getDouble("gPlaceLng");
             int uPriceLevel = activityObj.getInt("uPriceLevel");
             double uPopularity = activityObj.getDouble("uPopularity");
+
             float gRating = Float.parseFloat(activityObj.getString("gRating"));
 
             String uQuery = activityObj.getString("uQuery").replaceAll("_", " ");
