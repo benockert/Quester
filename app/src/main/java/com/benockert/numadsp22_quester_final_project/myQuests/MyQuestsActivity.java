@@ -194,7 +194,9 @@ public class MyQuestsActivity extends AppCompatActivity {
                         questList.add(questCard);
                     }
 
-                    findViewById(R.id.no_quests_text).setVisibility(View.GONE);
+                    if (usersActiveQuests.size() + usersInactiveQuests.size() > 0) {
+                        findViewById(R.id.no_quests_text).setVisibility(View.GONE);
+                    }
                     recyclerViewAdapter.notifyDataSetChanged();
                 } catch (Exception e) {
                     e.printStackTrace();
