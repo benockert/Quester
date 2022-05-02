@@ -95,9 +95,6 @@ public class MyQuestsActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.nav_profile) {
                 i = new Intent(context, UserProfileActivity.class);
                 startActivity(i);
-            }else if (item.getItemId() == R.id.nav_currActivity) {
-                    i = new Intent(context, MainActivity.class);
-                    startActivity(i);
             }else if (item.getItemId() == R.id.nav_createQuest) {
                 i = new Intent(context, CreateQuestActivity.class);
                 startActivity(i);

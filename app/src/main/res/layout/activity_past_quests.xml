@@ -11,10 +11,10 @@
         android:id="@+id/questNameLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="30dp"
         android:text="@string/quest_name"
         android:textSize="24sp"
-        app:layout_constraintStart_toStartOf="@+id/toCreateQuest"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -51,9 +51,9 @@
         android:id="@+id/activitiesLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
         android:text="@string/activities"
         android:textSize="16sp"
-        android:layout_marginTop="5dp"
         app:layout_constraintStart_toStartOf="@+id/participantsLabel"
         app:layout_constraintTop_toBottomOf="@+id/participants" />
 
@@ -62,7 +62,6 @@
         android:layout_width="137dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         android:onClick="viewQuestRecap"
         android:text="@string/view_quest_recap"
         app:layout_constraintStart_toStartOf="@+id/createQRecap"
@@ -72,32 +71,24 @@
         android:id="@+id/createQRecap"
         android:layout_width="137dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
         android:layout_marginEnd="8dp"
+        android:layout_marginBottom="74dp"
         android:onClick="createQuestRecap"
         android:text="@string/create_quest_recap"
+        app:layout_constraintBottom_toTopOf="@+id/pastQuestsRecylerView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/toCreateQuest" />
-
-    <Button
-        android:id="@+id/toCreateQuest"
-        android:layout_width="137dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="4dp"
-        android:onClick="toCreateQuest"
-        android:text="@string/create_new_quest"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/pastQuestsRecylerView"
         android:layout_width="409dp"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
         android:layout_marginStart="7dp"
         android:layout_marginTop="150dp"
         android:layout_marginEnd="7dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/activitiesLabel" />
+        app:layout_constraintTop_toBottomOf="@+id/createQRecap" />
 </androidx.constraintlayout.widget.ConstraintLayout>

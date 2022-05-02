@@ -14,13 +14,17 @@ import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -43,6 +47,7 @@ public class ChoosePhotos extends AppCompatActivity {
     Uri img2Uri;
     Uri img3Uri;
     int backgroundColor;
+    int userId;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -50,6 +55,7 @@ public class ChoosePhotos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
+        userId = this.getIntent().getExtras().getInt("userId");
         findViewById(R.id.generatingRecap).setVisibility(View.INVISIBLE);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
@@ -185,8 +191,6 @@ public class ChoosePhotos extends AppCompatActivity {
      * saves the screenshot created to firebase storage
      */
     private void createAndSaveScreenshot() {
-        String username = Objects.requireNonNull(FirebaseAuth.getInstance()
-                .getCurrentUser()).getDisplayName();
         String name = recapName.replaceAll("\\|", "_");
         View view = findViewById(R.id.L2);
         view.setDrawingCacheEnabled(true);
@@ -197,7 +201,11 @@ public class ChoosePhotos extends AppCompatActivity {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
 
         //reference to where the screenshot will be saves
-        StorageReference recapRef = storageRef.child(username + "/" + name + ".JPEG");
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
+        String userName = mAuth.getCurrentUser().getDisplayName();
+
+        StorageReference recapRef = storageRef.child(this.userId + "/" + name + ".JPEG");
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -210,6 +218,7 @@ public class ChoosePhotos extends AppCompatActivity {
             Log.i("success", "image upload success");
         });
     }
+
 
     /**
      * on click method called when the user is done selecting photos/changing the background
@@ -234,7 +243,8 @@ public class ChoosePhotos extends AppCompatActivity {
                 e.printStackTrace();
             }
             Log.i("recapName1", recapName);
-            i.putExtra("recapName", recapName);
+            i.putExtra("recapName", this.recapName);
+            i.putExtra("userId", this.userId);
             startActivity(i);
         }
     }

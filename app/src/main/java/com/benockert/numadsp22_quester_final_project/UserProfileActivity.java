@@ -21,6 +21,7 @@ import android.widget.TextView;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewAllRecaps;
 import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
+import com.benockert.numadsp22_quester_final_project.myQuests.MyQuestsActivity;
 import com.benockert.numadsp22_quester_final_project.types.Quest;
 import com.benockert.numadsp22_quester_final_project.types.UserProfile;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -76,11 +77,8 @@ public class UserProfileActivity extends AppCompatActivity {
                 i = new Intent(context, ViewAllRecaps.class);
                 startActivity(i);
             } else if (item.getItemId() == R.id.nav_home) {
-                i = new Intent(context, UserProfileActivity.class);
+                i = new Intent(context, MyQuestsActivity.class);
                 startActivity(i);
-            }else if (item.getItemId() == R.id.nav_currActivity) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
             }else if (item.getItemId() == R.id.nav_createQuest) {
                 i = new Intent(context, CreateQuestActivity.class);
                 startActivity(i);

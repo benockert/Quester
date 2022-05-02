@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -17,8 +18,11 @@ import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.CreateRecap.ChooseTemplate;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -213,9 +217,25 @@ public class PastQuests extends AppCompatActivity {
      * @param v represents the current view the user sees
      */
     public void viewQuestRecap(View v) {
-        Intent i = new Intent(this, ViewRecap.class);
-        i.putExtra("recapName", qRecap);
-        startActivity(i);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
+        String userName = mAuth.getCurrentUser().getDisplayName();
+        Context context = this;
+        dr.child("users").child(userName).child("id").get().addOnCompleteListener(
+                new OnCompleteListener<DataSnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<DataSnapshot> task) {
+                        if (task.isSuccessful()) {
+                            if (task.getResult().getValue() != null) {
+                                int tempid = (Integer) task.getResult().getValue();
+                                Intent i = new Intent(context, ViewRecap.class);
+                                i.putExtra("recapName", qRecap);
+                                i.putExtra("userId", tempid);
+                                startActivity(i);
+                            }
+                        }
+                    }
+                });
     }
 
     /**
@@ -225,9 +245,22 @@ public class PastQuests extends AppCompatActivity {
      * @param v represents the current view the user sees
      */
     public void createQuestRecap(View v) {
-        Intent i = new Intent(this, ChooseTemplate.class);
-        i.putExtra("recapName", qRecap);
-        startActivity(i);
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
+        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
+        String userName = mAuth.getCurrentUser().getDisplayName();
+        Context context = this;
+        dr.child("users").child(userName).child("id").get().addOnCompleteListener(
+                task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getValue() != null) {
+                            int tempid = (Integer) task.getResult().getValue();
+                            Intent i = new Intent(context, ChooseTemplate.class);
+                            i.putExtra("recapName", qRecap);
+                            i.putExtra("userId", tempid);
+                            startActivity(i);
+                        }
+                    }
+                });
     }
 
     /**
@@ -239,15 +272,5 @@ public class PastQuests extends AppCompatActivity {
     private String convertStringToJson(String s) {
         Scanner sc = new Scanner(s).useDelimiter("\\A");
         return sc.hasNext() ? sc.next().replace(", ", ",\n") : "";
-    }
-
-    /**
-     * shortcut that allows user to create a new quest while viewing a past quest
-     *
-     * @param v represents the current view the user sees
-     */
-    public void toCreateQuest(View v) {
-        Intent i = new Intent();
-        startActivity(i);
     }
 }

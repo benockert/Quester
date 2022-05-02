@@ -31,6 +31,7 @@ public class ViewRecap extends AppCompatActivity {
     String username;
     DatabaseReference dr;
     TextView title;
+    int userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class ViewRecap extends AppCompatActivity {
         dr = FirebaseDatabase.getInstance().getReference();
         questRecapName = this.getIntent().getExtras().getString("recapName");
         username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
+        userId = this.getIntent().getExtras().getInt("userId");
 
         //sets the title of the recap
         title = findViewById(R.id.toolbar_title);
@@ -48,7 +50,7 @@ public class ViewRecap extends AppCompatActivity {
         // Reference to an image file in Cloud Storage
         String recapName = questRecapName.replaceAll("\\|", "_");
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        String path = username + "/" + recapName + ".JPEG";
+        String path = userId + "/" + recapName + ".JPEG";
         StorageReference pathReference = storageReference.child(path);
 
         // ImageView in your Activity

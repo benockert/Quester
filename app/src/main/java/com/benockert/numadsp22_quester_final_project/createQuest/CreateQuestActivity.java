@@ -123,9 +123,6 @@ public class CreateQuestActivity extends AppCompatActivity {
             } else if (item.getItemId() == R.id.nav_recap) {
                 i = new Intent(context, ViewAllRecaps.class);
                 startActivity(i);
-            }else if (item.getItemId() == R.id.nav_currActivity) {
-//                    i = new Intent(context, MainActivity.class);
-//                    startActivity(i);
             }
             return false;
         });
