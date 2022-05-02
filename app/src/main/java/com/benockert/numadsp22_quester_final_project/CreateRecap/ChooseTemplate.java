@@ -24,7 +24,7 @@ public class ChooseTemplate extends AppCompatActivity {
     String chosenTemplate;
     String recapName;
     DatabaseReference dr;
-    int userId;
+    String userId;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -34,7 +34,7 @@ public class ChooseTemplate extends AppCompatActivity {
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         dr = FirebaseDatabase.getInstance().getReference();
         recapName = this.getIntent().getStringExtra("recapName");
-        userId = this.getIntent().getExtras().getInt("userId");
+        userId = this.getIntent().getExtras().getString("userId");
 
         ImageView templates = findViewById(R.id.templateImage);
 

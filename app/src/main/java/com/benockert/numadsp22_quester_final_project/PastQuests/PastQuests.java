@@ -227,7 +227,7 @@ public class PastQuests extends AppCompatActivity {
                     public void onComplete(@NonNull Task<DataSnapshot> task) {
                         if (task.isSuccessful()) {
                             if (task.getResult().getValue() != null) {
-                                int tempid = (Integer) task.getResult().getValue();
+                                String tempid = String.valueOf(task.getResult().getValue());
                                 Intent i = new Intent(context, ViewRecap.class);
                                 i.putExtra("recapName", qRecap);
                                 i.putExtra("userId", tempid);
@@ -253,7 +253,7 @@ public class PastQuests extends AppCompatActivity {
                 task -> {
                     if (task.isSuccessful()) {
                         if (task.getResult().getValue() != null) {
-                            int tempid = (Integer) task.getResult().getValue();
+                            String tempid = String.valueOf(task.getResult().getValue());
                             Intent i = new Intent(context, ChooseTemplate.class);
                             i.putExtra("recapName", qRecap);
                             i.putExtra("userId", tempid);

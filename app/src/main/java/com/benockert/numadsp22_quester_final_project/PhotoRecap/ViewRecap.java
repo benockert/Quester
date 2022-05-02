@@ -31,7 +31,7 @@ public class ViewRecap extends AppCompatActivity {
     String username;
     DatabaseReference dr;
     TextView title;
-    int userId;
+    String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class ViewRecap extends AppCompatActivity {
         dr = FirebaseDatabase.getInstance().getReference();
         questRecapName = this.getIntent().getExtras().getString("recapName");
         username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-        userId = this.getIntent().getExtras().getInt("userId");
+        userId = this.getIntent().getExtras().getString("userId");
 
         //sets the title of the recap
         title = findViewById(R.id.toolbar_title);

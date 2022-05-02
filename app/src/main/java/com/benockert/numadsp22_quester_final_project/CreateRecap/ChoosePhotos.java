@@ -47,7 +47,7 @@ public class ChoosePhotos extends AppCompatActivity {
     Uri img2Uri;
     Uri img3Uri;
     int backgroundColor;
-    int userId;
+    String userId;
 
     @SuppressLint("SourceLockedOrientationActivity")
     @Override
@@ -55,7 +55,7 @@ public class ChoosePhotos extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         recapName = this.getIntent().getStringExtra("recapName");
         template = this.getIntent().getStringExtra("chosenTemplateName");
-        userId = this.getIntent().getExtras().getInt("userId");
+        userId = this.getIntent().getExtras().getString("userId");
         findViewById(R.id.generatingRecap).setVisibility(View.INVISIBLE);
         this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
