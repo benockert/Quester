@@ -49,7 +49,7 @@ public class ViewRecap extends AppCompatActivity {
 
         //sets the title of the recap
         this.title = findViewById(R.id.toolbar_title);
-        this.title.setText(this.questRecapName.replace("\\|", ":"));
+        this.title.setText(this.questRecapName);
 
         // Reference to an image file in Cloud Storage
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();

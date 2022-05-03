@@ -30,6 +30,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class ViewAllRecaps extends AppCompatActivity {
@@ -85,7 +86,7 @@ public class ViewAllRecaps extends AppCompatActivity {
                 i = new Intent(context, CreateQuestActivity.class);
                 i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                 startActivity(i);
-            } 
+            }
             return false;
         });
     }
@@ -101,17 +102,29 @@ public class ViewAllRecaps extends AppCompatActivity {
         rView.setHasFixedSize(true);
 
         rviewAdapter = new ViewAllRecapsAdapter(recapCardList);
-
+        Context context = this;
         RecapCardListener tempListener = new RecapCardListener() {
-            private final Context contxt = getBaseContext();
             RecapCard temp;
 
             @Override
             public void onCardClick(int pos) {
+                FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
+                String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
                 temp = recapCardList.get(pos);
-                Intent i = new Intent(this.contxt, ViewRecap.class);
-                i.putExtra("recapName", temp.getRecapName());
-                startActivity(i);
+
+                dr.child("users").child(userName).child("id").get().addOnCompleteListener(
+                        task -> {
+                            if (task.isSuccessful()) {
+                                if (task.getResult().getValue() != null) {
+                                    String tempid = String.valueOf(task.getResult().getValue());
+                                    Intent i = new Intent(context, ViewRecap.class);
+                                    i.putExtra("recapName", temp.getRecapName());
+                                    i.putExtra("userId", tempid);
+                                    startActivity(i);
+                                }
+                            }
+                        });
             }
 
             @Override

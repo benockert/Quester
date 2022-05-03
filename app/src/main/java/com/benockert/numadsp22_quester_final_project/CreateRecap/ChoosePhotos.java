@@ -167,7 +167,7 @@ public class ChoosePhotos extends AppCompatActivity {
      * the recap name and date generated is saved to the firebase database
      */
     public void saveToFirebase() {
-        String name = recapName.replace(":", "\\|");
+        String name = recapName.replace(":", "|");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         assert userName != null;
@@ -182,7 +182,7 @@ public class ChoosePhotos extends AppCompatActivity {
      * saves the screenshot created to firebase storage
      */
     private void createAndSaveScreenshot() {
-        String name = recapName.replace(":", "\\|");
+        String name = recapName.replace(":", "_");
         View view = findViewById(R.id.L2);
         view.setDrawingCacheEnabled(true);
         Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
@@ -222,7 +222,7 @@ public class ChoosePhotos extends AppCompatActivity {
             e.printStackTrace();
         }
         Log.i("recapName1", recapName);
-        i.putExtra("recapName", this.recapName.replace(":", "\\|"));
+        i.putExtra("recapName", this.recapName.replace(":", "|"));
         i.putExtra("userId", this.userId);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
