@@ -154,6 +154,7 @@ public class ViewAllRecaps extends AppCompatActivity {
 
                     while (recapIterator.hasNext()) {
                         String recapName = recapIterator.next();
+                        Log.i("recapName", recapName);
                         RecapCard rc = new RecapCard(recapName, recaps.getJSONObject(recapName).getString("dateGenerated"));
                         recapCardList.add(rc);
                         rviewAdapter.notifyDataSetChanged();

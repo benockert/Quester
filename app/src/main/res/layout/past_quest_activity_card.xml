@@ -17,30 +17,20 @@
         android:id="@+id/constraintLayout"
         android:layout_width="374dp"
         android:layout_height="wrap_content"
-        android:minHeight="150dp"
+        android:minHeight="50dp"
         app:layout_constraintEnd_toStartOf="@+id/activityQuery"
         app:layout_constraintStart_toStartOf="@+id/activityQuery">
 
         <TextView
             android:id="@+id/activityName"
-            android:layout_width="151dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="40dp"
-            android:textColor="#616161"
             android:layout_marginTop="10dp"
-            app:layout_constraintStart_toEndOf="@+id/locationImage"
+            android:layout_marginStart="10dp"
+            android:textColor="#616161"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Activity Name" />
-
-        <ImageView
-            android:id="@+id/locationImage"
-            android:layout_width="150dp"
-            android:layout_height="140dp"
-            android:layout_marginStart="16dp"
-            android:contentDescription="@string/activity_location_image"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
 
         <TextView
             android:id="@+id/activityPrice"
@@ -54,7 +44,7 @@
 
         <TextView
             android:id="@+id/locationAddress"
-            android:layout_width="151dp"
+            android:layout_width="250dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
             app:layout_constraintStart_toStartOf="@+id/activityPrice"
@@ -63,8 +53,8 @@
 
         <ImageView
             android:id="@+id/mapsImg"
-            android:layout_width="42dp"
-            android:layout_height="33dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginEnd="5dp"
             android:contentDescription="@string/google_maps_logo"

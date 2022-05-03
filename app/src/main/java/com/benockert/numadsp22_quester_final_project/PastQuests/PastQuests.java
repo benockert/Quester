@@ -3,6 +3,8 @@ package com.benockert.numadsp22_quester_final_project.PastQuests;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
 import com.benockert.numadsp22_quester_final_project.CreateRecap.ChooseTemplate;
+import com.benockert.numadsp22_quester_final_project.createQuest.CreateQuestActivity;
 import com.benockert.numadsp22_quester_final_project.types.Activity;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -25,6 +28,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.maps.GeoApiContext;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,6 +36,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Objects;
 import java.util.Scanner;
 
 public class PastQuests extends AppCompatActivity {
@@ -138,16 +143,6 @@ public class PastQuests extends AppCompatActivity {
      * gets all the activities for the current quest and adds them to a list of activities
      */
     private void getAllActivities() {
-//        String apiKey = "";
-//        try {
-//            ActivityInfo ai = getPackageManager().getActivityInfo(this.getComponentName(), PackageManager.GET_META_DATA);
-//            Bundle metaData = ai.metaData;
-////            apiKey = metaData.get("com.google.android.geo.API_KEY").toString();
-//        } catch (PackageManager.NameNotFoundException | RuntimeException e) {
-//            e.printStackTrace();
-//            Log.e("TAG", "API_KEY not found in metadata");
-//        }
-
         dr.child("quests").child(questId).child("activities").get().addOnCompleteListener(task -> {
             if (task.isSuccessful()) {
                 try {
@@ -222,17 +217,14 @@ public class PastQuests extends AppCompatActivity {
         String userName = mAuth.getCurrentUser().getDisplayName();
         Context context = this;
         dr.child("users").child(userName).child("id").get().addOnCompleteListener(
-                new OnCompleteListener<DataSnapshot>() {
-                    @Override
-                    public void onComplete(@NonNull Task<DataSnapshot> task) {
-                        if (task.isSuccessful()) {
-                            if (task.getResult().getValue() != null) {
-                                String tempid = String.valueOf(task.getResult().getValue());
-                                Intent i = new Intent(context, ViewRecap.class);
-                                i.putExtra("recapName", qRecap);
-                                i.putExtra("userId", tempid);
-                                startActivity(i);
-                            }
+                task -> {
+                    if (task.isSuccessful()) {
+                        if (task.getResult().getValue() != null) {
+                            String tempid = String.valueOf(task.getResult().getValue());
+                            Intent i = new Intent(context, ViewRecap.class);
+                            i.putExtra("recapName", qRecap);
+                            i.putExtra("userId", tempid);
+                            startActivity(i);
                         }
                     }
                 });
@@ -247,7 +239,7 @@ public class PastQuests extends AppCompatActivity {
     public void createQuestRecap(View v) {
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
-        String userName = mAuth.getCurrentUser().getDisplayName();
+        String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         Context context = this;
         dr.child("users").child(userName).child("id").get().addOnCompleteListener(
                 task -> {

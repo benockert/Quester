@@ -14,17 +14,11 @@ import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.benockert.numadsp22_quester_final_project.PhotoRecap.ViewRecap;
 import com.benockert.numadsp22_quester_final_project.R;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.android.material.snackbar.BaseTransientBottomBar;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.storage.FirebaseStorage;
@@ -125,7 +119,6 @@ public class ChoosePhotos extends AppCompatActivity {
      */
     public void selectImg1(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        i.setType("image/*");
         img1.launch(i);
     }
 
@@ -136,7 +129,6 @@ public class ChoosePhotos extends AppCompatActivity {
      */
     public void selectImg2(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        i.setType("image/*");
         img2.launch(i);
     }
 
@@ -147,7 +139,6 @@ public class ChoosePhotos extends AppCompatActivity {
      */
     public void selectImg3(View v) {
         Intent i = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//        i.setType("image/*");
         img3.launch(i);
     }
 
@@ -176,13 +167,14 @@ public class ChoosePhotos extends AppCompatActivity {
      * the recap name and date generated is saved to the firebase database
      */
     public void saveToFirebase() {
+        String name = recapName.replace(":", "\\|");
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         String userName = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
         assert userName != null;
         DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
         String dateGenerated = String.valueOf(LocalDate.now());
         dr.child("users").child(userName).child("recaps")
-                .child(recapName).child("dateGenerated").setValue(dateGenerated);
+                .child(name).child("dateGenerated").setValue(dateGenerated);
     }
 
     /**
@@ -190,7 +182,7 @@ public class ChoosePhotos extends AppCompatActivity {
      * saves the screenshot created to firebase storage
      */
     private void createAndSaveScreenshot() {
-        String name = recapName.replaceAll("\\|", "_");
+        String name = recapName.replace(":", "\\|");
         View view = findViewById(R.id.L2);
         view.setDrawingCacheEnabled(true);
         Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
@@ -198,11 +190,6 @@ public class ChoosePhotos extends AppCompatActivity {
 
         // Create a storage reference from our app
         StorageReference storageRef = FirebaseStorage.getInstance().getReference();
-
-        //reference to where the screenshot will be saves
-        FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        DatabaseReference dr = FirebaseDatabase.getInstance().getReference();
-        String userName = mAuth.getCurrentUser().getDisplayName();
 
         StorageReference recapRef = storageRef.child(this.userId + "/" + name + ".JPEG");
 
