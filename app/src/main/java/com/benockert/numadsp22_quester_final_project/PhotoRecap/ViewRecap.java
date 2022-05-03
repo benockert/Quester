@@ -12,11 +12,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.content.FileProvider;
 
 import com.benockert.numadsp22_quester_final_project.R;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
@@ -113,6 +118,11 @@ public class ViewRecap extends AppCompatActivity {
      */
     public void delete(View v) {
         dr.child("users").child(username).child("recaps").child(questRecapName).removeValue();
+        String path = userId + "/" + questRecapName + ".JPEG";
+        StorageReference ref = FirebaseStorage.getInstance().getReference();
+        StorageReference pathReference = ref.child(path);
+        pathReference.delete().addOnCompleteListener(task -> {
+        });
         Intent i = new Intent(this, ViewAllRecaps.class);
         i.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
         startActivity(i);
