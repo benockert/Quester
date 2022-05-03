@@ -182,7 +182,7 @@ public class ChoosePhotos extends AppCompatActivity {
      * saves the screenshot created to firebase storage
      */
     private void createAndSaveScreenshot() {
-        String name = recapName.replace(":", "_");
+        String name = recapName.replace(":", "|");
         View view = findViewById(R.id.L2);
         view.setDrawingCacheEnabled(true);
         Bitmap bitmap = Bitmap.createBitmap(view.getDrawingCache());
