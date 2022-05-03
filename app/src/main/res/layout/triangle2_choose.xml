@@ -19,7 +19,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/L3"
+        android:id="@+id/L2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -172,7 +172,7 @@
         android:layout_marginBottom="8dp"
         android:onClick="changeBackgroundColor"
         android:text="@string/change_background_color"
-        app:layout_constraintBottom_toTopOf="@+id/L3"
+        app:layout_constraintBottom_toTopOf="@+id/L2"
         app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
