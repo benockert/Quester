@@ -1,6 +1,8 @@
 package com.benockert.numadsp22_quester_final_project.PhotoRecap;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
@@ -33,24 +35,25 @@ public class ViewRecap extends AppCompatActivity {
     TextView title;
     String userId;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_recap);
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
-        dr = FirebaseDatabase.getInstance().getReference();
-        questRecapName = this.getIntent().getExtras().getString("recapName");
-        username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
-        userId = this.getIntent().getExtras().getString("userId");
+        this.dr = FirebaseDatabase.getInstance().getReference();
+        this.questRecapName = this.getIntent().getExtras().getString("recapName");
+        this.username = Objects.requireNonNull(mAuth.getCurrentUser()).getDisplayName();
+        this.userId = this.getIntent().getExtras().getString("userId");
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         //sets the title of the recap
-        title = findViewById(R.id.toolbar_title);
-        title.setText(questRecapName);
+        this.title = findViewById(R.id.toolbar_title);
+        this.title.setText(this.questRecapName.replace("\\|", ":"));
 
         // Reference to an image file in Cloud Storage
-        String recapName = questRecapName.replaceAll("\\|", "_");
         StorageReference storageReference = FirebaseStorage.getInstance().getReference();
-        String path = userId + "/" + recapName + ".JPEG";
+        String path = userId + "/" + this.questRecapName + ".JPEG";
         StorageReference pathReference = storageReference.child(path);
 
         // ImageView in your Activity
@@ -65,7 +68,7 @@ public class ViewRecap extends AppCompatActivity {
     }
 
     /**
-     * sets the on click dunction of the share button located in the toolbar
+     * sets the on click function of the share button located in the toolbar
      *
      * @param bm BitMap representing the image to share
      */

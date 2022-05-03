@@ -48,6 +48,7 @@ public class PastQuests extends AppCompatActivity {
     private static Context context;
     private pastQuestActivityCardAdapter rviewAdapter;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +56,7 @@ public class PastQuests extends AppCompatActivity {
 
         findViewById(R.id.createQRecap).setVisibility(View.INVISIBLE);
         findViewById(R.id.viewQRecap).setVisibility(View.INVISIBLE);
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         FirebaseUser currentUser = mAuth.getCurrentUser();
@@ -222,7 +224,7 @@ public class PastQuests extends AppCompatActivity {
                         if (task.getResult().getValue() != null) {
                             String tempid = String.valueOf(task.getResult().getValue());
                             Intent i = new Intent(context, ViewRecap.class);
-                            i.putExtra("recapName", qRecap);
+                            i.putExtra("recapName", qRecap.replace(":", "\\|"));
                             i.putExtra("userId", tempid);
                             startActivity(i);
                         }

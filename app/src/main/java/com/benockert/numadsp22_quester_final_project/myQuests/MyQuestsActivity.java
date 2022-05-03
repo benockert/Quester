@@ -1,5 +1,6 @@
 package com.benockert.numadsp22_quester_final_project.myQuests;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
@@ -49,6 +50,7 @@ public class MyQuestsActivity extends AppCompatActivity {
 
     private String currentUser;
 
+    @SuppressLint("SourceLockedOrientationActivity")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,6 +59,7 @@ public class MyQuestsActivity extends AppCompatActivity {
         //init data from db
         FirebaseAuth mAuth = FirebaseAuth.getInstance();
         dr = FirebaseDatabase.getInstance().getReference();
+        this.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
 
         // get the API key for the Places SDK to use
         try {
