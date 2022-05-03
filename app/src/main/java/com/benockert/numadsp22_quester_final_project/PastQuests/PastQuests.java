@@ -172,7 +172,7 @@ public class PastQuests extends AppCompatActivity {
                             address = "N/A";
                         }
                         try {
-                            price = currActivity.getInt("gPriceLevel");
+                            price = currActivity.getInt("uPriceLevel");
                         } catch (JSONException e) {
                             price = 0;
                         }
